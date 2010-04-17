@@ -72,6 +72,53 @@
 		}
 
 	}
+
+
+	class LastFMLovedTracks extends LastFM {
+
+		public function __construct( $config ) {
+			parent::setVariables( $config );	
+
+			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&api_key=%s&user=%s&limit=%d', $this->key, $this->username, $this->total ) );
+			$this->setItemTemplate('<li{%classe%}><a class="clearfix" href="{%link%}"><img src="{%image%}" width="{%size%}" height="{%size%}" alt="{%track%}"><strong><span>{%artist%}</span> {%track%}</strong></a></li>'."\n");
+
+			parent::__construct( $config );
+		}
+
+		/**
+		 * @return SimpleXMLElement
+		 */
+		public function getData() {
+			$data = parent::getData();
+			return $data->lovedtracks->track;
+		}
+
+		/**
+		 * @return array
+		 */
+		public function populateItemTemplate( &$item ) {
+			$album = $item->album;
+			$artist = $item->artist->name	;
+			$title= $item->name;
+			$this->compteur++;
+			
+			$img = ($item->image[2] != '' ? $item->image[2] : Pubwich::getThemeUrl().'/img/cover.png');
+			
+			return array(
+						'link' => htmlspecialchars( $item->url ),
+						'artist' => $artist,
+						'album' => $album,
+						'track' => $title,
+						'date' => $item->date,
+						'image' => $img,
+						'size' => $this->size,
+
+						'classe' => isset($this->classes[$this->compteur-1]) ? ' class="'.$this->classes[$this->compteur-1].'"' : '',
+						);
+		}
+
+	}
+
 	
 	class LastFMWeeklyTracks extends LastFM {
 
