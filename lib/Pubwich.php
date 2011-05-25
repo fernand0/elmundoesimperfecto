@@ -90,6 +90,7 @@
 				foreach( $column as $service ) {
 
 					list( $name, $variable, $config ) = $service;
+					$name = ucfirst($name);
 					$service_instance = strtolower( $name . '_' . $variable );
 					${$service_instance} = Pubwich::loadService( $name, $config );
 					${$service_instance}->setVariable( $variable );
