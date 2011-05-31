@@ -22,7 +22,7 @@
 			$this->cache_id = $id;
 
 			if ( !$this->callback_function ) {
-				$this->callback_function = 'simplexml_load_string';
+				$this->callback_function = array($this, 'simplexml_load_string');
 			}
 
 			$this->cache_options = array(
@@ -46,6 +46,20 @@
 				$this->tmpBoxTemplate = null;
 			}
 		}
+
+		/**
+		 * Double SimpleXML method to fix the CDATA problem
+         * @since 20110531
+		 */
+        static function simplexml_load_string($xmldata)
+        {
+            if (defined('LIBXML_VERSION') && LIBXML_VERSION >= 20621) {
+                return simplexml_load_string($xmldata, 'SimpleXMLElement', LIBXML_NOCDATA);
+            }
+            else {
+                return simplexml_load_string($xmldata);
+            }
+        }
 
 		/**
 		 * @return array
