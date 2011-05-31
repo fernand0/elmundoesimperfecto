@@ -143,7 +143,34 @@
 		}
 
 		/**
-		 * return string
+		 * @return string
+         * @since 20110531
+		 */
+		public function getProcessedData() {
+            if (isset($this->data_processed)) {
+                return $this->data_processed;
+            }
+            else {
+    			return $this->getData();
+            }
+		}
+
+		/**
+		 * @return void
+         * @since 20110531
+		 */
+        public function prepareService() {
+            if (method_exists($this, 'processDataStream')) {
+                $data_processed = $this->processDataStream();
+                if ($data_processed !== false) {
+                    $this->data_processed = $data_processed;
+                }
+            }
+            return;
+        }
+
+        /**
+		 * @return string
 		 */
 		public function getVariable() {
 			return $this->variable;
@@ -220,7 +247,7 @@
 		public function renderBox( ) {
 
 			$items = '';
-			$classData = $this->getData();
+			$classData = $this->getProcessedData();
 
 			$htmlClass = strtolower( get_class( $this ) ).' '.( get_parent_class( $this ) != 'Service' ? strtolower( get_parent_class( $this ) ) : '' );
 			if ( !$classData ) {

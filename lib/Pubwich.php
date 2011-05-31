@@ -112,10 +112,6 @@
 				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), '/themes/'.PUBWICH_THEME.'/index.tpl.php' ) );
 			}
 
-			foreach (self::$classes as &$classe) {
-				$classe->init();
-			}
-
 			if ( file_exists( self::getThemePath()."/functions.php" ) ) {
 				require( self::getThemePath()."/functions.php" );
 				self::applyTheme();
@@ -402,5 +398,18 @@
 				return Zend_Json::decode( $str, Zend_Json::TYPE_OBJECT );
 			}
 		}
+
+        public function processFilters() {
+            // TODO
+            return;
+        }
+
+        public function processServices() {
+			foreach (self::$classes as &$classe) {
+				$classe->init();
+                $classe->prepareService();
+			}
+            return;
+        }
 
 	}
