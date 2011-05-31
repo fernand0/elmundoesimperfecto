@@ -399,11 +399,60 @@
 			}
 		}
 
+		/**
+		 * @return void
+         * @since 20110531
+		 */
         public function processFilters() {
-            // TODO
+
+            /* the first and very simple approach to plug filter methods in,
+             * they can be used to filter the now processed data before output
+             *
+             * for now put all filter functions in a filters.php in the theme
+             * path, this should been enhanced later with paths for global
+             * core filter, user filters, theme filters
+             */
+
+			if ( file_exists( self::getThemePath()."/filters.php" ) ) {
+				require( self::getThemePath()."/filters.php" );
+			}
+            
+			foreach( self::$classes as $service ) {
+
+				$filtermethods = array();
+				$parent = get_parent_class( $service );
+				$classname = get_class( $service );
+				$variable = $service->getVariable();
+
+                $filtermethods = array(
+                    $parent,
+                    $parent . '_' . $classname,
+                    $parent . '_' . $classname . '_' . $variable,
+                );
+
+				foreach ( $filtermethods as $filter ) {
+					$stream_filter = $filter . '_filterStream';
+					$item_filter = $filter . '_filterItem';
+
+					if ( function_exists($stream_filter  ) ) {
+						$stream_filter($service);
+					}
+
+					if ( function_exists( $item_filter ) && $service->data_processed && is_array($service->data_processed)) {
+                        for ($i = 0; $i < count($service->data_processed); $i++) {
+                            $item_filter(&$service->data_processed[$i]);
+                        }
+					}
+				}
+			}
+
             return;
         }
 
+		/**
+		 * @return void
+         * @since 20110531
+		 */
         public function processServices() {
 			foreach (self::$classes as &$classe) {
 				$classe->init();
