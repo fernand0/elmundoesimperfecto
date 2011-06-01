@@ -50,7 +50,7 @@
 			$comments_count = $item->children('http://purl.org/rss/1.0/modules/slash/')->comments;
 
             if (!$title) $title = $summary ? $summary : strip_tags(str_replace(array('<br>','<br/>'), ' ', $content));
-            if (strlen($title) > 140) $title = substr($title, 0, 140).'...';
+            if (strlen($title) > 200) $title = substr($title, 0, 200).'...';
 
             if (isset($this->dateFormat)) {
                 $absolute_date = date($this->dateFormat, strtotime($date));
