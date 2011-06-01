@@ -76,7 +76,7 @@ msgstr "vor %d Sekunden"
 
 #: lib/Pubwich.php:356
 msgid "%e %B at %H:%M"
-msgstr "%e %B um %H:%M"
+msgstr "am %d.%m.%Y um %H:%M"
 
 #: lib/Pubwich.php:371
 #, php-format
