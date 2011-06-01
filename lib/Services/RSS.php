@@ -46,8 +46,9 @@
 			$date = $item->pubDate;
             $summary = strip_tags(trim( str_replace(array('<br>','<br/>'), ' ', $item->description) ));
             $content = trim($item->children('http://purl.org/rss/1.0/modules/content/')->encoded);
-            $comments_link = $item->comments;
-			$comments_count = $item->children('http://purl.org/rss/1.0/modules/slash/')->comments;
+            // $comments_link = $item->comments;
+			// $comments_count = $item->children('http://purl.org/rss/1.0/modules/slash/')->comments;
+			$media = $item->children('http://search.yahoo.com/mrss/');
 
             if (!$title) $title = $summary ? $summary : strip_tags(str_replace(array('<br>','<br/>'), ' ', $content));
             if (strlen($title) > 200) $title = substr($title, 0, 200).'...';
@@ -57,6 +58,26 @@
             }
             else {
                 $absolute_date = null;
+            }
+
+            if ($media->content)
+            {
+                $media_content = $media->content->attributes();
+                $medial_content = $media_content['url'];
+            }
+            else
+            {
+                $media_content = null;
+            }
+
+            if ($media->thumbnail)
+            {
+                $media_thumbnail = $media->thumbnail->attributes();
+                $medial_thumbnail = $media_thumbnail['url'];
+            }
+            else
+            {
+                $media_thumbnail = null;
             }
 
             $timestamp = 0;
@@ -71,9 +92,10 @@
                         'timestamp' => $timestamp,
                         'summary' => $summary,
 						'content' => $content,
-						'comments_link' => $comments_link,
-						'comments_count' => $comments_count,
+						'media_content' => $media_content,
+						'media_thumbnail' => $media_thumbnail,
+						//'comments_link' => $comments_link,
+						//'comments_count' => $comments_count,
 			);
-
         }
 	}
