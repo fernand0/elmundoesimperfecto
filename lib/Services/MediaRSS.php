@@ -46,10 +46,9 @@
 			$date = $item->pubDate;
 			$media = $item->children('http://search.yahoo.com/mrss/')->group;
 
-            if ($media->content)
+             if ($media->content)
             {
-                $media_content = $media->content->attributes();
-                $medial_content = $media_content['url'];
+                $media_content = (string) $media->content->attributes()->url;
             }
             else
             {
@@ -58,8 +57,7 @@
 
             if ($media->thumbnail)
             {
-                $media_thumbnail = $media->thumbnail->attributes();
-                $medial_thumbnail = $media_thumbnail['url'];
+                $media_thumbnail = (string) $media->thumbnail->attributes()->url;
             }
             else
             {
