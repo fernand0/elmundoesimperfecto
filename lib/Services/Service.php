@@ -12,11 +12,11 @@
 		/**
 		 * @constructor
 		 */
-		public function __construct( $config=null ) {
+		public function __construct( $config=array() ) {
 			PubwichLog::log( 2, sprintf( Pubwich::_("Creating an instance of %s"), get_class( $this ) ) );
 
-			$this->title = $config['title'];
-			$this->description = $config['description'];
+			if (isset($config['title'])) $this->title = $config['title'];
+			if (isset($config['description'])) $this->description = $config['description'];
 
 			$id = md5( $this->getURL() );
 			$this->cache_id = $id;
@@ -118,7 +118,7 @@
 				$Cache_Lite = new Cache_Lite( $this->cache_options );
 				$Cache_Lite->get( $this->cache_id );
 			}
-			if ( !$this->callback_getdata ) {
+			if ( !isset($this->callback_getdata) || !$this->callback_getdata ) {
 				$content = FileFetcher::get( $url, $this->http_headers );
 			} else {
 				$content = call_user_func( $this->callback_getdata[0], $this->callback_getdata[1] );
@@ -248,6 +248,7 @@
 
 			$items = '';
 			$classData = $this->getProcessedData();
+            $compteur = 0;
 
 			$htmlClass = strtolower( get_class( $this ) ).' '.( get_parent_class( $this ) != 'Service' ? strtolower( get_parent_class( $this ) ) : '' );
 			if ( !$classData ) {

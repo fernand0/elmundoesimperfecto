@@ -36,7 +36,7 @@
 			if ( defined('PUBWICH_LANG') && PUBWICH_LANG != '' ) {
 				require( 'Gettext/streams.php' );
 				require( 'Gettext/gettext.php' );
-				self::$gettext = new gettext_reader( new FileReader( dirname(__FILE__).'/../lang/'.PUBWICH_LANG.'/pubwich-'.PUBWICH_LANG.'.mo' ) );
+				self::$gettext = @new gettext_reader( new FileReader( dirname(__FILE__).'/../lang/'.PUBWICH_LANG.'/pubwich-'.PUBWICH_LANG.'.mo' ) );
 			}
 
 			// JSON support
@@ -72,8 +72,10 @@
 		 * @param string $string
 		 * @return string
 		 */
-		public function _( $string ) {
-			return (self::$gettext ) ? self::$gettext->translate( $string ) : $string;
+		static public function _( $string ) {
+            // gettext lib throws notices, so we turn off all error reporting
+            // for the translation process
+			return (self::$gettext ) ? @self::$gettext->translate( $string ) : $string;
 		}
 
 		/**
@@ -194,7 +196,7 @@
 				throw new PubwichError( sprintf( Pubwich::_( 'You told Pubwich to use the %s service, but the file <code>%s</code> couldn’t be found.' ), $service, $service.'.php' ) );
 			}
 
-			$classname = ( $config['method'] ) ? $config['method'] : $service;
+			$classname = ( isset($config['method']) && $config['method'] ) ? $config['method'] : $service;
 			if ( !class_exists( $classname ) ) {
 				throw new PubwichError( sprintf( Pubwich::_( 'The class %s doesn\'t exist. Check your configuration file for inexistent services or methods.' ), $classname ) );
 			}
@@ -403,7 +405,7 @@
 		 * @return void
          * @since 20110531
 		 */
-        public function processFilters() {
+        static public function processFilters() {
 
             /* the first and very simple approach to plug filter methods in,
              * they can be used to filter the now processed data before output
@@ -453,7 +455,7 @@
 		 * @return void
          * @since 20110531
 		 */
-        public function processServices() {
+        static public function processServices() {
 			foreach (self::$classes as &$classe) {
 				$classe->init();
                 $classe->prepareService();

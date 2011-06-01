@@ -14,7 +14,7 @@
 
 		public function __construct( $config ){
 			$this->total = $config['total'];
-			$this->dateFormat = $config['date_format'];
+			if (isset($config['date_format']) && $config['date_format']) $this->dateFormat = $config['date_format'];
 			$this->setURL( $config['url'] );
 			$this->setItemTemplate('<li><a href="{{link}}">{{{title}}}</a> {{{date}}}</li>'."\n");
 			$this->setURLTemplate( $config['link'] );
@@ -28,14 +28,14 @@
             $dataForOutput = array();
 
             if (isset($item['link'])) $dataForOutput['link'] = $item['link'];
-            if (isset($item['link'])) $dataForOutput['title'] = $item['title'];
-            if (isset($item['link'])) $dataForOutput['date'] = $item['date'];
-            if (isset($item['link'])) $dataForOutput['absolute_date'] = $item['absolute_date'];
-            if (isset($item['link'])) $dataForOutput['author'] = $item['author'];
-            if (isset($item['link'])) $dataForOutput['summary'] = $item['summary'];
-            if (isset($item['link'])) $dataForOutput['content'] = $item['content'];
-            if (isset($item['link'])) $dataForOutput['comments_link'] = $item['comments_link'];
-            if (isset($item['link'])) $dataForOutput['comments_count'] = $item['comments_count'];
+            if (isset($item['title'])) $dataForOutput['title'] = $item['title'];
+            if (isset($item['date'])) $dataForOutput['date'] = $item['date'];
+            if (isset($item['absolute_date'])) $dataForOutput['absolute_date'] = $item['absolute_date'];
+            if (isset($item['author'])) $dataForOutput['author'] = $item['author'];
+            if (isset($item['summary'])) $dataForOutput['summary'] = $item['summary'];
+            if (isset($item['content'])) $dataForOutput['content'] = $item['content'];
+            if (isset($item['comments_link'])) $dataForOutput['comments_link'] = $item['comments_link'];
+            if (isset($item['comments_count'])) $dataForOutput['comments_count'] = $item['comments_count'];
 
             return $dataForOutput;
 		}

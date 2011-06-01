@@ -52,12 +52,19 @@
             if (!$title) $title = $summary ? $summary : strip_tags(str_replace(array('<br>','<br/>'), ' ', $content));
             if (strlen($title) > 140) $title = substr($title, 0, 140).'...';
 
+            if (isset($this->dateFormat)) {
+                $absolute_date = date($this->dateFormat, strtotime($date));
+            }
+            else {
+                $absolute_date = null;
+            }
+
             return array(
 						'link' => $link,
 						'title' => $title,
                         'author' => $author,
 						'date' => Pubwich::time_since( $date ),
-						'absolute_date' => date($this->dateFormat, strtotime($date)),
+						'absolute_date' => $absolute_date,
                         'summary' => $summary,
 						'content' => $content,
 						'comments_link' => $comments_link,
