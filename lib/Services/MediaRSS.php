@@ -3,15 +3,15 @@
     require_once 'FeedMetaService.php';
 
 	/**
-	 * @classname RSS
-	 * @description Fetch RSS feeds
-	 * @version 1.1 (20090929)
+	 * @classname MediaRSS
+	 * @description Fetch RSS feeds with media items
+	 * @version 20110601
 	 * @author Rémi Prévost (exomel.com)
      * @author http://michael.haschke.biz/
 	 * @methods None
 	 */
 
-	class RSS extends FeedMetaService {
+	class MediaRSS extends FeedMetaService {
 
 		private $dateFormat;
 
@@ -44,21 +44,7 @@
             $title = strip_tags(trim( $item->title ));
             $author = trim($item->author);
 			$date = $item->pubDate;
-            $summary = strip_tags(trim( str_replace(array('<br>','<br/>'), ' ', $item->description) ));
-            $content = ($content = trim($item->children('http://purl.org/rss/1.0/modules/content/')->encoded))?$content:trim($item->description);
-            // $comments_link = $item->comments;
-			// $comments_count = $item->children('http://purl.org/rss/1.0/modules/slash/')->comments;
-			$media = $item->children('http://search.yahoo.com/mrss/');
-
-            if (!$title) $title = $summary ? $summary : strip_tags(str_replace(array('<br>','<br/>'), ' ', $content));
-            if (strlen($title) > 200) $title = substr($title, 0, 200).'...';
-
-            if (isset($this->dateFormat)) {
-                $absolute_date = date($this->dateFormat, strtotime($date));
-            }
-            else {
-                $absolute_date = null;
-            }
+			$media = $item->children('http://search.yahoo.com/mrss/')->group;
 
             if ($media->content)
             {
@@ -80,6 +66,30 @@
                 $media_thumbnail = null;
             }
 
+            if ($media->title)
+            {
+                $title = trim($media->title);
+            }
+
+            if ($media->description)
+            {
+                $content = trim($media->description);
+            }
+            else
+            {
+                $content = null;
+            }
+
+            if (!$title) $title = strip_tags(str_replace(array('<br>','<br/>'), ' ', $content));
+            if (strlen($title) > 200) $title = substr($title, 0, 200).'...';
+
+            if (isset($this->dateFormat)) {
+                $absolute_date = date($this->dateFormat, strtotime($date));
+            }
+            else {
+                $absolute_date = null;
+            }
+
             $timestamp = 0;
             $timestamp = strtotime($date);
 
@@ -90,12 +100,9 @@
 						'date' => Pubwich::time_since( $date ),
 						'absolute_date' => $absolute_date,
                         'timestamp' => $timestamp,
-                        'summary' => $summary,
 						'content' => $content,
 						'media_content' => $media_content,
 						'media_thumbnail' => $media_thumbnail,
-						//'comments_link' => $comments_link,
-						//'comments_count' => $comments_count,
 			);
         }
 	}
