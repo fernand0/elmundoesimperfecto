@@ -96,12 +96,45 @@
 					$service_instance = strtolower( $name . '_' . $variable );
 					${$service_instance} = Pubwich::loadService( $name, $config );
 					${$service_instance}->setVariable( $variable );
-					self::$classes[] = ${$service_instance};
+					self::$classes[$variable] = ${$service_instance};
 					self::$columns[$columnCounter][] = &${$service_instance};
 
 				}
 			}
 		}
+
+		/**
+		 * loadConfiguredServices() is a synomym to setClasses()
+		 *
+		 * @return void
+		 */
+		static public function loadConfiguredServices() {
+			self::setClasses();
+            return;
+		}
+
+		/**
+		 * Get an array with all intern IDs of active services
+		 *
+		 * @return array
+		 */
+		static public function listActiveServices() {
+			$services = self::$classes;
+            if (!is_array($services)) return array();
+            return array_keys($services);
+        }
+
+		/**
+		 * Get an currently active service object
+		 *
+         * @param string $id ID of active service
+		 * @return object
+		 */
+		static public function getActiveService($service_id) {
+			$services = self::$classes;
+            if (!isset($services[$service_id])) return false;
+            return $services[$service_id];
+        }
 
 		/**
 		 * Renders the template according to the current theme
