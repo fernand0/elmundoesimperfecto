@@ -50,12 +50,16 @@
                 $absolute_date = null;
             }
 
+            $timestamp = 0;
+            $timestamp = strtotime($date);
+
             return array(
 						'link' => $link,
 						'title' => $title,
                         'author' => $author,
 						'date' => Pubwich::time_since( $date ),
 						'absolute_date' => $absolute_date,
+                        'timestamp' => $timestamp,
                         'summary' => $summary,
 						'content' => $content,
 			);

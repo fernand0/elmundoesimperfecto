@@ -31,6 +31,7 @@
             if (isset($item['title'])) $dataForOutput['title'] = $item['title'];
             if (isset($item['date'])) $dataForOutput['date'] = $item['date'];
             if (isset($item['absolute_date'])) $dataForOutput['absolute_date'] = $item['absolute_date'];
+            if (isset($item['timestamp'])) $dataForOutput['timestamp'] = $item['timestamp'];
             if (isset($item['author'])) $dataForOutput['author'] = $item['author'];
             if (isset($item['summary'])) $dataForOutput['summary'] = $item['summary'];
             if (isset($item['content'])) $dataForOutput['content'] = $item['content'];
