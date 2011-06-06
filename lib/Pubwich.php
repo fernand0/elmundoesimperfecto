@@ -69,13 +69,17 @@
 		/**
 		 * Translate a string according to the defined locale/
 		 *
-		 * @param string $string
+		 * @param string $single
 		 * @return string
 		 */
-		static public function _( $string ) {
+		static public function _($single, $plural=false, $number=false) {
             // gettext lib throws notices, so we turn off all error reporting
             // for the translation process
-			return (self::$gettext ) ? @self::$gettext->translate( $string ) : $string;
+
+            if ($plural===false && $number===false)
+			return (self::$gettext ) ? @self::$gettext->translate( $single ) : $string;
+
+            return (self::$gettext ) ? @self::$gettext->ngettext($single, $plural, $number) : $string;
 		}
 
 		/**
@@ -381,16 +385,6 @@
 		static public function time_since( $original ) {
 
 			$original = strtotime( $original );
-
-			$chunks = array(
-				array( 60 * 60 * 24 * 365 , Pubwich::_('year') ),
-				array( 60 * 60 * 24 * 30 , Pubwich::_('month' ) ),
-				array( 60 * 60 * 24 * 7, Pubwich::_('week') ),
-				array( 60 * 60 * 24 , Pubwich::_('day') ),
-				array( 60 * 60 , Pubwich::_('hour') ),
-				array( 60 , Pubwich::_('minute') ),
-			);
-
 			$today = time();
 			$since = $today - $original;
 
@@ -398,27 +392,26 @@
 				return sprintf( Pubwich::_('just moments ago'), $since );
 			}
 
-			if ( $since < 60 ) {
-				return sprintf( Pubwich::_('%d seconds ago'), $since );
+			if ( $since >= ( 7 * 24 * 60 * 60 ) ) {
+				return strftime( Pubwich::_('%e %B at %H:%M'), $original );
 			}
 
-			if ( $since > ( 7 * 24 * 60 * 60 ) ) {
-				$print =  strftime( Pubwich::_('%e %B at %H:%M'), $original );
-				return $print;
-			}
+            $timechunks = array(
+                array(60, 60,'1 second ago', '%d seconds ago'),
+                array(60*60, 60, '1 minute ago', '%d minutes ago'),
+                array(24*60*60, 24, '1 hour ago', '%d hours ago'),
+                array(7*24*60*60, 7, '1 day ago', '%d days ago'),
+			);
 
-			for ( $i = 0, $j = count( $chunks ); $i < $j; $i++ ) {
-				$seconds = $chunks[$i][0];
-				$name = $chunks[$i][1];
-				if ( ( $count = floor( $since / $seconds ) ) != 0 ) {
-					break;
+			for ( $i = 0, $j = count( $timechunks ); $i < $j; $i++ ) {
+				$seconds = $timechunks[$i][0];
+				$string_single = $timechunks[$i][2];
+                $string_plural = $timechunks[$i][3];
+				if ( $since < $seconds) {
+                    $count = floor( $since / ($seconds/$timechunks[$i][1]));
+					return sprintf( Pubwich::_($string_single, $string_plural, $count), $count );
 				}
 			}
-
-			$suffixe = "s";
-			$print = ( $count == 1 ) ? '1&nbsp;'.$name : $count.'&nbsp;'.$name.$suffixe;
-
-			return sprintf( Pubwich::_('%s ago'), $print );
 
 		}
 
