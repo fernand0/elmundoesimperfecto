@@ -452,11 +452,19 @@
 				$classname = get_class( $service );
 				$variable = $service->getVariable();
 
-                $filtermethods = array(
-                    $parent,
-                    $parent . '_' . $classname,
-                    $parent . '_' . $classname . '_' . $variable,
-                );
+				if ( $parent != 'Service' ) {
+					$filtermethods = array(
+						$parent,
+						$parent . '_' . $classname,
+						$parent . '_' . $classname . '_' . $variable,
+					);
+				} else {
+					$filtermethods = array(
+						$classname,
+						$classname . '_' . $variable,
+					);
+				}
+
 
 				foreach ( $filtermethods as $filter ) {
 					$stream_filter = $filter . '_filterStream';
