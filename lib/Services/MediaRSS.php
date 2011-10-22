@@ -8,7 +8,7 @@
 	 * @version 20110601
 	 * @author Rémi Prévost (exomel.com)
      * @author http://michael.haschke.biz/
-	 * @methods None
+     * @DEPRECATED 2011-10-22
 	 */
 
 	class MediaRSS extends FeedMetaService {
@@ -32,6 +32,7 @@
 		 * @return SimpleXMLElement
 		 */
 		public function getParentData() {
+            // TODO: check for usage of this method, remove it if not used!
 			return parent::getData();
 		}
 

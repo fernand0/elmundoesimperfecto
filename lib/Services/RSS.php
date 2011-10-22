@@ -1,6 +1,6 @@
 <?php
 	defined('PUBWICH') or die('No direct access allowed.');
-    require_once 'FeedMetaService.php';
+    require_once 'Feed.php';
 
 	/**
 	 * @classname RSS
@@ -8,93 +8,14 @@
 	 * @version 1.1 (20090929)
 	 * @author Rémi Prévost (exomel.com)
      * @author http://michael.haschke.biz/
-	 * @methods None
+     * @DEPRECATED 2011-10-22
 	 */
 
-	class RSS extends FeedMetaService {
-
-		private $dateFormat;
+	class RSS extends Feed {
 
 		public function __construct( $config ){
-			$this->setHeaderLink( array( 'url' => $config['url'], 'type' => 'application/rss+xml' ) );
+			$config['contenttype'] = 'application/rss+xml';
 			parent::__construct( $config );
 		}
 
-		/**
-		 * @return SimpleXMLElement
-		 */
-		public function getData() {
-			$data = parent::getData();
-			return $data->channel->item;
-		}
-
-		/**
-		 * @return SimpleXMLElement
-		 */
-		public function getParentData() {
-			return parent::getData();
-		}
-
-		/**
-		 * @return array
-         * @since 20110531
-		 */
-        public function processDataItem( &$item ) {
-			$link = htmlspecialchars($item->link);
-            $title = strip_tags(trim( $item->title ));
-            $author = trim($item->author);
-			$date = $item->pubDate;
-            $summary = strip_tags(trim($item->description), '<br>');
-            $content = ($content = trim($item->children('http://purl.org/rss/1.0/modules/content/')->encoded))?$content:trim($item->description);
-            // $comments_link = $item->comments;
-			// $comments_count = $item->children('http://purl.org/rss/1.0/modules/slash/')->comments;
-			$media = $item->children('http://search.yahoo.com/mrss/');
-
-            if (!$title) $title = $summary ? $summary : $content;
-            $title = strip_tags(str_replace(array('<br>','<br/>'), ' ', $title));
-            // if (strlen($title) > 200) $title = substr($title, 0, 200).'...';
-
-            if (isset($this->dateFormat)) {
-                $absolute_date = date($this->dateFormat, strtotime($date));
-            }
-            else {
-                $absolute_date = null;
-            }
-
-            if ($media->content)
-            {
-                $media_content = (string) $media->content->attributes()->url;
-            }
-            else
-            {
-                $media_content = null;
-            }
-
-            if ($media->thumbnail)
-            {
-                $media_thumbnail = (string) $media->thumbnail->attributes()->url;
-            }
-            else
-            {
-                $media_thumbnail = null;
-            }
-
-            $timestamp = 0;
-            $timestamp = strtotime($date);
-
-            return array(
-						'link' => $link,
-						'title' => $title,
-                        'author' => $author,
-						'date' => Pubwich::time_since( $date ),
-						'absolute_date' => $absolute_date,
-                        'timestamp' => $timestamp,
-                        'summary' => $summary,
-						'content' => $content,
-						'media_content' => $media_content,
-						'media_thumbnail' => $media_thumbnail,
-						//'comments_link' => $comments_link,
-						//'comments_count' => $comments_count,
-			);
-        }
 	}

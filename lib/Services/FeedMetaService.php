@@ -6,6 +6,7 @@
 	 * @description Parental class for Atom and RSS service classes
 	 * @since 20110531
      * @author http://michael.haschke.biz/
+     * @DEPRECATED 2011-10-22
 	 */
 
 	class FeedMetaService extends Service {
