@@ -8,7 +8,7 @@
 	 * @version 1.1 (20090929)
 	 * @author Rémi Prévost (exomel.com)
      * @author http://michael.haschke.biz/
-	 * @methods None
+     * @DEPRECATED 2011-10-22
 	 */
 
 	class Atom extends Feed {
