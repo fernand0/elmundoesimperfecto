@@ -6,14 +6,29 @@
 	 */
 	class Service {
 
-		public $data, $cache_id, $cache_options, $title, $description, $urlTemplate, $username, $total, $method, $callback_function, $header_link, $http_headers;
-		private $url, $itemTemplate, $tmpTemplate, $boxTemplate, $tmpBoxTemplate;
+		public $data,
+               $cache_id,
+               $cache_options,
+               $title,
+               $description,
+               $urlTemplate,
+               $username,
+               $total,
+               $method,
+               $callback_function,
+               $header_link,
+               $http_headers;
+
+		private $configuration, $url, $itemTemplate, $tmpTemplate, $boxTemplate, $tmpBoxTemplate;
 
 		/**
 		 * @constructor
 		 */
 		public function __construct( $config=array() ) {
 			PubwichLog::log( 2, sprintf( Pubwich::_("Creating an instance of %s"), get_class( $this ) ) );
+
+            // save original service config
+            $this->configuration = $config;
 
 			if (isset($config['title'])) $this->title = $config['title'];
 			if (isset($config['description'])) $this->description = $config['description'];
@@ -27,7 +42,7 @@
 
 			$this->cache_options = array(
 				'cacheDir' => CACHE_LOCATION,
-				'lifeTime' => CACHE_LIMIT,
+				'lifeTime' => $this->getDisplacedCacheInvalidationTime(),
 				'readControl' => true,
 				'readControlType' => 'strlen',
 				'errorHandlingAPIBreak' => true,
@@ -46,6 +61,38 @@
 				$this->tmpBoxTemplate = null;
 			}
 		}
+
+		/**
+		 * Use timeshift factor to randomize range of cache invalidation time.
+         * Default: 0.5 (with 1h cache it means 0.5h to 1.5h)
+         * @since 20110531
+		 */
+        public function getDisplacedCacheInvalidationTime()
+        {
+            $displacementfactor = 0.5; // default
+
+            if (defined('CACHE_DISPLACEMENT')) {
+                $displacementfactor = CACHE_DISPLACEMENT;
+            }
+            
+            $cache_limit = 0; // default, no caching
+
+            if (isset($this->configuration['cache_limit'])) {
+                $cache_limit = intval($this->configuration['cache_limit']);
+            }
+            elseif (defined('CACHE_LIMIT')) {
+                $cache_limit = CACHE_LIMIT;
+            }
+
+            $limit_min = ceil($cache_limit * (1 - $displacementfactor));
+            $limit_max = ceil($cache_limit * (1 + $displacementfactor));
+
+            $limit_new = rand($limit_min, $limit_max);
+
+            echo '['.$limit_min.':'.$limit_max.']:'.$limit_new.'s,';
+
+            return $limit_new;
+        }
 
 		/**
 		 * Double SimpleXML method to fix the CDATA problem
@@ -114,7 +161,9 @@
 		public function buildCache( $Cache_Lite = null ) {
 			PubwichLog::log( 2, sprintf( Pubwich::_('Rebuilding the cache for %s service' ), get_class( $this ) ) );
 			$url = $this->getURL();
-			if ( !$Cache_Lite ) {
+
+            if ( !$Cache_Lite ) {
+                // create cache object
 				$Cache_Lite = new Cache_Lite( $this->cache_options );
 				$Cache_Lite->get( $this->cache_id );
 			}

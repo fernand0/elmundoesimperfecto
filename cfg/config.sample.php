@@ -23,6 +23,7 @@
 	// Performance - Cache and Timeouts
 	define( 'CACHE_LOCATION', dirname(__FILE__) . '/../cache/' );
 	define( 'CACHE_LIMIT', 30 * 60 ); // 30 minutes
+    define( 'CACHE_DISPLACEMENT', 0.5); // between 0 and under 1, eg. 30min and 0.5 leads to cache limit randomly calculated between 15min and 45min
     define( 'FETCHDATA_TIMEOUT', 5); // 5 seconds
 
 	// Pubwich services configuration
