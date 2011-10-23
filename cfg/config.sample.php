@@ -20,6 +20,11 @@
 	define('PUBWICH_LOGLEVEL', 0);
 	define('PUBWICH_LOGTOFILE', false);
 
+	// Performance - Cache and Timeouts
+	define( 'CACHE_LOCATION', dirname(__FILE__) . '/../cache/' );
+	define( 'CACHE_LIMIT', 30 * 60 ); // 30 minutes
+    define( 'FETCHDATA_TIMEOUT', 5); // 5 seconds
+
 	// Pubwich services configuration
 	/*
 	 * setServices syntax to use
@@ -172,10 +177,5 @@
 
 		)
 	);
-
-	// Caching system
-	define( 'CACHE_LOCATION', dirname(__FILE__) . '/../cache/' );
-	define( 'CACHE_LIMIT', 20 * 60 );
-
 
 	// Don't forget to fill informations in /humans.txt
