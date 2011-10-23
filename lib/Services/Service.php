@@ -89,8 +89,6 @@
 
             $limit_new = rand($limit_min, $limit_max);
 
-            echo '['.$limit_min.':'.$limit_max.']:'.$limit_new.'s,';
-
             return $limit_new;
         }
 
