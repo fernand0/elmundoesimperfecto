@@ -132,7 +132,12 @@ class Feed  extends Service {
             $media_type[] = array(null);
             $media_type = ($media_type = trim($media_type[0]))?$media_type:$media->get_medium();
 
-            $media_caption = trim(strip_tags($media->get_caption()));
+            $media_caption = trim(strip_tags($media->get_description()));
+            if (!$media_caption)
+            {
+                $media_caption = $media->get_caption();
+                $media_caption = $media_caption?trim(strip_tags($media->get_text())):'';
+            }
         }
         else
         {
