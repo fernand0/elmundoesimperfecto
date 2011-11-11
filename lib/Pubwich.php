@@ -2,7 +2,7 @@
 	defined('PUBWICH') or die('No direct access allowed.');
 
     define('PUBWICH_NAME', 'PubwichFork');
-	define('PUBWICH_VERSION', '2.dev');
+	define('PUBWICH_VERSION', '2.0.dev');
     define('PUBWICH_WEB', 'https://github.com/haschek/PubwichFork');
 
 	/**
