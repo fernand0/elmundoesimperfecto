@@ -72,26 +72,6 @@ class Feed  extends Service {
      * @return array
      * @since 20110531
      */
-    public function processDataStream() {
-        if (!method_exists($this, 'processDataItem')) return false;
-
-        $data_source = $this->getData();
-        $data_processed = array();
-
-        if (!$data_source) return false;
-
-        foreach ($data_source as $data_item) {
-            $data_processed[] = $this->processDataItem($data_item);
-        }
-
-        return $data_processed;
-
-    }
-
-    /**
-     * @return array
-     * @since 20110531
-     */
     public function processDataItem( &$item ) {
 
         // meta
