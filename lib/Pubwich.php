@@ -79,9 +79,9 @@
             // for the translation process
 
             if ($plural===false && $number===false)
-			return (self::$gettext ) ? @self::$gettext->translate( $single ) : $string;
+			return (self::$gettext ) ? @self::$gettext->translate( $single ) : $single;
 
-            return (self::$gettext ) ? @self::$gettext->ngettext($single, $plural, $number) : $string;
+            return (self::$gettext ) ? @self::$gettext->ngettext($single, $plural, $number) : $single;
 		}
 
 		/**
