@@ -264,54 +264,10 @@ h1, h2, h1 a, h2 a {
 	color: #DC413A;
 }
 
-.lastfm li {
-	float: left;
-	width: 100%;
-	background: none;
+.lastfmtopalbums li a strong,
+.lastfmweeklyalbums li a strong {
+    display: block;
 }
-
-.lastfm li a {
-	text-decoration: none;
-	border: none;
-	display: block;
-	padding: 5px;
-}
-
-.lastfm li img {
-	background: url("img/cover.png");
-	display: block;
-	float: left;
-}
-
-.lastfm li a strong {
-	display: block;
-	margin-left: 70px;
-	font-weight: normal;
-	padding: 8px 5px 8px 10px;
-}
-
-.lastfm li a span {
-	font-size: 100%;
-	display: block;
-	font-weight: bold;
-}
-
-.lastfm li.premier span {
-	font-size: 145%;
-}
-
-.lastfm li.deuxieme span {
-	font-size: 130%;
-}
-
-.lastfm li.troisieme span {
-	font-size: 120%;
-}
-
-.lastfm li.quatrieme span {
-	font-size: 110%;
-}
-
 
 /**
  *	=! Twitter

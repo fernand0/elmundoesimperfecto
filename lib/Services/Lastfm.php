@@ -14,7 +14,6 @@
 		public $username, $size, $key, $classes, $compteur;
 
 		public function setVariables( $config ) {
-			$this->size = $config['size'];
 			$this->compteur = 0;
 			$this->username = $config['username'];
 			$this->key = $config['key'];
@@ -22,8 +21,8 @@
 			$this->setURLTemplate('http://www.last.fm/user/'.$config['username'].'/');
 		}
 
-		public function buildCache() {
-			parent::buildCache();
+		public function buildCache($Cache_Lite = null) {
+			parent::buildCache($Cache_Lite);
 		}
 
 		public function getData() {
@@ -42,7 +41,7 @@
 			parent::setVariables( $config );
 
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&api_key=%s&user=%s&limit=%d', $this->key, $this->username, $this->total ) );
-			$this->setItemTemplate('<li{{{classe}}}><a class="clearfix" href="{{{link}}}">{{{artist}}} — {{{track}}}</a></li>'."\n");
+			$this->setItemTemplate('<li><a href="{{{link}}}"><strong>{{{track}}}</strong> — {{{artist}}}</a></li>'."\n");
 
 			parent::__construct( $config );
 		}
@@ -69,7 +68,6 @@
 						'album' => $album,
 						'track' => $title,
 						'date' => $item->date,
-						'classe' => isset($this->classes[$this->compteur-1]) ? ' class="'.$this->classes[$this->compteur-1].'"' : '',
 						);
 		}
 
@@ -82,17 +80,22 @@
 
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.getweeklyalbumchart&api_key=%s&user=%s', $this->key, $this->username ) );
 			$this->classes = array( 'premier', 'deuxieme', 'troisieme', 'quatrieme' );
-			$this->setItemTemplate('<li{{{classe}}}><a class="clearfix" href="{{{link}}}"><img src="{{{image}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}"><strong><span>{{{artist}}}</span> {{{album}}}</strong></a></li>'."\n");
+			$this->setItemTemplate('<li{{{classe}}}><a href="{{{link}}}"><img src="{{{image}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}"><strong>{{{artist}}}</strong> {{{album}}}</a></li>'."\n");
 
 			parent::__construct( $config );
+		}
+
+		public function setVariables( $config ) {
+            parent::setVariables($config);
+			$this->size = $config['size'];
 		}
 
 		/**
 		 * @param string $url
 		 * @return void
 		 */
-		public function buildCache() {
-			parent::buildCache();
+		public function buildCache($Cache_Lite = null) {
+			parent::buildCache($Cache_Lite);
 			$this->buildAlbumCache( true );
 		}
 
@@ -213,10 +216,15 @@
 	class LastFMTopAlbums extends LastFM {
 		public function __construct( $config ) {
 			parent::setVariables( $config );
-			$period = $config['period'] ? $config['period'] : 'overall';
+			$period = isset($config['period']) ? $config['period'] : 'overall';
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&api_key=%s&user=%s&period=%s', $this->key, $this->username, $period ) );
-			$this->setItemTemplate('<li><a class="clearfix" href="{{{link}}}"><img src="{{{image_medium}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}"><strong><span>{{{artist}}}</span> {{{album}}}</strong></a></li>'."\n");
+			$this->setItemTemplate('<li><a href="{{{link}}}"><img class="item-media-thumbnail" src="{{{image_medium}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}"><strong>{{{artist}}}</strong> {{{album}}}</a></li>'."\n");
 			parent::__construct( $config );
+		}
+
+		public function setVariables( $config ) {
+            parent::setVariables($config);
+			$this->size = $config['size'];
 		}
 
 		/**
