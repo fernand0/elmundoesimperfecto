@@ -37,7 +37,7 @@
 		 */
 		public function populateBoxTemplate( ) {
 		 	return array(
-				'class' => $this->title ? '' : 'no-title'
+				'class' => $this->title ? 'text' : 'no-title text'
 			) + parent::populateBoxTemplate();
 		}
 
