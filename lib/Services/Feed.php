@@ -26,7 +26,18 @@ class Feed  extends Service {
         $this->callback_function = array($this, 'loadStringIntoSimplePieObject');
 
         $this->setURL( $config['url'] );
-        $this->setItemTemplate('<li><a href="{{link}}">{{{title}}}</a> {{{date}}}</li>'."\n");
+        $this->setItemTemplate(
+            '<li>
+                {{#media_thumbnail_url}}
+                    <img src="{{{media_thumbnail_url}}}" class="item-media-thumbnail" alt="{{{media_caption}}}" height="75" />
+                {{/media_thumbnail_url}}
+                <a href="{{link}}">{{{title}}}</a>
+                {{#summary}}
+                    <br/>{{{summary}}}
+                {{/summary}}
+                ({{{date}}})
+             </li>'."\n"
+        );
         $this->setURLTemplate( $config['link'] );
 
         parent::__construct( $config );
@@ -38,13 +49,8 @@ class Feed  extends Service {
     public function getData() {
         static $id = 0;
         $data = parent::getData();
+        if (!$data) return false;
         return $data->get_items();
-        $feedItem = $data->get_item($id);
-        $id++;
-        //print_r($data);
-        //print_r($feedItem);
-        //die($id);
-        return $feedItem;
     }
 
     public function loadStringIntoSimplePieObject($xmldata)
@@ -65,6 +71,14 @@ class Feed  extends Service {
      * @return array
      */
     public function populateItemTemplate( &$item ) {
+
+        $title = html_entity_decode(trim($item['title']), ENT_QUOTES);
+        $summary = html_entity_decode(trim($item['summary']), ENT_QUOTES);
+
+        if (strpos($summary, $title) !== false)
+        {
+            unset($item['summary']);
+        }
         return $item;
     }
 
