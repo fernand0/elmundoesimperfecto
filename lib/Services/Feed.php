@@ -86,7 +86,7 @@ class Feed  extends Service {
      * @return array
      * @since 20110531
      */
-    public function processDataItem( &$item ) {
+    public function processDataItem( $item ) {
 
         // meta
 

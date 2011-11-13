@@ -63,6 +63,18 @@
 		}
 
 		/**
+         * @since 2011-11-13
+		 */
+        public function getConfigValue($key)
+        {
+            if (isset($this->configuration[$key])) {
+                return $this->configuration[$key];
+            }
+
+            return null;
+        }
+
+		/**
 		 * Use timeshift factor to randomize range of cache invalidation time.
          * Default: 0.5 (with 1h cache it means 0.5h to 1.5h)
          * @since 20110531
