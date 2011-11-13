@@ -138,7 +138,7 @@ h1, h2, h1 a, h2 a {
 }
 
 /**
- * =! Boxes
+ * =! Boxes default
  ******************************************************************/
  
 .box {
@@ -147,10 +147,6 @@ h1, h2, h1 a, h2 a {
 	box-shadow: 0 0 0.5em rgba( 0, 0, 0, 0.2 );
 	-moz-box-shadow: 0 0 0.5em rgba( 0, 0, 0, 0.2 );
 	-webkit-box-shadow: 0 0 0.5em rgba( 0, 0, 0, 0.2);
-}
-
-.box.nodata {
-	opacity: 0.5;
 }
 
 .box h2 {
@@ -168,16 +164,40 @@ h1, h2, h1 a, h2 a {
         opacity: 1;
 }
 
+.box .boite-inner {
+	padding: 0.7em 1em;
+}
+
 .box ul li {
-	margin-bottom: 0.7em;
+	margin: 0 0 0.7em 0;
+        padding: 0 0 0.7em 0;
+        border-bottom: dotted 1px #ddd;
+        overflow: hidden;
+}
+
+.box ul > li:last-child {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+.box .item-media-thumbnail
+{
+    float: left;
+    vertical-align: baseline;
+    margin:0.25em 1em 0.35em 0;
+    width: auto;
+    height: auto;
+    max-height: 7em;
+    max-width: 25%;
+}
+
+.box.nodata {
+	opacity: 0.5;
 }
 
 .box ul li.nodata {
 	opacity: 0.5;
-}
-
-.box .boite-inner {
-	padding: 0.5em 0.5em 0.25em 0.5em;
 }
 
 .box.no-title h2 {
@@ -185,23 +205,17 @@ h1, h2, h1 a, h2 a {
 }
 
 /**
- *	=! Text box
+ * =! Text
  ******************************************************************/
 
-.text .boite-inner {
-	padding-bottom: 1px;
+.text p, .text ul, .text ol
+{
+    margin-bottom: 0.75em;
 }
 
-.text .boite-inner p {
-	margin: 0 0 1em;
-}
-
-/**
- *	=! RSS & Atom
- ******************************************************************/
-
-.rss li, .atom li, .feed li {
-	padding: 0 0.5em;
+.text .boite-inner > :last-child
+{
+    margin-bottom: 0;
 }
 
 /**
