@@ -9,8 +9,8 @@
 	 * @methods None
 	 */
 
-	Pubwich::requireServiceFile( 'RSS' );
-	class Instapaper extends RSS {
+	Pubwich::requireServiceFile( 'Feed' );
+	class Instapaper extends Feed {
 
 		public function __construct( $config ){
 			$config['link'] = 'http://www.instapaper.com/';
