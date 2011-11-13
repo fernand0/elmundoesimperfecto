@@ -448,27 +448,6 @@ h1, h2, h1 a, h2 a {
 	color: #D62323;
 }
 
-.youtube li a {
-	display: block;
-	padding: 5px;
-	border: none;
-}
-
-.youtube li a img {
-	float: left;
-	display: block;
-}
-
-.youtube li a strong {
-	display: block;
-	margin-left: 130px;
-}
-
-.youtube li a span {
-	display: block;
-	margin-left: 130px;
-}
-
 /**
  *	=! Vimeo
  ******************************************************************/
