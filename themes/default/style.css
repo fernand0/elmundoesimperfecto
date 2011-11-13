@@ -232,21 +232,23 @@ h1, h2, h1 a, h2 a {
 }
 
 .flickr ul li {
+        padding:0;
+        margin: 0;
 	float: left;
-	padding-right: 5px;
-	background: none;
-}
-
-.flickr ul li.derniere {
-	padding-right: 0;
+        width: 25%;
+        border: none;
 }
 
 .flickr ul li a {
+        display: block;
+        margin: 0 0.35em 0.35em 0;
 	border: none;
 }
 
 .flickr ul li img {
 	display: block;
+        width: 100%;
+        height: auto;
 }
 
 /**

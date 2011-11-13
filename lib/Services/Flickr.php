@@ -11,7 +11,7 @@
 
 	class Flickr extends Service {
 
-		public $compteur, $row, $sort;
+		public $sort;
 
 		/**
 		 * @constructor
@@ -26,10 +26,8 @@
 		 * @return void
 		 */
 		public function setVariables( $config ) {
-			$this->row = $config['row'];
 			$this->sort = isset( $config['sort'] ) ? $config['sort'] : 'date-posted-desc';
-			$this->compteur = 0;
-			$this->setItemTemplate('<li {{#last_in_row}} class="last-in-row"{{/last_in_row}}><a title="{{title}}" href="{{link}}"><img src="{{photo}}" alt="{{title}}" /></a></li>'."\n");
+			$this->setItemTemplate('<li><a title="{{{title}}}" href="{{{link}}}"><img src="{{{photo}}}" alt="{{{title}}}" height="75" /></a></li>'."\n");
 		}
 
 		/**
@@ -37,13 +35,11 @@
 		 * @return array
 		 */
 		public function populateItemTemplate( &$item ) {
-			$this->compteur++;
 			$path = $item['pathalias']!='' ? $item['pathalias'] : $item['owner'];
 			return array(
 						'link' => 'http://www.flickr.com/photos/'.$path.'/'.$item['id'].'/',
 						'title' => htmlspecialchars( $item['title'] ),
-						'photo' => $this->getAbsoluteUrl( $item ),
-						'last_in_row' => ($this->compteur % $this->row == 0 )
+						'photo' => $this->getAbsoluteUrl( $item )
 			);
 		}
 
