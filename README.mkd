@@ -1,58 +1,70 @@
-# Pubwich
+About PubwichFork
+================================================================================
 
-Pubwich is an open-source PHP Web application that allows you to aggregate your published data from multiple Websites and services into a single HTML page.
+[PubwichFork][1] is an open-source PHP web application that allows you to
+aggregate your published data from multiple websites and services into a single
+HTML page.
 
-## Installation
+PubwichFork is an improved version of the original Pubwich application, since
+[Pubwich][2] is not actively maintained anymore by the original author.
+PubwichFork fixes several bugs and integrates pre-output filtering of the data
+streams.
 
-Duplicate `cfg/config.sample.php` to `cfg/config.php`. (Optional: if you want to use a custom theme, duplicate `themes/default` to `themes/your_theme_name` and edit the `PUBWICH_THEME` constant in `cfg/config.php` to `"your_theme_name"`.
+[1]: https://github.com/haschek/PubwichFork
+[2]: http://pubwich.org/
 
-Edit the newly created config.php to fill the blank spaces with your informations (API keys, usernames, site’s URL, etc.) and to modify the arguments passed to `Pubwich::setServices()`. See the *Services configuration* section of this file.
+Installation
+--------------------------------------------------------------------------------
 
-Edit the `/humans.txt` file to put your personal informations under `TEAM' title. You will find explanations and help about this initiative on www.humanstxt.org
+_If you need to upgrade from your current Pubwich install, please check the
+**upgrading** section in this file._
 
-Modify your crontab file (by running `crontab -e`) and add the following line:
-`*/<N> * * * * <PHP> -f <ABSOLUTE_PATH>/cron/cron.php`
-
-Then replace the following elements:
-`<N>` → Cache expiration (in minutes)
-`<PHP>` → The path to PHP executable binary (usually `/usr/bin/php` or `/usr/local/bin/php`, use `which php` to find it)
-`<ABSOLUTE_PATH>` → Absolute path to Pubwich directory
-
-Example: `*/10 * * * * /usr/bin/php -f /home/myusername/public_html/pubwich/cron/cron.php`
-
-Change the permissions on the cache directory to make it writeable for all (`chmod -R 0777 cache`).
+* Duplicate `cfg/config.sample.php` to `cfg/config.php`. (Optional: if you want
+to use a custom theme, duplicate `themes/default` to `themes/your_theme_name`
+and edit the `PUBWICH_THEME` constant in `cfg/config.php` to `"your_theme_name"`.
+* Edit the newly created config.php to fill the blank spaces with your
+informations (API keys, usernames, site’s URL, etc.) and to modify the arguments
+passed to `Pubwich::setServices()`. See the **configuration** section of this
+file.
+* Edit the `/humans.txt` file to put your personal informations under `TEAM`
+title. You will find explanations and help about this initiative on
+[humanstxt.org][3]
+* Modify your crontab file (by running `crontab -e`) and add the following line:
+`*/<N> * * * * <PHP> -f <ABSOLUTE_PATH>/cron/cron.php` and replace the
+following elements:
+  * `<N>` → Cache expiration (in minutes)
+  * `<PHP>` → The path to PHP executable binary (usually `/usr/bin/php` or `/usr/local/bin/php`, use `which php` to find it)
+  * `<ABSOLUTE_PATH>` → Absolute path to Pubwich directory
+  * _Example:_ `*/10 * * * * /usr/bin/php -f /home/myusername/public_html/pubwich/cron/cron.php`
+* Change the permissions on the cache directory to make it writeable for all
+(`chmod -R 0777 cache`).
 
 Everything should be working now (when browsing to your server!).
 
-## Upgrading to Pubwich 1.4
+[3]: http://humanstxt.org/
 
-There are a few things that you’ll need to consider when upgrading to Pubwich 1.4; Notably, Twitter OAuth support and a new templating language.
+Upgrading from Pubwich to PubwichFork 2.0
+--------------------------------------------------------------------------------
 
-### Twitter & OAuth
+Last official Pubwich version is 1.5., please remember that Pubwich makes some
+important changes with version 1.4., e.g. Twitter OAuth support and the
+[Mustache template engine][4]. Please check the latest [Pubwich documentation][5]
+if you are still using a Pubwich install before version 1.4.
 
-Before Pubwich 1.4, you needed to enter your Twitter username and password in order to make request to its API. This is called “*Basic Authentication*”. But since Twitter [dropped support](http://www.countdowntooauth.com/) for this kind of authentication in june 2010, Pubwich doesn’t support it anymore. A [small tutorial](http://pubwich.org/wiki/Using_Twitter_with_Pubwich) is available to show you how to create a Twitter application, get OAuth application keys and access tokens.
+Backup your `config.php`; and your customized user theme, if you don't
+want to use the PubwichFork default theme. Then install PubwichFork and
+re-configure it. Usually your old config file and theme should work with
+PubwichFork. If not, please [report bugs][6].
 
-After you are done configuring Pubwich 1.4 to work with Twitter, you can remove your Twitter `username` and `password` parameters from your configuration file.
+[4]: http://mustache.github.com/
+[5]: https://github.com/remiprev/pubwich#readme
+[6]: https://github.com/haschek/PubwichFork/issues
 
-### Custom item templates in your theme
+Service configuration
+--------------------------------------------------------------------------------
 
-Every theme has a `functions.php` file that contains at least the basic template for what Pubwich calls a “*box*”. Along with that `boxTemplate` function, you can define other templates, such as how an item is rendered for a specific service. Before Pubwich 1.4, you could use this template syntax:
-
-    function Atom_myblog_itemTemplate() {
-      return '<li><a href="{%url%}">{%title%}</a> - {%content%}</li>'."\n";
-    }
-
-But now, with the new Mustache.php template engine, you have to use this syntax:
-
-    function Atom_myblog_itemTemplate() {
-      return '<li><a href="{{{url}}}">{{{title}}}</a> - {{{content}}}</li>'."\n";
-    }
-
-So, basically, instead of `{%variable%}`, you have to use `{{{variable}}}`. The new template engine allows us to use conditionnals, loops and other kinds of cool stuff.
-
-## Service configuration
-
-In Pubwich’s `config.php` file, a service looks like this:
+All services are configured in the `config.php` file, usually a service looks
+like this:
 
     array( 'Flickr', 'photos', array(
             'method' => 'FlickrUser',
@@ -66,207 +78,32 @@ In Pubwich’s `config.php` file, a service looks like this:
         )
     ),
 
-Where `Flickr` is the *service*, `photos` is the *variable* and `FlickrUser` is the *method*.
-
-These parameters can be used for all services:
-
-* `title` → The box title.
-* `description` → The box description.
-* `total` → The number of items to display.
-
-### Atom
-
-* `url` → The feed URL.
-* `link` → The website URL.
-
-### Delicious
-
-* `username` → The Delicious.com username.
-
-### Dribbble
-
-* `username` → The Dribbble username.
-* `method` → `DribbbleShots`.
-
-#### DribbbleShots
-
-*No specific parameters*
-
-### Facebook
-
-* `id` → The Facebook user ID.
-* `key` → The Facebook API key.
-* `username` → The Facebook username.
-
-### Flickr
-
-* `row` → The number of photos per row. Pubwich adds the class `last-in-row` to each row’s last photo.
-* `sort` → The order in which to sort the photos. See [this page](http://www.flickr.com/services/api/flickr.photos.search.html) for all the possible values.
-* `key` → The Flickr API key.
-* `method` → Either `FlickrUser`, `FlickrGroup`, `FlickrTags`
-
-#### FlickrUser
-
-* `userid` → The Flickr user ID. Use [this page](http://idgettr.com/) to find it.
-
-#### FlickrGroup
-
-* `groupid` → The Flickr group ID. Use [this page](http://idgettr.com/) to find it.
-
-#### FlickrTags
-
-* `tags` → The tags as an `array()` or a string with comma separated values.
-
-### GitHub
-
-* `username` → The GitHub username
-* `method` → Either `GithubRecentActivity`, `GithubRepositories` and `GithubGists`
-
-#### GithubRecentActivity
-
-*No specific parameters*
-
-#### GithubRepositories
-
-*No specific parameters*
-
-#### GithubGists
-
-*No specific parameters*
-
-### Goodreads
-
-* `userid` → The Goodreads user ID.
-* `size` → The size for each book cover.
-
-### Gowalla
-
-* `username` → The Gowalla username.
-* `password` → The Gowalla password.
-* `key` → The Gowalla API key.
-* `method` → Either `GowallaUser`, `GowallaUserStamps`, `GowallaUserTopSpots`
-
-#### GowallaUser
-
-*No specific parameters*
-
-#### GowallaUserStamps
-
-*No specific parameters*
-
-#### GowallaUserTopSpots
-
-*No specific parameters*
-
-### Lastfm
-
-* `username` → The Last.fm username.
-* `key` → The Last.fm API key.
-* `method` → Either `LastFMRecentTracks`, `LastFMWeeklyAlbums`, `LastFMTopAlbums`
-
-#### LastFMRecentTracks
-
-*No specific parameters*
-
-#### LastFMWeeklyAlbums
-
-* `size` → The size of each album covers.
-
-#### LastFMTopAlbums
-
-* `size` → The size of each album covers.
-
-### Pinboard
-
-* `username` → The Pinboard username.
-* `secret` → The Pinboard secret token (grab it from your RSS feed URL).
-
-### Readernaut
-
-* `username` → The Readernaut username.
-* `method` → Either `ReadernautBooks`, `ReadernautNotes`
-
-#### ReadernautBooks
-
-* `size` → The size of each book covers.
-
-#### ReadernautNotes
-
-*No specific parameters*
-
-### Reddit
-
-* `username` → The Readernaut username.
-* `key` → Your API key. Go to [this page](http://www.reddit.com/prefs/feeds/) and extract the key from one of the JSON feeds URL.
-* `method` → `RedditLiked`
-
-#### RedditLiked
-
-*No specific parameters*
-
-### RSS
-
-* `url` → The feed URL.
-* `link` → The website URL.
-
-### SlideShare
-
-* `method` → Either `SlideShareUserSlideshows`
-* `key` → The SlideShare API key
-* `secret` → The SlideShare shared secret
-
-#### SlideShareUserSlideshows
-
-* `username` → The SlideShare username.
-
-### StatusNet
-
-* `method` → Either `StatusNetUser`, `StatusNetSearch`
-* `root` → The StatusNet root URL (default is `http://identi.ca`)
-* `username` → The StatusNet username.
-* `password` → The StatusNet password.
-
-#### StatusNetUser
-
-*No specific parameters*
-
-#### StatusNetSearch
-
-* `terms` → The search query.
-
-### Text
-
-* `text` → The text to display.
-
-### Twitter
-
-* `method` → Either `TwitterUser`, `TwitterSearch`
-* `oauth` → The OAuth configuration array. Example:
-
-        'oauth' => array(
-            'app_consumer_key' => '',
-            'app_consumer_secret' => '',
-            'user_access_token' => '',
-            'user_access_token_secret' => ''
-        ),
-
-#### TwitterUser
-
-* `username` → The Twitter username.
-
-#### TwitterSearch
-
-* `terms` → The search query.
-
-### Vimeo
-
-* `username` → The Vimeo username.
-
-### YouTube
-
-* `username` → The YouTube username.
-
-## Custom templates
+In this example `Flickr` is the **service name**, `photos` is the **service ID**
+and the inner array is the service configuration. Some parameters can be used
+for all services:
+
+* `title` → box title
+* `description` → box description
+* `total` → number of items to display
+* `cache_limit` → cache invalidation time in seconds
+
+The simplest and wide supported [`Feed` service][7] can be configured by additional
+parameters:
+
+* url: URI of the feed
+* contenttype: either `application/rss+xml` or `application/atom+xml`
+* link: the URI of the website the feed is used for
+
+There are several other service classes, e.g. for Delicious, Vimeo, YouTube,
+Flickr, Last.fm, simple Text, Dribbble, Facebook, Foursquare, Github, Goodreads,
+Gowalla, Instapaper, Pinboard, Readernaut, Readitlater, Reddit, Slideshare,
+Status.net and Twitter. For further info please read the [Service documentation][8].
+
+[7]: https://github.com/haschek/PubwichFork/wiki/ServiceFeed
+[8]: https://github.com/haschek/PubwichFork/wiki/Services
+
+Custom templates
+--------------------------------------------------------------------------------
 
 When Pubwich is ready to display its data, it first looks into the theme’s `functions.php` file to see if custom template functions are defined. There are currently four kinds of template functions: box templates, item templates, column templates and layout templates.
 
