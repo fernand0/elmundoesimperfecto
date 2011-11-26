@@ -478,7 +478,7 @@
 
 					if ( function_exists( $item_filter ) && isset($service->data_processed) && is_array($service->data_processed)) {
                         foreach ($service->data_processed as $i => $v) {
-                            $item_filter(&$service->data_processed[$i]);
+                            $item_filter($service->data_processed[$i]);
                         }
 					}
 				}

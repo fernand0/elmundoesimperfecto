@@ -35,7 +35,7 @@ function Service_filterItem($item)
 }
 */
 
-function Feed_filterItem($item)
+function Feed_filterItem(&$item)
 {
     $item['title'] = shortenString(
         $item['title'],
