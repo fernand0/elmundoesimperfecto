@@ -23,9 +23,11 @@
 
 	// Performance - Cache and Timeouts
 	define( 'CACHE_LOCATION', dirname(__FILE__) . '/../cache/' );
-	define( 'CACHE_LIMIT', 30 * 60 ); // 30 minutes
+	define( 'CACHE_LIMIT', 60 * 60 ); // 60 minutes
+	define( 'OUTPUT_CACHE_LIMIT', 30 * 60 ); // 30 minutes
     define( 'CACHE_DISPLACEMENT', 0.5); // between 0 and under 1, eg. 30min and 0.5 leads to cache limit randomly calculated between 15min and 45min
     define( 'FETCHDATA_TIMEOUT', 5); // 5 seconds
+	define( 'ENABLE_INVALID_CACHE', true ); // if available, use invalide cache for output to speed up response time
 
 	// Pubwich services configuration
 	// first, we have some examples to configure single services
@@ -47,150 +49,179 @@
 		)
 	); //*/
 
-	/*
-	$flickr = array(
-	    'Flickr', 'photos', array( 
-			'method' => 'FlickrUser',
-			'key' => 'FLICKR_KEY_HERE',
-			'userid' => 'FLICKER_USERID_HERE', // use http://www.idgettr.com to find it
-			'username' => 'FLICKR_USERNAME_HERE',
-			'total' => 12,
-			'title' => 'Flick<em>r</em>',
-			'description' => 'latest photos',
-			'row' => 4,
-		)
-	); //*/
-
-	/*
-	$vimeo = array(
-	    'Vimeo', 'videos', array(
-			'username' => 'VIMEO_USERNAME_HERE',
-			'total' => 4,
-			'title' => 'Vimeo',
-			'description' => 'latest videos'
-		)
-	); //*/
-
-	/*
-	$youtube = array(
-	    'Youtube', 'youtube', array(
-			'method' => 'YoutubeVideos',
-			'username' => 'YOUTUBE_USERNAME_HERE',
-			'total' => 4,
-			'size' => 120,
-			'title' => 'Youtube',
-			'description' => 'latest videos'
-		)
-	); //*/
-	
-	/*
-	$twitter = array(
-	    'Twitter', 'etats', array(
-			'method' => 'TwitterUser',
-			'username' => 'TWITTER_USERNAME_HERE',
-			'oauth' => array(
-				// You have to create a new application at http://dev.twitter.com/apps to get these keys
-				// See the tutorial at http://pubwich.org/wiki/Using_Twitter_with_Pubwich
-				'app_consumer_key' => '',
-				'app_consumer_secret' => '',
-				'user_access_token' => '',
-				'user_access_token_secret' => ''
-			),
-			'total' => 10,
-			'title' => 'Twitter',
-			'description' => 'latest statuses'
-		)
-	); //*/
+    // read Service documentation
+    // @see https://github.com/haschek/PubwichFork/Services
 
 	/*
 	$delicious = array(
-	    'Delicious', 'liens', array(
-			'username' => 'DELICIOUS_USERNAME_HERE',
+	    'Delicious', 'bookmarks', array(
+			'username' => 'DELICIOUS_USERNAME',
 			'total' => 5,
-			'title' => 'del.icio.us',
+			'title' => 'Delicious',
 			'description' => 'latest bookmarks',
 		)
 	); //*/
 
-	/*
-	$facebook = array(
-	    'Facebook', 'status', array(
-			'id' => 'FACEBOOK_USERID_HERE',
-			'key' => 'FACEBOOK_KEY_HERE',
-			'username' => 'FACEBOOK_USERNAME_HERE',
-			'total' => 5,
-			'title' => 'Facebook',
-			'description' => 'latest statuses',
-		)
-	); //*/
-
-	/*
-	$rss_news = array(
-	    'RSS', 'ixmedia', array(
-			'url' => 'http://feeds2.feedburner.com/ixmediablogue',
-			'link' => 'http://blogue.ixmedia.com/',
-			'total' => 5,
-			'title' => 'Blogue iXmédia',
-			'description' => 'latest atom blog entries'
-		)
-	); //*/
-	
-	/*
-	$atom_news = array(
-	    'Atom', 'effair', array(
-			'url' => 'http://remiprevost.com/atom/',
-			'link' => 'http://remiprevost.com/',
-			'total' => 5,
-			'title' => 'Effair',
-			'description' => 'latest rss blog entries'
-		)
-	); //*/
-
-	/*
-	$readernaut = array(
-	    'Readernaut', 'livres', array(
-			'method' => 'ReadernautBooks',
-			'username' => 'READERNAUT_USERNAME_HERE',
-			'total' => 9,
-			'size' => 50,
-			'title' => 'Readernaut',
-			'description' => 'latest books'
-		)
+    /*
+    $dribbble = array(
+        // TODO
     ); //*/
 
 	/*
-	$lastfm = array(
-	    'Lastfm', 'albums', array(
+	$facebook = array(
+        // TODO
+    ); //*/
+
+	/*
+	$feed_atom = array(
+	        'Feed', 'feed_atom', array(
+			'url' => 'http://example.org/feed.atom',
+			'contenttype' => 'application/atom+xml',
+			'link' => 'http://example.org/',
+			'total' => 3,
+			'title' => 'Site title',
+			'description' => 'Site description'
+		)
+	); //*/
+
+	/*
+	$feed_rss = array(
+	        'Feed', 'feed_rss', array(
+			'url' => 'http://example.com/feed.rss',
+			'contenttype' => 'application/rss+xml',
+			'link' => 'http://example.com/',
+			'total' => 3,
+			'title' => 'Site title',
+			'description' => 'Site description'
+		)
+	); //*/
+
+	/*
+	$flickr_user = array(
+	    'Flickr', 'flickruser', array(
+			'method' => 'FlickrUser',
+			'key' => 'FLICKR_KEY_HERE',
+			'userid' => 'FLICKER_USERID_HERE', // use http://www.idgettr.com to find it
+			'username' => 'FLICKR_USERNAME_HERE',
+			'total' => 8,
+			'title' => 'Flick<em>r</em>',
+			'description' => 'my latest photos'
+		)
+	); //*/
+
+    /*
+    $foursquare = array(
+        // TODO
+    ); //*/
+
+    /*
+    $github = array(
+        // TODO
+    ); //*/
+
+    /*
+    $goodreads = array(
+        // TODO
+    ); //*/
+
+    /*
+    $gowalla = array(
+        // TODO
+    ); //*/
+
+    /*
+    $instapaper = array(
+        // TODO
+    ); //*/
+
+	/*
+	$lastfm_weekly = array(
+	    'Lastfm', 'lastfm_weekly', array(
 			'method' => 'LastFMWeeklyAlbums',
 			'key' => 'LASTFM_KEY_HERE',
 			'username' => 'LASTFM_USERNAME_HERE',
 			'total' => 5,
-			'size' => 64,
+			'size' => 75,
 			'title' => 'Last.fm',
 			'description' => 'weekly top albums',
-		) 
+		)
 	); //*/
 
+    /*
+    $pinboard = array(
+        // TODO
+    ); //*/
+
+	/*
+	$readernaut = array(
+	    //  TODO
+    ); //*/
+
+    /*
+    $readitlater = array(
+        // TODO
+    ); //*/
+
+    /*
+    $reddit = array(
+        // TODO
+    ); //*/
+
+    /*
+    $slideshare = array(
+        // TODO
+    ); //*/
+
+    /*
+    $statusnet = array(
+        // TODO
+    ); //*/
+
+	/*
+	$twitter = array(
+	    // TODO
+	); //*/
+
+	/*
+	$vimeo_likes = array(
+	    'Vimeo', 'vimeo_likes', array(
+			'username' => 'VIMEO_USERNAME_HERE',
+            'list' => 'likes',
+			'total' => 3,
+			'title' => 'Vimeo',
+			'description' => 'what I liked'
+		)
+	); //*/
+
+	/*
+	$youtube_uploads = array(
+	    'Youtube', 'youtube_uploads', array(
+			'list' => 'uploads',
+			'username' => 'YOUTUBE_USERNAME_HERE',
+			'total' => 3,
+			'title' => 'Youtube',
+			'description' => 'my recent videos'
+		)
+	); //*/
 
 	Pubwich::setServices(
 		array(
 		    // column 1
 			array(
-                $infobox,
-                // $youtube,
-                // $vimeo,
-                // $flickr,
+                // $infobox,
+                // $feed_atom,
+                // $feed_rss,
 			),
+            // column 2
 			array(
-			    // $twitter,
+                // $flickr_user,
+                // $vimeo_likes,
+                // $youtube_uploads,
+			),
+            // column 3
+			array(
 			    // $delicious,
-			    // $facebook,
-			    // $rss_news,
-			),
-			array(
-                // $atom_news,
-                // $readernaut,
-                // $lastfm,
+                // $lastfm_weekly,
 			),
 
 		)

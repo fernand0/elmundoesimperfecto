@@ -34,7 +34,7 @@
 			if (isset($config['description'])) $this->description = $config['description'];
 
 			$id = md5( $this->getURL() );
-			$this->cache_id = $id;
+			$this->cache_id = $id . '.data';
 
 			if ( !$this->callback_function ) {
 				$this->callback_function = array($this, 'simplexml_load_string');
@@ -46,6 +46,7 @@
 				'readControl' => true,
 				'readControlType' => 'strlen',
 				'errorHandlingAPIBreak' => true,
+                'fileNameProtection' => false,
 				'automaticSerialization' => false
 			);
 

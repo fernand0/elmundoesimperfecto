@@ -10,7 +10,7 @@
 	 */
 	class Pubwich {
 
-		static private $services, $classes, $columns, $theme_url, $theme_path, $header_links, $gettext = null;
+		static private $services, $classes, $columns, $theme_url, $theme_path, $header_links, $gettext = null, $disableOutput = false;
 
 		/**
 		 * Application initialisation
@@ -25,48 +25,103 @@
 			require_once( 'PEAR.php' );
 
 			// Exception class
-			require( 'PubwichError.php' );
+			require_once( 'PubwichError.php' );
 
 			// Configuration files
 			if ( !file_exists( dirname(__FILE__)."/../cfg/config.php" ) ) {
 				throw new PubwichError( 'You must rename <code>/cfg/config.sample.php</code> to <code>/cfg/config.php</code> and edit the Web service configuration details.' );
 			} else {
-				require( dirname(__FILE__) . '/../cfg/config.php' );
+				require_once( dirname(__FILE__) . '/../cfg/config.php' );
 			}
 
 			// Internationalization class
 			if ( defined('PUBWICH_LANG') && PUBWICH_LANG != '' ) {
-				require( 'Gettext/streams.php' );
-				require( 'Gettext/gettext.php' );
+				require_once( 'Gettext/streams.php' );
+				require_once( 'Gettext/gettext.php' );
 				self::$gettext = @new gettext_reader( new FileReader( dirname(__FILE__).'/../lang/'.PUBWICH_LANG.'/pubwich-'.PUBWICH_LANG.'.mo' ) );
 			}
 
-			// JSON support
-			if ( !function_exists( 'json_decode' ) ) {
-				require_once( dirname(__FILE__) . '/../Zend/Json.php' );
-			}
 			// Events logger (and first message)
-			require('PubwichLog.php');
+			require_once('PubwichLog.php');
 			PubwichLog::init();
 			PubwichLog::log( 1, Pubwich::_("Pubwich object initialization") );
 
-			// Theme
-			self::$theme_url = PUBWICH_URL . 'themes/' . PUBWICH_THEME;
-			self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
-			require( 'PubwichTemplate.php' );
-
-			// PHP objects creation
-			self::setClasses();
-
 			// Other classes
-			require( 'FileFetcher.php' );
-			require( 'Cache/Lite.php' );
+			require_once( 'FileFetcher.php' );
+			require_once( 'Cache/Lite.php' );
 
 			if ( !defined( 'PUBWICH_CRON' ) ) {
 				require_once( 'Mustache.php/Mustache.php' );
 			}
 
+            self::controlPreprocessingOutput();
+
+			// JSON support
+			if ( !function_exists( 'json_decode' ) ) {
+				require_once( dirname(__FILE__) . '/../Zend/Json.php' );
+			}
+
+            // Theme
+			self::$theme_url = PUBWICH_URL . 'themes/' . PUBWICH_THEME;
+			self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
+			require_once( 'PubwichTemplate.php' );
+
+			// PHP objects creation
+			self::setClasses();
+
 		}
+
+        static function controlPreprocessingOutput() {
+
+            $output_cache_content = false;
+
+            if ($output_cache = self::getOutputCacheObject()) {
+                $cache_id = md5(PUBWICH_URL) . '.output';
+				$output_valid_cache_content = $output_cache->get( $cache_id );
+
+                if ($output_valid_cache_content) {
+                    $output_cache_content = $output_valid_cache_content;
+                    PubwichLog::log( 1, Pubwich::_("Use valid output cache content.") );
+                    self::$disableOutput = true;
+                }
+                elseif (ENABLE_INVALID_CACHE === true) {
+                    // enabling alltime cache by setting lifetime unreachable high
+                    $output_cache->setLifeTime(time()+666);
+                    PubwichLog::log( 1, Pubwich::_("Use invalid output cache content.") );
+                    $output_cache_content = $output_cache->get( $cache_id );
+                }
+            }
+
+            if ($output_cache_content) {
+                /*
+                    enabling of post output processing (experimental but it seems to work properly)
+                    why: aggregating feeds and linked data is a performance issue
+                         because the app needs to wait for a response to all the
+                         http requests. To overcome this problem we could echo an
+                         (old) output cache and process then the data aggregation to
+                         create an updated cache for the next request.
+                    @see http://www.brandonchecketts.com/archives/performing-post-output-script-processing-in-php
+                    @see http://de2.php.net/manual/en/features.connection-handling.php#93441
+                */
+                ob_end_clean();
+                header("Connection: close");
+                header("Content-Encoding: none");
+                header('Content-Type: text/html; charset=UTF-8');
+                ignore_user_abort(true); // optional
+                ob_start();
+                echo $output_cache_content;
+                $size = ob_get_length();
+                header("Content-Length: $size");
+                ob_end_flush();     // Strange behaviour, will not work
+                flush();            // Unless both are called !
+                ob_end_clean();
+
+                //do post output processing here
+                PubwichLog::log(1, Pubwich::_('Start post output processing.'));
+            }
+
+            return;
+        }
 
 		/**
 		 * Translate a string according to the defined locale/
@@ -149,17 +204,60 @@
 		 */
 		static public function renderTemplate() {
 
-			if ( !file_exists(self::getThemePath()."/index.tpl.php") ) {
+            if (self::$disableOutput === true) {
+                die();
+            }
+
+			if ( !file_exists(self::getThemePath().'/index.tpl.php') ) {
 				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), '/themes/'.PUBWICH_THEME.'/index.tpl.php' ) );
 			}
 
-			if ( file_exists( self::getThemePath()."/functions.php" ) ) {
-				require( self::getThemePath()."/functions.php" );
-				self::applyTheme();
-			}
+			if (!file_exists( self::getThemePath().'/functions.php' ) ) {
+				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), self::getThemePath().'/functions.php' ) );
+            }
 
-			include (self::getThemePath() . '/index.tpl.php' );
+            if ($output_cache = self::getOutputCacheObject()) {
+                $output_cache->setLifeTime(0); // always overwrite cache
+                $cache_id = md5(PUBWICH_URL) . '.output';
+            }
+
+            if ($output_cache) {
+                ob_start();
+                ob_implicit_flush(false);
+            }
+            require_once( self::getThemePath().'/functions.php' );
+            self::applyTheme();
+			include_once (self::getThemePath() . '/index.tpl.php' );
+            if ($output_cache) {
+                $data = ob_get_contents();
+                ob_end_clean();
+                $output_cache->save($data, $cache_id);
+                if (self::$disableOutput === true) {
+                    die();
+                }
+                echo($data);
+            }
 		}
+
+        static function getOutputCacheObject() {
+            if (defined('CACHE_LOCATION') && defined('OUTPUT_CACHE_LIMIT')) {
+                $cache_options =  array(
+                    'cacheDir' => CACHE_LOCATION,
+                    'lifeTime' => OUTPUT_CACHE_LIMIT,
+                    'readControl' => true,
+                    'readControlType' => 'strlen',
+                    'errorHandlingAPIBreak' => true,
+                    'fileNameProtection' => false,
+                    'automaticSerialization' => false
+                );
+
+                require_once( 'Cache/Lite/Output.php' );
+                return new Cache_Lite_Output( $cache_options );
+            }
+            else {
+                return false;
+            }
+        }
 
 		/**
 		 * @return string
