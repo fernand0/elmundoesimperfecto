@@ -29,6 +29,11 @@
     define( 'FETCHDATA_TIMEOUT', 5); // 5 seconds
 	define( 'ENABLE_INVALID_CACHE', true ); // if available, use invalide cache for output to speed up response time
 
+    // Using a Proxy
+    // define( 'PUBWICH_PROXY', 'http://proxy.example.com');
+    // define( 'PUBWICH_PROXYPORT', '3128'); // 3128 is the standard port for a proxy, but it can vary
+    // for more info @see https://github.com/haschek/PubwichFork/wiki/UsingProxyServer
+
 	// Pubwich services configuration
 	// first, we have some examples to configure single services
 	// below, we use the service configs to group them
