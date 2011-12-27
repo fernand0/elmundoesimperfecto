@@ -114,7 +114,7 @@
                 header("Content-Length: $size");
                 ob_end_flush();     // Strange behaviour, will not work
                 flush();            // Unless both are called !
-                ob_end_clean();
+                @ob_end_clean();
 
                 //do post output processing here
                 PubwichLog::log(1, Pubwich::_('Start post output processing.'));
@@ -145,7 +145,7 @@
 		 * @return void
 		 */
 		static public function setClasses() {
-			require( 'Services/Service.php' );
+			require_once( 'Services/Service.php' );
 			$columnCounter = 0;
 			foreach ( self::getServices() as $column ) {
 				$columnCounter++;
@@ -162,6 +162,30 @@
 
 				}
 			}
+
+            if (count(self::$classes) < 1) {
+                $error_text_service = array(
+                        'Text', 'error_empty_config', array(
+                            'title' => 'Error: Please configure PubwichFork',
+                            'text' => '
+                                <p>There is no configuration found. Please edit <code>config.php</code>
+                                and follow the instructions there. Do not forget to edit the
+                                service configuration in step 6 and the service grouping in step 7.</p>
+                                <p>You may check the <a href="https://github.com/haschek/PubwichFork/wiki">PubwichFork documentation</a>
+                                for more informations.</p>',
+                        )
+                    );
+
+                self::setServices(
+                    array(
+                        array(
+                            $error_text_service
+                        )
+                    )
+                );
+
+                self::setClasses();
+            }
 		}
 
 		/**
@@ -590,7 +614,7 @@
          * @since 20110531
 		 */
         static public function processServices() {
-			foreach (self::$classes as &$classe) {
+			foreach (self::$classes as $classe) {
 				$classe->init();
                 $classe->prepareService();
 			}
