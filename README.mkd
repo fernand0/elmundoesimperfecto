@@ -100,7 +100,7 @@ Gowalla, Instapaper, Pinboard, Readernaut, Readitlater, Reddit, Slideshare,
 Status.net and Twitter. For further info please read the [Service documentation][8].
 
 [7]: https://github.com/haschek/PubwichFork/wiki/ServiceFeed
-[8]: https://github.com/haschek/PubwichFork/wiki/Services
+[8]: https://github.com/haschek/PubwichFork/wiki/SocialWebServices
 
 Custom templates
 --------------------------------------------------------------------------------
