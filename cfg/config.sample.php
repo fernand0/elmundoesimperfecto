@@ -1,27 +1,48 @@
 <?php
 	defined('PUBWICH') or die('No direct access allowed.');
 
-	//! Rename this file to config.php
+	//! RENAME THIS FILE TO config.php
+	
+	/*
+	    Please follow this steps to configure PubwichFork:
+	    
+	    1) Server environment & Logging
+	    2) Localisation/Language
+	    3) Site informations
+	    4) Performance & Cache
+	    5) Proxy settings
+	    6) Social Web service configurations
+	    7) Add service configurations
+	*/
+	
+	/* -- 1) Server environment & Logging ------------------------------ */
 
     //! Production environment
     // ini_set('display_errors', 0); // uncomment this line in production environment (prevent errors from showing up)
 	// error_reporting(0); // uncomment this line in production environment (prevent errors from showing up)
 
-	// Localisation
+	// Logging configuration (you should not have to edit this)
+	define('PUBWICH_LOGLEVEL', 0);
+	define('PUBWICH_LOGTOFILE', false);
+	
+	/* -- 2) Localisation/Language ------------------------------------- */
+
 	date_default_timezone_set( 'Europe/Berlin' );
 	define('PUBWICH_LANG', ''); // leave to '' to keep Pubwich in english
 	setlocale( LC_ALL, 'en_EN.UTF8' ); // for date methods
 
-	// General site informations
+	/* -- 3) Site informations ----------------------------------------- */
+
 	define('PUBWICH_URL', 'http://localhost/pubwich/');
 	define('PUBWICH_THEME', 'default');
 	define('PUBWICH_TITLE', 'My Pubwich-powered site');
 
-	// Logging configuration (you should not have to edit this)
-	define('PUBWICH_LOGLEVEL', 0);
-	define('PUBWICH_LOGTOFILE', false);
+	/* -- 4) Performance & Cache --------------------------------------- */
+	
+	/*
+	   @see https://github.com/haschek/PubwichFork/wiki/PerformanceCacheOptimization
+    */
 
-	// Performance - Cache and Timeouts
 	define( 'CACHE_LOCATION', dirname(__FILE__) . '/../cache/' );
 	define( 'CACHE_LIMIT', 60 * 60 ); // 60 minutes
 	define( 'OUTPUT_CACHE_LIMIT', 30 * 60 ); // 30 minutes
@@ -29,14 +50,29 @@
     define( 'FETCHDATA_TIMEOUT', 5); // 5 seconds
 	define( 'ENABLE_INVALID_CACHE', true ); // if available, use invalide cache for output to speed up response time
 
-    // Using a Proxy
+	/* -- 5) Proxy settings -------------------------------------------- */
+
+    /* You probably do not need this, but in some cases your server may not
+       have directly access to the web for aggregation. Then please ask
+       your admin/service provider for the proxy server data.
+       
+       @see https://github.com/haschek/PubwichFork/wiki/UsingProxyServer
+    */
+
     // define( 'PUBWICH_PROXY', 'http://proxy.example.com');
     // define( 'PUBWICH_PROXYPORT', '3128'); // 3128 is the standard port for a proxy, but it can vary
     // for more info @see https://github.com/haschek/PubwichFork/wiki/UsingProxyServer
 
-	// Pubwich services configuration
-	// first, we have some examples to configure single services
-	// below, we use the service configs to group them
+	/* -- 6) Social Web service configurations ------------------------- */
+
+	/* Here you need to configure the Social Web/Media services which you
+	   want to aggregate with PubwichFork; just edit and uncomment the
+	   the following examples of service configuration, or read the
+	   documentation. Later (in step 7) you need to group the configured
+	   services.
+	   
+	   @see https://github.com/haschek/PubwichFork/wiki/SocialWebServices
+	*/
 	
 	//*
 	$infobox = array(
@@ -208,6 +244,14 @@
 			'description' => 'my recent videos'
 		)
 	); //*/
+
+	/* -- 7) Add service configurations -------------------------------- */
+	
+	/*
+	    Use the configuration variables from step 6 to group the Social
+	    Web services (if you use the vars from the examples, do not forget
+	    to uncomment). The default theme can have up to 3 groups (columns).
+	*/
 
 	Pubwich::setServices(
 		array(
