@@ -2,11 +2,12 @@
 	defined('PUBWICH') or die('No direct access allowed.');
 
 	/**
-	 * @classname LastFM
 	 * @description Fetch data from Last.fm
-	 * @version 1.2 (20100526)
-	 * @author Rémi Prévost (exomel.com)
-	 * @methods LastFMWeeklyAlbums LastFMRecentTracks LastFMTopAlbums
+	 * @author Rémi Prévost
+	 * @author Gareth Simpson
+	 * @author http://michael.haschke.biz/
+	 * @methods LastFMRecentTracks LastFMLovedTracks LastFMWeeklyTracks LastFMWeeklyAlbums LastFMTopAlbums
+	 * @version GPL2
 	 */
 
 	class LastFM extends Service {
@@ -54,10 +55,11 @@
 			return $data->recenttracks->track;
 		}
 
-		/**
-		 * @return array
-		 */
-		public function populateItemTemplate( &$item ) {
+        /**
+         * @return array
+         * @since 20120318
+         */
+        public function processDataItem( $item ) {
 			$album = $item->album;
 			$artist = $item->artist;
 			$title= $item->name;
@@ -69,6 +71,13 @@
 						'track' => $title,
 						'date' => $item->date,
 						);
+        }
+        
+		/**
+		 * @return array
+		 */
+		public function populateItemTemplate( &$item ) {
+            return $item;
 		}
 
 	}
@@ -93,10 +102,11 @@
 			return $data->lovedtracks->track;
 		}
 
-		/**
-		 * @return array
-		 */
-		public function populateItemTemplate( &$item ) {
+        /**
+         * @return array
+         * @since 20120318
+         */
+        public function processDataItem( $item ) {
 			$artist = $item->artist->name;
 			$title= $item->name;
 			$this->compteur++;
@@ -106,6 +116,13 @@
 						'track' => $title,
 						'date' => $item->date,
 						);
+        }
+        
+		/**
+		 * @return array
+		 */
+		public function populateItemTemplate( &$item ) {
+            return $item;
 		}
 
 	}
@@ -130,10 +147,11 @@
 			return $data->weeklytrackchart->track;
 		}
 
-		/**
-		 * @return array
-		 */
-		public function populateItemTemplate( &$item ) {
+        /**
+         * @return array
+         * @since 20120318
+         */
+        public function processDataItem( $item ) {
 			$artist = $item->artist;
 			$title= $item->name;
 			$this->compteur++;
@@ -144,6 +162,13 @@
 						'date' => $item->date,
 						'playcount' => $item->playcount,
 						);
+        }
+        
+		/**
+		 * @return array
+		 */
+		public function populateItemTemplate( &$item ) {
+            return $item;
 		}
 
 	}
@@ -178,10 +203,11 @@
 			return $data->topalbums->album;
 		}
 
-		/**
-		 * @return array
-		 */
-		public function populateItemTemplate( &$item ) {
+        /**
+         * @return array
+         * @since 20120318
+         */
+        public function processDataItem( $item ) {
 			$images = new StdClass;
 			foreach( $item->image as $k=>$i ) {
 				$key = (string) $i['size'];
@@ -199,5 +225,12 @@
 						'image_large' => $images->large,
 						'image_extralarge' => $images->extralarge,
 						);
+        }
+        
+		/**
+		 * @return array
+		 */
+		public function populateItemTemplate( &$item ) {
+            return $item;
 		}
 	}
