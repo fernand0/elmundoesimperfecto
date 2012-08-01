@@ -19,7 +19,7 @@
 		 */
 		public function __construct( $config ) {
 			parent::__construct( $config );
-			$this->callback_function = array(Pubwich, 'json_decode');
+			$this->callback_function = array('Pubwich', 'json_decode');
 		}
 
 		/**
