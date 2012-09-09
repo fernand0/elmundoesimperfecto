@@ -20,7 +20,7 @@
 			<div id="footer">
 				<div class="footer-inner">
 					<hr>
-					<?php echo sprintf( Pubwich::_('All data is &copy; copyright %s. Proudly powered by %s.'), date('Y'), '<a class="pubwich" href="'.PUBWICH_WEB.'">'.PUBWICH_NAME.'</a>'  )?>
+					<?php echo sprintf( Pubwich::_('Fetched %s, proudly aggregated by %s.'), date('Y'), '<a class="pubwich" href="'.PUBWICH_WEB.'">'.PUBWICH_NAME.'</a>'  )?>
 				</div>
 			</div>
 		</div>
