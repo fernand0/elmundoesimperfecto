@@ -17,7 +17,15 @@ class Delicious extends Feed {
 
     public function __construct( $config ){
         $config['link'] = 'http://delicious.com/'.$config['username'].'/';
-        $config['url'] = sprintf( 'http://feeds.delicious.com/v2/rss/%s?count=%s', $config['username'], $config['total'] );
+        $tags = null;
+        if (isset($config['tags']) && is_string($config['tags'])) {
+            $tags = explode(',', $config['tags']);
+            foreach ($tags as $i => $tag) {
+                $tags[$i] = urlencode(trim($tag));
+            }
+            $tags = '/'.implode('+', $tags);
+        }
+        $config['url'] = sprintf( 'http://feeds.delicious.com/v2/rss/%s%s?count=%s', $config['username'], $tags, $config['total'] );
         parent::__construct( $config );
         $this->setItemTemplate(
             '<li>
