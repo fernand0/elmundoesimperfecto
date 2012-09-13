@@ -38,17 +38,20 @@
 			$text = preg_replace( '/(https?:\/\/[^\s\)]+)/', '<a href="\\1">\\1</a>', $text );
 			$text = preg_replace( '/(^|\s)\#([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1<a href="https://search.twitter.com/search?q=%23\\2">#\\2</a>', $text );
 			$text = preg_replace( '/(^|\s)\@([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1@<a href="https://twitter.com/\\2">\\2</a>', $text );
-			$text = '<p>' . $text . '</p>';
 			return $text;
 		}
+		
+        public function processDataItem($item) {
+			return array(
+			            'text' => $item->text,
+						'status' => $this->filterContent( $item->text ),
+						'date' => Pubwich::time_since( $item->created_at ),
+						'timestamp' => strtotime($item->created_at),
+						);
+        }
 
 		public function populateItemTemplate( &$item ) {
-			return array(
-						'text' => $this->filterContent( $item->text ),
-						'date' => Pubwich::time_since( $item->created_at ),
-						'location' => $item->user->location,
-						'source' => $item->source,
-						);
+			return $item;
 		}
 
 		public function oauthRequest( $params=array() ) {
@@ -74,22 +77,21 @@
 			parent::setVariables( $config );
 
 			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'statuses/user_timeline', array('count'=>$config['total']) ) );
-			$this->setURL('http://twitter.com/'.$config['username'].'/'.$config['total']);
+			$this->setURL('http://twitter.com/'.$config['username'].'/'.$config['total']); // for cache hash
 			$this->username = $config['username'];
-			$this->setItemTemplate('<li class="clearfix"><span class="date"><a href="{{{link}}}">{{{date}}}</a></span>{{{text}}}</li>'."\n");
-			$this->setURLTemplate('http://www.twitter.com/'.$config['username'].'/');
+			$this->setItemTemplate('<li>{{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL);
+			$this->setURLTemplate('http://www.twitter.com/'.$config['username']);
 
 			parent::__construct( $config );
 		}
 
-		public function populateItemTemplate( &$item ) {
-			return parent::populateItemTemplate( $item ) + array(
+		public function processDataItem( $item ) {
+			return parent::processDataItem( $item ) + array(
 					'link' => sprintf( 'http://www.twitter.com/%s/statuses/%s/', $this->username, $item->id ),
 					'user_image' => $item->user->profile_image_url,
 					'user_name' => $item->user->name,
 					'user_nickname' => $item->user->screen_name,
-					'user_link' => sprintf( 'http://www.twitter.com/%s/', $item->user->screen_name ),
-					'in_reply_to_screen_name' => $item->in_reply_to_screen_name,
+					'user_link' => sprintf( 'http://www.twitter.com/%s', $item->user->screen_name ),
 			);
 		}
 
@@ -101,8 +103,8 @@
 			parent::setVariables( $config );
 
 			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'search', array('q'=>$config['terms'], 'rpp'=>$config['total'], 'result_type'=>'recent' ), "http://search.twitter.com/" ) );
-			$this->setURL('http://search.twitter.com/'.$config['terms'].'/'.$config['total']);
-			$this->setItemTemplate( '<li class="clearfix"><span class="image"><a href="{{{user_link}}}"><img width="48" src="{{{user_image}}}" alt="{{{user_nickname}}}" /></a></span>{{{text}}}<p class="date"><a href="{{{link}}}">{{{date}}}</a></p></li>'."\n" );
+			$this->setURL('http://search.twitter.com/'.$config['terms'].'/'.$config['total']); // for cache hash
+			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="" /> <strong>@{{{user_nickname}}}</strong></a>: {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
 			$this->setURLTemplate( 'http://search.twitter.com/search?q='.$config['terms'] );
 
 			parent::__construct( $config );
@@ -113,12 +115,13 @@
 			return $data->results;
 		}
 
-		public function populateItemTemplate( &$item ) {
-			return parent::populateItemTemplate( $item ) + array(
+		public function processDataItem( $item ) {
+			return parent::processDataItem( $item ) + array(
 						'link' => sprintf( 'http://www.twitter.com/%s/statuses/%s/', $item->from_user, $item->id ),
 						'user_image' => $item->profile_image_url,
+					    'user_name' => $item->from_user_name,
 						'user_nickname' => $item->from_user,
-						'user_link' => sprintf( 'http://www.twitter.com/%s/', $item->from_user ),
+						'user_link' => sprintf( 'http://www.twitter.com/%s', $item->from_user ),
 			);
 		}
 
