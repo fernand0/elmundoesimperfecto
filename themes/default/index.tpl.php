@@ -4,6 +4,7 @@
 		<title><?php echo PUBWICH_TITLE?></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="generator" content="<?php echo PUBWICH_NAME;?> <?php echo PUBWICH_VERSION;?>" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1"> 
 		<link rel="stylesheet" media="screen" href="<?php echo Pubwich::getThemeUrl()?>/style.css" type="text/css">
 		<link type="text/plain" rel="author" href="humans.txt" />
 <?php echo Pubwich::getHeader() ?>
