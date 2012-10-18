@@ -5,7 +5,7 @@ Please see the [commit log][1] for all single changes.
 
 [1] https://github.com/haschek/PubwichFork/commits
 
-PubwichFork 2.1 (?)
+PubwichFork 2.1 (2012-10-18)
 ---------------------------------------------------------------------------
 * update PEAR libraries
 * fix PHP strict errors
