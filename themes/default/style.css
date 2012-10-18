@@ -97,7 +97,6 @@ body {
 	font-size: 0.8em;
     width: auto;
 	max-width: 80em;
-    min-width: 50em;
 	margin: 0 auto;
 }
 
@@ -548,8 +547,27 @@ h1, h2, h1 a, h2 a {
  *	=! Simple Layout for smaller Devices (or big font sizes)
  ******************************************************************/
 
-
 @media screen and (max-width: 50em)
+{
+
+    .col1, .col2 {
+        width: 49%;
+        margin: 0;
+    }
+    
+    .col2 {
+        float: right;
+    }
+
+    .col3 {
+        float: none;
+        clear: both;
+        width: auto;
+    }
+
+}
+
+@media screen and (max-width: 33em)
 {
     body {
 	    font-size: 1em;
@@ -557,18 +575,26 @@ h1, h2, h1 a, h2 a {
     }
 
     #wrap {
-	    font-size: 1em;
+	    font-size: 0.9em;
 	    max-width: none;
         min-width: 0;
     }
 
     h1 {
-	    font-size: 2.8em;
+	    font-size: 2em;
         line-height: 1;
 	    padding: 0;
         margin: 0.25em 0 0.75em 0;
 	    width: 100%;
 	    text-align: center;
+    }
+    
+    .box h2 {
+        font-size: 1.111em;
+    }
+
+    .box h2 span {
+        font-size: 0.8em;
     }
 
     #footer {
