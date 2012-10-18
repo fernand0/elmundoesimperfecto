@@ -7,8 +7,7 @@ HTML page.
 
 PubwichFork is an improved version of the original Pubwich application, since
 [Pubwich][2] is not actively maintained anymore by the original author.
-PubwichFork fixes several bugs and integrates pre-output filtering of the data
-streams.
+PubwichFork fixes several bugs and enables filtering of the data streams.
 
 [1]: https://github.com/haschek/PubwichFork
 [2]: http://pubwich.org/
@@ -26,18 +25,18 @@ and edit the `PUBWICH_THEME` constant in `cfg/config.php` to `"your_theme_name"`
 informations (API keys, usernames, site’s URL, etc.) and to modify the arguments
 passed to `Pubwich::setServices()`. See the **configuration** section of this
 file.
-* Edit the `/humans.txt` file to put your personal informations under `TEAM`
+* Change the permissions on the cache directory to make it writeable for all
+(`chmod -R 0777 cache`).
+* _optional:_ Edit the `/humans.txt` file to put your personal informations under `TEAM`
 title. You will find explanations and help about this initiative on
 [humanstxt.org][3]
-* Modify your crontab file (by running `crontab -e`) and add the following line:
+* _optional:_ Modify your crontab file (by running `crontab -e`) and add the following line:
 `*/<N> * * * * <PHP> -f <ABSOLUTE_PATH>/cron/cron.php` and replace the
 following elements:
   * `<N>` → Cache expiration (in minutes)
   * `<PHP>` → The path to PHP executable binary (usually `/usr/bin/php` or `/usr/local/bin/php`, use `which php` to find it)
   * `<ABSOLUTE_PATH>` → Absolute path to Pubwich directory
   * _Example:_ `*/10 * * * * /usr/bin/php -f /home/myusername/public_html/pubwich/cron/cron.php`
-* Change the permissions on the cache directory to make it writeable for all
-(`chmod -R 0777 cache`).
 
 Everything should be working now (when browsing to your server!).
 

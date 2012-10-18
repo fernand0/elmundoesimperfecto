@@ -10,9 +10,9 @@
 
 /* SITE */
 
-	This website use the "Pubwich" open-source PHP Web application created by Rémi Prévost.
-	You can find more informations on the official website : www.pubwich.org
-	And you're welcome to fork it on GitHub : http://github.com/remiprev/pubwich
+	This website use the "PubwichFork" open-source PHP Web application.
+	You can find more informations on the official website : http://eye48.com/go/pubwichfork
+	And you're welcome to fork it on GitHub : http://github.com/haschek/PubwichFork
 	
 	Doctype: HTML4
-	Components: JQuery, Cache_Lite, Mustache.php, PHP Gettext, PHP OAuth, Zend_Json
+	Components: Cache_Lite, Mustache.php, PHP Gettext, PHP OAuth, Zend_Json
