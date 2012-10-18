@@ -57,7 +57,7 @@
 		public function oauthRequest( $params=array() ) {
 			$method = $params[0];
 			$additional_params = isset( $params[1] ) ? $params[1] : array();
-			$base = isset( $params[2] ) ? $params[2] : "http://api.twitter.com/1/";
+			$base = isset( $params[2] ) ? $params[2] : "https://api.twitter.com/1.1/";
 
 			$sha1_method = new OAuthSignatureMethod_HMAC_SHA1();
 			$consumer = new OAuthConsumer( $this->oauth['app_consumer_key'], $this->oauth['app_consumer_secret'] );
@@ -87,7 +87,7 @@
 
 		public function processDataItem( $item ) {
 			return parent::processDataItem( $item ) + array(
-					'link' => sprintf( 'http://www.twitter.com/%s/statuses/%s/', $this->username, $item->id ),
+					'link' => sprintf( 'http://www.twitter.com/%s/statuses/%s/', $item->user->screen_name, $item->id_str ),
 					'user_image' => $item->user->profile_image_url,
 					'user_name' => $item->user->name,
 					'user_nickname' => $item->user->screen_name,
@@ -102,7 +102,7 @@
 		public function __construct( $config ) {
 			parent::setVariables( $config );
 
-			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'search', array('q'=>$config['terms'], 'rpp'=>$config['total'], 'result_type'=>'recent' ), "http://search.twitter.com/" ) );
+			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'search/tweets', array('q'=>$config['terms'], 'count'=>$config['total'], 'result_type'=>'recent' ) ) );
 			$this->setURL('http://search.twitter.com/'.$config['terms'].'/'.$config['total']); // for cache hash
 			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="" /> <strong>@{{{user_nickname}}}</strong></a>: {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
 			$this->setURLTemplate( 'http://search.twitter.com/search?q='.$config['terms'] );
@@ -112,16 +112,18 @@
 
 		public function getData() {
 			$data = parent::getData();
-			return $data->results;
+			// print_r($data);
+			// return $data->results;
+			return $data->statuses;
 		}
 
 		public function processDataItem( $item ) {
 			return parent::processDataItem( $item ) + array(
-						'link' => sprintf( 'http://www.twitter.com/%s/statuses/%s/', $item->from_user, $item->id ),
-						'user_image' => $item->profile_image_url,
-					    'user_name' => $item->from_user_name,
-						'user_nickname' => $item->from_user,
-						'user_link' => sprintf( 'http://www.twitter.com/%s', $item->from_user ),
+						'link' => sprintf( 'http://www.twitter.com/%s/statuses/%s/', $item->user->screen_name, $item->id_str ),
+						'user_image' => $item->user->profile_image_url,
+					    'user_name' => $item->user->name,
+						'user_nickname' => $item->user->screen_name,
+						'user_link' => sprintf( 'http://www.twitter.com/%s', $item->user->screen_name ),
 			);
 		}
 
