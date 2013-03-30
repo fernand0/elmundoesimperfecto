@@ -18,9 +18,11 @@
 		static public function init() {
 
 			// Let’s modify the `include_path`
-			$path = dirname(__FILE__).'/';
-			$path_pear = dirname(__FILE__).'/PEAR/';
-			set_include_path( $path . PATH_SEPARATOR . $path_pear . PATH_SEPARATOR . get_include_path() );
+			$path_core = dirname(__FILE__).'/';
+			// $path_services = $path_core.'../services/';
+			$path_libs = $path_core.'../vendor/';
+			$path_pear = $path_libs . 'PEAR/';
+			set_include_path( $path_core . PATH_SEPARATOR . $path_libs . PATH_SEPARATOR . $path_pear . PATH_SEPARATOR . get_include_path() );
 
 			require_once( 'PEAR.php' );
 
@@ -28,10 +30,10 @@
 			require_once( 'PubwichError.php' );
 
 			// Configuration files
-			if ( !file_exists( dirname(__FILE__)."/../cfg/config.php" ) ) {
+			if ( !file_exists( dirname(__FILE__)."/../../cfg/config.php" ) ) {
 				throw new PubwichError( 'You must rename <code>/cfg/config.sample.php</code> to <code>/cfg/config.php</code> and edit the Web service configuration details.' );
 			} else {
-				require_once( dirname(__FILE__) . '/../cfg/config.php' );
+				require_once( dirname(__FILE__) . '/../../cfg/config.php' );
 			}
 
 			// Internationalization class
@@ -62,7 +64,7 @@
 			}
 
             // Theme
-			self::$theme_url = PUBWICH_URL . 'themes/' . PUBWICH_THEME;
+			self::$theme_url = PUBWICH_URL . 'app/themes/' . PUBWICH_THEME;
 			self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
 			require_once( 'PubwichTemplate.php' );
 
@@ -145,7 +147,7 @@
 		 * @return void
 		 */
 		static public function setClasses() {
-			require_once( 'Services/Service.php' );
+			require_once( 'Service.php' );
 			$columnCounter = 0;
 			foreach ( self::getServices() as $column ) {
 				$columnCounter++;
@@ -325,9 +327,9 @@
 				// theme-specific service
 				self::$theme_path . '/lib/Services/' . $service . '.php',
 				// pubwich custom service
-				dirname(__FILE__) . '/Services/Custom/' . $service . '.php',
+				// dirname(__FILE__) . '/Services/Custom/' . $service . '.php',
 				// pubwich default service
-				dirname(__FILE__) . '/Services/' . $service . '.php'
+				dirname(__FILE__) . '/../services/' . $service . '.php'
 			);
 
 			$file_included = false;
