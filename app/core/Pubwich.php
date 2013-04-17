@@ -20,9 +20,16 @@
 			// Let’s modify the `include_path`
 			$path_core = dirname(__FILE__).'/';
 			// $path_services = $path_core.'../services/';
-			$path_libs = $path_core.'../vendor/';
+			$path_libs = $path_core . '../vendor/';
 			$path_pear = $path_libs . 'PEAR/';
-			set_include_path( $path_core . PATH_SEPARATOR . $path_libs . PATH_SEPARATOR . $path_pear . PATH_SEPARATOR . get_include_path() );
+			$path_user = $path_core . '../../usr/';
+			set_include_path(
+			    realpath($path_core) . PATH_SEPARATOR
+			    . realpath($path_libs) . PATH_SEPARATOR
+			    . realpath($path_pear) . PATH_SEPARATOR
+			    . realpath($path_user) . PATH_SEPARATOR
+			    . get_include_path()
+			);
 
 			require_once( 'PEAR.php' );
 
@@ -30,10 +37,10 @@
 			require_once( 'PubwichError.php' );
 
 			// Configuration files
-			if ( !file_exists( dirname(__FILE__)."/../../usr/configuration/config.php" ) ) {
+			if ( !file_exists( $path_user . 'configuration/config.php' ) ) {
 				throw new PubwichError( 'You must rename <code>usr/configuration/config.sample.php</code> to <code>usr/configuration/config.php</code> and edit the Web service configuration details.' );
 			} else {
-				require_once( dirname(__FILE__) . '/../../usr/configuration/config.php' );
+				require_once( 'configuration/config.php' );
 			}
 
 			// Internationalization class
