@@ -30,10 +30,10 @@
 			require_once( 'PubwichError.php' );
 
 			// Configuration files
-			if ( !file_exists( dirname(__FILE__)."/../../cfg/config.php" ) ) {
-				throw new PubwichError( 'You must rename <code>/cfg/config.sample.php</code> to <code>/cfg/config.php</code> and edit the Web service configuration details.' );
+			if ( !file_exists( dirname(__FILE__)."/../../usr/configuration/config.php" ) ) {
+				throw new PubwichError( 'You must rename <code>usr/configuration/config.sample.php</code> to <code>usr/configuration/config.php</code> and edit the Web service configuration details.' );
 			} else {
-				require_once( dirname(__FILE__) . '/../../cfg/config.php' );
+				require_once( dirname(__FILE__) . '/../../usr/configuration/config.php' );
 			}
 
 			// Internationalization class
