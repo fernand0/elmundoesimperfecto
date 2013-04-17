@@ -67,7 +67,7 @@
 
 			// JSON support
 			if ( !function_exists( 'json_decode' ) ) {
-				require_once( dirname(__FILE__) . '/../Zend/Json.php' );
+				require_once( 'Zend/Json.php' );
 			}
 
             // Theme
