@@ -154,7 +154,7 @@
 		 * @return void
 		 */
 		static public function setClasses() {
-			require_once( 'Service.php' );
+			require_once( 'core/Service.php' );
 			$columnCounter = 0;
 			foreach ( self::getServices() as $column ) {
 				$columnCounter++;
@@ -324,33 +324,6 @@
 		}
 
 		/**
-		 * Require a service file (according to the “cascade”)
-		 *
-		 * @param string $service Service
-		 * @return bool
-		 */
-		static public function requireServiceFile( $service ) {
-			$files = array(
-				// theme-specific service
-				self::$theme_path . '/lib/Services/' . $service . '.php',
-				// pubwich custom service
-				// dirname(__FILE__) . '/Services/Custom/' . $service . '.php',
-				// pubwich default service
-				dirname(__FILE__) . '/../services/' . $service . '.php'
-			);
-
-			$file_included = false;
-			foreach( $files as $file ) {
-				if ( file_exists( $file ) ) {
-					require_once( $file );
-					$file_included = true;
-					break;
-				}
-			}
-			return $file_included;
-		}
-
-		/**
 		 * Load a service file
 		 *
 		 * @param string $service The service name
@@ -360,11 +333,11 @@
 		static public function loadService( $service, $config ) {
 			PubwichLog::log( 1, sprintf( Pubwich::_('Loading %s service'), $service ) );
 
-			$file_included = self::requireServiceFile( $service );
-
-			if ( !$file_included ) {
+			try {
+    			include_once('services/' . $service . '.php');
+            } catch (Exception $e) {
 				throw new PubwichError( sprintf( Pubwich::_( 'You told Pubwich to use the %s service, but the file <code>%s</code> couldn’t be found.' ), $service, $service.'.php' ) );
-			}
+            }
 
 			$classname = ( isset($config['method']) && $config['method'] ) ? $config['method'] : $service;
 			if ( !class_exists( $classname ) ) {
