@@ -71,8 +71,14 @@
 			}
 
             // Theme
-			self::$theme_url = PUBWICH_URL . 'app/themes/' . PUBWICH_THEME;
-			self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
+            if (file_exists(dirname(__FILE__) . '/../themes/' . PUBWICH_THEME) === true) {
+			    self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
+			    self::$theme_url = PUBWICH_URL . 'app/themes/' . PUBWICH_THEME;
+			}
+			else {
+			    self::$theme_path = dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME;
+			    self::$theme_url = PUBWICH_URL . 'usr/themes/' . PUBWICH_THEME;
+			}
 			require_once( 'core/PubwichTemplate.php' );
 
 			// PHP objects creation
