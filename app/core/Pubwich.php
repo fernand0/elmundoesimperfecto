@@ -18,13 +18,13 @@
 		static public function init() {
 
 			// Let’s modify the `include_path`
-			$path_core = dirname(__FILE__).'/';
+			$path_app = dirname(__FILE__).'/../';
 			// $path_services = $path_core.'../services/';
-			$path_libs = $path_core . '../vendor/';
+			$path_libs = $path_app . 'vendor/';
 			$path_pear = $path_libs . 'PEAR/';
-			$path_user = $path_core . '../../usr/';
+			$path_user = $path_app . '../usr/';
 			set_include_path(
-			    realpath($path_core) . PATH_SEPARATOR
+			    realpath($path_app) . PATH_SEPARATOR
 			    . realpath($path_libs) . PATH_SEPARATOR
 			    . realpath($path_pear) . PATH_SEPARATOR
 			    . realpath($path_user) . PATH_SEPARATOR
@@ -34,7 +34,7 @@
 			require_once( 'PEAR.php' );
 
 			// Exception class
-			require_once( 'PubwichError.php' );
+			require_once( 'core/PubwichError.php' );
 
 			// Configuration files
 			if ( !file_exists( $path_user . 'configuration/config.php' ) ) {
@@ -51,7 +51,7 @@
 			}
 
 			// Events logger (and first message)
-			require_once('PubwichLog.php');
+			require_once('core/PubwichLog.php');
 			PubwichLog::init();
 			PubwichLog::log( 1, Pubwich::_("Pubwich object initialization") );
 
@@ -73,7 +73,7 @@
             // Theme
 			self::$theme_url = PUBWICH_URL . 'app/themes/' . PUBWICH_THEME;
 			self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
-			require_once( 'PubwichTemplate.php' );
+			require_once( 'core/PubwichTemplate.php' );
 
 			// PHP objects creation
 			self::setClasses();
