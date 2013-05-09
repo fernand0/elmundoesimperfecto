@@ -334,7 +334,7 @@
 			PubwichLog::log( 1, sprintf( Pubwich::_('Loading %s service'), $service ) );
 
 			try {
-    			include_once('services/' . $service . '.php');
+    			@include_once('services/' . $service . '.php');
             } catch (Exception $e) {
 				throw new PubwichError( sprintf( Pubwich::_( 'You told Pubwich to use the %s service, but the file <code>%s</code> couldn’t be found.' ), $service, $service.'.php' ) );
             }
