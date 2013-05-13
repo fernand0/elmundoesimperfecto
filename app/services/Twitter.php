@@ -9,7 +9,7 @@
 	 * @methods TwitterUser TwitterSearch
 	 */
 
-	require_once( dirname(__FILE__) . '/../OAuth/OAuth.php' );
+	require_once( 'OAuth/OAuth.php' );
 	class Twitter extends Service {
 
 		private $oauth;

@@ -16,7 +16,7 @@
 		static public function init() {
 
 			if ( PUBWICH_LOGTOFILE === true && PUBWICH_LOGLEVEL > 0 ) {
-				$log_dir = dirname(__FILE__).'/../logs';
+				$log_dir = dirname(__FILE__).'/../../usr/logs';
 				if ( !is_dir( $log_dir  ) ) {
 					mkdir( $log_dir );
 				}

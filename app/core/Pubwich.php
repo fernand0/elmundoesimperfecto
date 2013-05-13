@@ -18,20 +18,29 @@
 		static public function init() {
 
 			// Let’s modify the `include_path`
-			$path = dirname(__FILE__).'/';
-			$path_pear = dirname(__FILE__).'/PEAR/';
-			set_include_path( $path . PATH_SEPARATOR . $path_pear . PATH_SEPARATOR . get_include_path() );
+			$path_app = dirname(__FILE__).'/../';
+			// $path_services = $path_core.'../services/';
+			$path_libs = $path_app . 'vendor/';
+			$path_pear = $path_libs . 'PEAR/';
+			$path_user = $path_app . '../usr/';
+			set_include_path(
+			    realpath($path_app) . PATH_SEPARATOR
+			    . realpath($path_libs) . PATH_SEPARATOR
+			    . realpath($path_pear) . PATH_SEPARATOR
+			    . realpath($path_user) . PATH_SEPARATOR
+			    . get_include_path()
+			);
 
 			require_once( 'PEAR.php' );
 
 			// Exception class
-			require_once( 'PubwichError.php' );
+			require_once( 'core/PubwichError.php' );
 
 			// Configuration files
-			if ( !file_exists( dirname(__FILE__)."/../cfg/config.php" ) ) {
-				throw new PubwichError( 'You must rename <code>/cfg/config.sample.php</code> to <code>/cfg/config.php</code> and edit the Web service configuration details.' );
+			if ( !file_exists( $path_user . 'configuration/config.php' ) ) {
+				throw new PubwichError( 'You must rename <code>usr/configuration/config.sample.php</code> to <code>usr/configuration/config.php</code> and edit the Web service configuration details.' );
 			} else {
-				require_once( dirname(__FILE__) . '/../cfg/config.php' );
+				require_once( 'configuration/config.php' );
 			}
 
 			// Internationalization class
@@ -42,7 +51,7 @@
 			}
 
 			// Events logger (and first message)
-			require_once('PubwichLog.php');
+			require_once('core/PubwichLog.php');
 			PubwichLog::init();
 			PubwichLog::log( 1, Pubwich::_("Pubwich object initialization") );
 
@@ -58,13 +67,19 @@
 
 			// JSON support
 			if ( !function_exists( 'json_decode' ) ) {
-				require_once( dirname(__FILE__) . '/../Zend/Json.php' );
+				require_once( 'Zend/Json.php' );
 			}
 
             // Theme
-			self::$theme_url = PUBWICH_URL . 'themes/' . PUBWICH_THEME;
-			self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
-			require_once( 'PubwichTemplate.php' );
+            if (file_exists(dirname(__FILE__) . '/../themes/' . PUBWICH_THEME) === true) {
+			    self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
+			    self::$theme_url = PUBWICH_URL . 'app/themes/' . PUBWICH_THEME;
+			}
+			else {
+			    self::$theme_path = dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME;
+			    self::$theme_url = PUBWICH_URL . 'usr/themes/' . PUBWICH_THEME;
+			}
+			require_once( 'core/PubwichTemplate.php' );
 
 			// PHP objects creation
 			self::setClasses();
@@ -145,7 +160,7 @@
 		 * @return void
 		 */
 		static public function setClasses() {
-			require_once( 'Services/Service.php' );
+			require_once( 'core/Service.php' );
 			$columnCounter = 0;
 			foreach ( self::getServices() as $column ) {
 				$columnCounter++;
@@ -315,33 +330,6 @@
 		}
 
 		/**
-		 * Require a service file (according to the “cascade”)
-		 *
-		 * @param string $service Service
-		 * @return bool
-		 */
-		static public function requireServiceFile( $service ) {
-			$files = array(
-				// theme-specific service
-				self::$theme_path . '/lib/Services/' . $service . '.php',
-				// pubwich custom service
-				dirname(__FILE__) . '/Services/Custom/' . $service . '.php',
-				// pubwich default service
-				dirname(__FILE__) . '/Services/' . $service . '.php'
-			);
-
-			$file_included = false;
-			foreach( $files as $file ) {
-				if ( file_exists( $file ) ) {
-					require_once( $file );
-					$file_included = true;
-					break;
-				}
-			}
-			return $file_included;
-		}
-
-		/**
 		 * Load a service file
 		 *
 		 * @param string $service The service name
@@ -351,11 +339,11 @@
 		static public function loadService( $service, $config ) {
 			PubwichLog::log( 1, sprintf( Pubwich::_('Loading %s service'), $service ) );
 
-			$file_included = self::requireServiceFile( $service );
-
-			if ( !$file_included ) {
+			try {
+    			@include_once('services/' . $service . '.php');
+            } catch (Exception $e) {
 				throw new PubwichError( sprintf( Pubwich::_( 'You told Pubwich to use the %s service, but the file <code>%s</code> couldn’t be found.' ), $service, $service.'.php' ) );
-			}
+            }
 
 			$classname = ( isset($config['method']) && $config['method'] ) ? $config['method'] : $service;
 			if ( !class_exists( $classname ) ) {

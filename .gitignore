@@ -1,7 +1,8 @@
-cfg/config.php
-cache/cache_*
+usr/configuration/*.php
+usr/cache/cache_*
+usr/logs/*.log
+
 lib/Services/Custom/*.php
-logs/*.log
 themes/user
 themes/default/lib/Services/*.php
 favicon.*
