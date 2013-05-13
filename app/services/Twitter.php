@@ -76,7 +76,7 @@
 		public function __construct( $config ) {
 			parent::setVariables( $config );
 
-			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'statuses/user_timeline', array('count'=>$config['total']) ) );
+			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'statuses/user_timeline', array('screen_name'=>$config['username'], 'count'=>$config['total']) ) );
 			$this->setURL('http://twitter.com/'.$config['username'].'/'.$config['total']); // for cache hash
 			$this->username = $config['username'];
 			$this->setItemTemplate('<li>{{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL);
