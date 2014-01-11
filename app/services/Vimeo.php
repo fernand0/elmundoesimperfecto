@@ -9,7 +9,8 @@
 	 * @methods None
 	 */
 
-    Pubwich::requireServiceFile( 'Feed' );
+    require_once 'Feed.php';
+    
 	class Vimeo extends Feed {
 
 		public function __construct( $config ){

@@ -11,7 +11,8 @@
      * @author Michael Haschke, http://michael.haschke.biz/
 	 */
 
-	Pubwich::requireServiceFile( 'Feed' );
+	require_once 'Feed.php';
+	
 	class Youtube extends Feed {
 
 		public function __construct( $config ){

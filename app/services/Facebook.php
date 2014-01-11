@@ -9,7 +9,8 @@
 	 * @methods None
 	 */
 
-	Pubwich::requireServiceFile( 'RSS' );
+	require_once 'RSS.php';
+	
 	class Facebook extends RSS {
 
 		public function __construct( $config ){
