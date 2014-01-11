@@ -6,63 +6,111 @@ aggregate your published data from multiple websites and services into a
 single HTML page.
 
 PubwichFork is an improved version of the original Pubwich application,
-since [Pubwich][2] is not actively maintained anymore by the original
+since Pubwich is not actively maintained anymore by the original
 author. PubwichFork fixes several bugs and enables filtering of the data
 streams.
 
-[1]: https://github.com/haschek/PubwichFork
-[2]: http://pubwich.org/
+[1]: http://48augen.de/projects/pubwichfork.html
 
 Installation
 ---------------------------------------------------------------------------
 
-_If you need to upgrade from your current Pubwich install, please check the
-**upgrading** section in this file._
+_If you need to upgrade from your current Pubwich(Fork) install, please
+check the **upgrading** section in this file._
 
-* Duplicate `usr/configuration/config.sample.php` to 
-  `usr/configuration/config.php`. (Optional: if you want to use a custom
-  theme, duplicate `themes/default` to `themes/your_theme_name` and edit
-  the `PUBWICH_THEME` constant in `usr/configuration/config.php` to
-  `'your_theme_name'`.
-* Edit the newly created config.php to fill the blank spaces with your
-  informations (API keys, usernames, site’s URL, etc.) and to modify the
-  arguments passed to `Pubwich::setServices()`. See the **configuration**
-  section of this file.
-* Change the permissions on the cache directory to make it writeable for
-  all (`chmod -R 0777 cache`).
-* _optional:_ Edit the `/humans.txt` file to put your personal informations
-  under `TEAM` title. You will find explanations and help about this
-  initiative on [humanstxt.org][3]
-* _optional:_ Modify your crontab file (by running `crontab -e`) and add
-  the following line: `*/<N> * * * * <PHP> -f <ABSOLUTE_PATH>/app/cron.php`
-  and replace the following elements:
-  * `<N>` → Cache expiration (in minutes)
-  * `<PHP>` → The path to PHP executable binary (usually `/usr/bin/php` or
-    `/usr/local/bin/php`, use `which php` to find it)
-  * `<ABSOLUTE_PATH>` → Absolute path to Pubwich directory
-  * _Example:_
-    `*/10 * * * * /usr/bin/php -f /home/myusername/public_html/pubwich/cron/cron.php`
+The following install instructions work for PubwichFork 3.x, for the
+current stable version 2.1 please read the public [install manual][2].
 
-Everything should be working now (when browsing to your server!).
+[2]: https://github.com/haschek/PubwichFork/wiki/Install-and-Configure
 
-[3]: http://humanstxt.org/
+### Installing PubwichFork 3.x
 
-Upgrading from Pubwich to PubwichFork
+1. Get it from the repository and change to development branch:
+       git clone https://github.com/haschek/PubwichFork.git
+       cd PubwichFork
+       git checkout development
+       git pull
+
+2. Install necessary vendor libraries, you need to install [Bower][3]
+   before you can use it for that step:
+       bower install
+
+3. Change the permissions on the cache directory to make it writeable for
+   for you and the user group of the webserver, e.g. on Ubuntu:
+       sudo chown youruser:www-data usr/cache/
+       sudo chmod 6770 usr/cache/
+   _It may be easier to allow writing to all (777) but this is not
+   recommended for security reasons._
+
+4. Duplicate ``usr/configuration/config.sample.php`` to 
+   ``usr/configuration/config.php``. (Optional: if you want to use a custom
+   theme, duplicate ``app/themes/default`` to ``usr/themes/your_theme_name``
+   and edit the ``PUBWICH_THEME`` constant in ``usr/configuration/config.php``
+   to ``'your_theme_name'``.
+
+5. Edit the newly created config.php to fill the blank spaces with your
+   informations (API keys, usernames, site’s URL, etc.) and to modify the
+   arguments passed to ``Pubwich::setServices()``. See the **Service
+   configuration** section of this file or read the
+   [Service Class manual][4].
+
+Everything should be working now.
+
+[3]: https://github.com/bower/bower/#installing-bower
+[4]: https://github.com/haschek/PubwichFork/wiki/SocialWebServices
+
+Upgrading
 ---------------------------------------------------------------------------
 
-Last official Pubwich version is 1.5., please remember that Pubwich makes
-some important changes with version 1.4., e.g. Twitter OAuth support and
-the [Mustache template engine][4]. Please check the latest
-[Pubwich documentation][5] if you are still using a Pubwich install before
-version 1.4.
+Currently we have 3 different Pubwich(Fork) development branches:
 
-Backup your `config.php`; and your customized user theme, if you don't
-want to use the PubwichFork default theme. Then install PubwichFork and
-re-configure it. Usually your old config file and theme should work with
-PubwichFork. If not, please [report bugs][6].
+1. ``1.x``: the first official Pubwich application, the last official
+   release was Pubwich 1.5 - Pubwich is not maintained anymore since 2011
 
-[4]: http://mustache.github.com/
-[5]: https://github.com/remiprev/pubwich#readme
+2. ``2.x``: May 2011 Pubwich was forked, community commits and fixes
+   were merged in, and it was extended (e.g. adding filters and improved
+   caching options, responsive default theme). Around 80 commits were made
+   since then. The current stable release is PubwichFork 2.1
+
+3. ``3.x``: this is the current development version, the jump in the
+   version number reflects the big changes: the project folders were
+   restructured, inclusion of vendor libraries are changed. An improved
+   template system and a mobile first default theme are planned. It's
+   planned to change the name of PubwichFork with the release (send your
+   suggestions, any ideas are appreciated!).
+
+### Upgrade from Pubwich 1.x to PubwichFork 2.x
+
+Last official Pubwich release was 1.5., please remember that important
+changes were made in Pubwich 1.4., e.g. Twitter OAuth support and the new
+template engine. Please check the old [Pubwich manual about upgrading][5]
+if you are still using a Pubwich install before version 1.4.
+
+Upgrading from Pubwich 1.5+ to PubwichFork 2.1 should be simple:
+
+1. Backup your ``cfg/config.php`` and your customized user theme.
+
+2. [Install PubwichFork][2] and re-configure it, using your configuration
+   backup.
+
+3. Copy your theme folder to ``themes`` again.
+
+Usually your old config file and user theme should work with PubwichFork.
+If not, please [report bugs][6].
+
+### Upgrade from PubwichFork 2.x to 3.x
+
+1. Backup your ``cfg/config.php`` and your customized user theme.
+
+2. Install PubwichFork 3.x and copy your configuration backup file to
+   ``usr/configuration/config.php``.
+
+3. Copy your theme folder to ``usr/themes``.
+
+The current PubwichFork 3.x development branch is compatible to current
+configuration files, filters and user themes.
+
+[5]: https://github.com/remiprev/pubwich#upgrading-to-pubwich-14
 [6]: https://github.com/haschek/PubwichFork/issues
 
 Service configuration
