@@ -45,8 +45,8 @@
 
 			// Internationalization class
 			if ( defined('PUBWICH_LANG') && PUBWICH_LANG != '' ) {
-				require_once( 'Gettext/streams.php' );
-				require_once( 'Gettext/gettext.php' );
+				require_once( 'php-gettext/streams.php' );
+				require_once( 'php-gettext/gettext.php' );
 				self::$gettext = @new gettext_reader( new FileReader( dirname(__FILE__).'/../lang/'.PUBWICH_LANG.'/pubwich-'.PUBWICH_LANG.'.mo' ) );
 			}
 
