@@ -2,7 +2,7 @@
 	defined('PUBWICH') or die('No direct access allowed.');
 
     define('PUBWICH_NAME', 'PubwichFork');
-	define('PUBWICH_VERSION', '2.1');
+	define('PUBWICH_VERSION', '3.0.0');
     define('PUBWICH_WEB', 'https://github.com/haschek/PubwichFork');
 
 	/**
@@ -21,17 +21,17 @@
 			$path_app = dirname(__FILE__).'/../';
 			// $path_services = $path_core.'../services/';
 			$path_libs = $path_app . 'vendor/';
-			$path_pear = $path_libs . 'PEAR/';
+			$path_pear_cache_lite = $path_libs . 'pear-cache-lite/';
 			$path_user = $path_app . '../usr/';
 			set_include_path(
 			    realpath($path_app) . PATH_SEPARATOR
 			    . realpath($path_libs) . PATH_SEPARATOR
-			    . realpath($path_pear) . PATH_SEPARATOR
+			    . realpath($path_pear_cache_lite) . PATH_SEPARATOR
 			    . realpath($path_user) . PATH_SEPARATOR
 			    . get_include_path()
 			);
 
-			require_once( 'PEAR.php' );
+			require_once( 'pear-core/PEAR.php' );
 
 			// Exception class
 			require_once( 'core/PubwichError.php' );
@@ -45,8 +45,8 @@
 
 			// Internationalization class
 			if ( defined('PUBWICH_LANG') && PUBWICH_LANG != '' ) {
-				require_once( 'Gettext/streams.php' );
-				require_once( 'Gettext/gettext.php' );
+				require_once( 'php-gettext/streams.php' );
+				require_once( 'php-gettext/gettext.php' );
 				self::$gettext = @new gettext_reader( new FileReader( dirname(__FILE__).'/../lang/'.PUBWICH_LANG.'/pubwich-'.PUBWICH_LANG.'.mo' ) );
 			}
 
@@ -60,14 +60,15 @@
 			require_once( 'Cache/Lite.php' );
 
 			if ( !defined( 'PUBWICH_CRON' ) ) {
-				require_once( 'Mustache.php/Mustache.php' );
+				require_once( 'mustache.php/src/Mustache/Autoloader.php' );
+				Mustache_Autoloader::register();
 			}
 
             self::controlPreprocessingOutput();
 
 			// JSON support
 			if ( !function_exists( 'json_decode' ) ) {
-				require_once( 'Zend/Json.php' );
+				throw new PubwichError('PHP version with json_decode support is required: http://php.net/manual/en/json.installation.php');
 			}
 
             // Theme
@@ -447,7 +448,7 @@
 			}
 
 			$output_columns = array();
-			$m = new Mustache;
+			$m = new Mustache_Engine;
 			foreach( self::$columns as $col => $classes ) {
 				$boxes = '';
 				foreach( $classes as $class ) {

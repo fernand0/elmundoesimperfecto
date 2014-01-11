@@ -44,7 +44,7 @@
 		 * @return void
 		 */
 		public function populate( $data ) {
-			$m = new Mustache;
+			$m = new Mustache_Engine;
 			$this->output = $m->render($this->template, $data);
 		}
 

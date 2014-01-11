@@ -15,8 +15,8 @@ class Feed  extends Service {
     public function __construct( $config ){
 
         // Include SimplePie
-        include_once('SimplePie'.DIRECTORY_SEPARATOR.'SimplePieAutoloader.php');
-        include_once('SimplePie'.DIRECTORY_SEPARATOR.'idn'.DIRECTORY_SEPARATOR.'idna_convert.class.php');
+        include_once('simplepie'.DIRECTORY_SEPARATOR.'autoloader.php');
+        include_once('simplepie'.DIRECTORY_SEPARATOR.'idn'.DIRECTORY_SEPARATOR.'idna_convert.class.php');
 
         if (!isset($config['contenttype'])) $config['contenttype'] = 'application/xml';
 
