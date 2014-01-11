@@ -60,7 +60,8 @@
 			require_once( 'Cache/Lite.php' );
 
 			if ( !defined( 'PUBWICH_CRON' ) ) {
-				require_once( 'Mustache.php/Mustache.php' );
+				require_once( 'mustache.php/src/Mustache/Autoloader.php' );
+				Mustache_Autoloader::register();
 			}
 
             self::controlPreprocessingOutput();
@@ -447,7 +448,7 @@
 			}
 
 			$output_columns = array();
-			$m = new Mustache;
+			$m = new Mustache_Engine;
 			foreach( self::$columns as $col => $classes ) {
 				$boxes = '';
 				foreach( $classes as $class ) {
