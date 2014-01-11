@@ -3,8 +3,6 @@ app/vendor
 usr/configuration/*.php
 usr/cache/cache_*
 usr/logs/*.log
+usr/themes/*
 
-lib/Services/Custom/*.php
-themes/user
-themes/default/lib/Services/*.php
 favicon.*
