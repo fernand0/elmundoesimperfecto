@@ -9,7 +9,7 @@
 	 * @methods FoursquareCheckins
 	 */
 
-	require_once( dirname(__FILE__) . '/../OAuth/OAuth.php' );
+	require_once( 'php-oauth/index.php' );
 	class Foursquare extends Service {
 
 		private $oauth;
