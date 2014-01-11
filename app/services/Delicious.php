@@ -12,7 +12,8 @@ defined('PUBWICH') or die('No direct access allowed.');
  * @methods None
  */
 
-Pubwich::requireServiceFile( 'Feed' );
+require_once 'Feed.php';
+
 class Delicious extends Feed {
 
     public function __construct( $config ){
