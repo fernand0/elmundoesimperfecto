@@ -1,3 +1,5 @@
+app/vendor
+
 usr/configuration/*.php
 usr/cache/cache_*
 usr/logs/*.log
