@@ -8,6 +8,15 @@
 	 * @author Rémi Prévost (exomel.com)
 	 * @methods ReadernautBooks ReadernautNotes
 	 */
+	 
+	/*
+	 Looks like the Readernaut API is not running anymore, e.g.	 
+	 http://readernaut.com/api/v1/xml/nathan/books/?order_by=-created
+	 leads to a 404.
+	 
+	 The recently described REST URIs also do not work yet:
+	 https://gist.github.com/nathanborror/266580
+	*/
 
 	class Readernaut extends Service {
 
