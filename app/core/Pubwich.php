@@ -67,7 +67,7 @@
 
 			// JSON support
 			if ( !function_exists( 'json_decode' ) ) {
-				require_once( 'Zend/Json.php' );
+				throw new PubwichError('PHP version with json_decode support is required: http://php.net/manual/en/json.installation.php');
 			}
 
             // Theme
