@@ -2,7 +2,7 @@
   "name": "PubwichFork",
   "version": "2.1",
   "dependencies": {
-    "SimplePie": "simplepie/simplepie#1.3.1",
+    "simplepie": "simplepie/simplepie#1.3.1",
     "pear-core": "pear/pear-core",
     "pear-cache-lite": "pear/Cache_Lite",
     "php-gettext": "https://launchpad.net/php-gettext/trunk/1.0.11/+download/php-gettext-1.0.11.tar.gz",
