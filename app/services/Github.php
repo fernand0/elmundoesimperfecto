@@ -9,7 +9,8 @@
 	 * @methods GithubRecentActivity GithubRepositories
 	 */
 
-	Pubwich::requireServiceFile( 'Feed' );
+	require_once 'Feed.php';
+	
 	class GithubRecentActivity extends Feed {
 
 		/**
