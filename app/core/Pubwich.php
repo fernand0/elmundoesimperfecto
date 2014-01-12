@@ -55,9 +55,16 @@
 			PubwichLog::init();
 			PubwichLog::log( 1, Pubwich::_("Pubwich object initialization") );
 
+            // Caching
+            if (!defined('CACHE_LOCATION')) {
+                define('CACHE_LOCATION', $path_user . 'cache/');
+            }
+            
+			require_once( 'Cache/Lite.php' );
+			
 			// Other classes
 			require_once( 'FileFetcher.php' );
-			require_once( 'Cache/Lite.php' );
+			
 
 			if ( !defined( 'PUBWICH_CRON' ) ) {
 				require_once( 'mustache.php/src/Mustache/Autoloader.php' );

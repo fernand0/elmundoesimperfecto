@@ -43,7 +43,7 @@
 	   @see https://github.com/haschek/PubwichFork/wiki/PerformanceCacheOptimization
     */
 
-	define( 'CACHE_LOCATION', dirname(__FILE__) . '/../cache/' );
+	// define( 'CACHE_LOCATION', dirname(__FILE__) . '/../cache/' ); // only configure the cache directory location if you don't want to use the standard ``usr/cache/`` folder
 	define( 'CACHE_LIMIT', 60 * 60 ); // 60 minutes
 	define( 'OUTPUT_CACHE_LIMIT', 30 * 60 ); // 30 minutes
     define( 'CACHE_DISPLACEMENT', 0.5); // between 0 and under 1, eg. 30min and 0.5 leads to cache limit randomly calculated between 15min and 45min
