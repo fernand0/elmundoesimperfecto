@@ -392,15 +392,14 @@
 		 */
 		static private function applyTheme() {
 
-			if ( function_exists( 'boxTemplate' ) ) {
-				$boxTemplate = call_user_func( 'boxTemplate' );
-			} else {
+            $boxTemplate = self::getTemplateSnippet('boxTemplate');
+			if (!$boxTemplate) {
 				throw new PubwichError( Pubwich::_('You must define a boxTemplate function in your theme\'s functions.php file.') );
 			}
 
 			foreach( self::$classes as $class ) {
 
-				$functions = array();
+				$templateSnippetNames = array();
 				$parent = get_parent_class( $class );
 				$classname = get_class( $class );
 				$variable = $class->getVariable();
@@ -410,28 +409,29 @@
 				}
 
 				if ( $parent != 'Service' ) {
-					$functions = array(
+					$templateSnippetNames = array(
 						$parent,
 						$parent . '_' . $classname,
 						$parent . '_' . $classname . '_' . $variable,
 					);
 				} else {
-					$functions = array(
+					$templateSnippetNames = array(
 						$classname,
 						$classname . '_' . $variable,
 					);
 				}
 
-				foreach ( $functions as $f ) {
-					$box_f = $f . '_boxTemplate';
-					$item_f = $f . '_itemTemplate';
+				foreach ( $templateSnippetNames as $snippetname ) {
+					
+					$box_template = self::getTemplateSnippet($snippetname . '_boxTemplate');
+					$item_template = self::getTemplateSnippet($snippetname . '_itemTemplate');
 
-					if ( function_exists( $box_f ) ) {
-						$class->setBoxTemplate( call_user_func( $box_f ) );
+					if ($box_template) {
+						$class->setBoxTemplate($box_template);
 					}
 
-					if ( function_exists( $item_f ) ) {
-						$class->setItemTemplate( call_user_func( $item_f ) );
+					if ($item_template) {
+						$class->setItemTemplate($item_template);
 					}
 				}
 			}
@@ -444,18 +444,14 @@
 		 */
 		static public function getLoop() {
 
-			$columnTemplate = function_exists( 'columnTemplate' ) ? call_user_func( 'columnTemplate' ) : '<div class="col{{{number}}}">{{{content}}}</div>';
-			$layoutTemplateDefined = false;
+			$columnTemplate = self::getTemplateSnippet('columnTemplate', '<div class="col{{{number}}}">{{{content}}}</div>');
 
-			if ( function_exists( 'layoutTemplate' ) ) {
-				$layoutTemplate = call_user_func( 'layoutTemplate' );
-				$layoutTemplateDefined = true;
-			} else {
-				$layoutTemplate = '';
-			}
+			$layoutTemplate = self::getTemplateSnippet('layoutTemplate');
 
 			$output_columns = array();
+			$layoutTemplateAuto = '';
 			$m = new Mustache_Engine;
+			
 			foreach( self::$columns as $col => $classes ) {
 				$boxes = '';
 				foreach( $classes as $class ) {
@@ -463,11 +459,75 @@
 				}
 				$output_columns['col'.$col] = $m->render($columnTemplate, array('number'=>$col, 'content'=>$boxes));
 
-				if ( !$layoutTemplateDefined ) {
-					$layoutTemplate .= '{{{col'.$col.'}}} ';
-				}
+				$layoutTemplateAuto .= '{{{col'.$col.'}}} ';
 			}
+			
+			if (!$layoutTemplate) {
+			    $layoutTemplate = $layoutTemplateAuto;
+			}
+			
 			return $m->render($layoutTemplate, $output_columns);
+		}
+		
+		/**
+		 * Get theme file location
+		 *
+		 * Try to read the file location of a given theme file.
+		 *
+		 * - checking user theme directory
+		 * - checking default theme directory as fallback
+		 *
+		 * Returns the file location or false if it is not exist.
+		 *
+         * @since 2014-01-14
+		 */
+		static public function getThemeFileLocation($fileName) {
+		    
+		}
+
+		/**
+		 * Get template snippet string.
+		 *
+		 * Try to read the string for the requested template snippet by:
+		 *
+		 * - checking for a existing function with the snippet name
+		 * - checking for file with that name in the theme folder
+		 * - check for fallback in default theme folder
+		 *
+		 * Returns the string of the template snippet or false if it is not
+		 * available.
+		 *
+         * @since 2014-01-12
+		 */
+		static public function getTemplateSnippet($templateSnippetName, $fallbackString = false) {
+		
+		    static $snippets = array();
+		    
+		    // echo '<!-- TEMPLATESTRINGS: '.print_r($snippets, true).' -->'.PHP_EOL;
+		    
+		    // template snippet already known (or not available)?
+		    
+		    if (isset($snippets[$templateSnippetName])) {
+		        return $snippets[$templateSnippetName];
+		    }
+		    
+		    // check for funktion that gives back the template snippet string
+		    
+		    if (function_exists($templateSnippetName)) {
+		        $snippets[$templateSnippetName] = call_user_func($templateSnippetName);
+		        return $snippets[$templateSnippetName];
+		    }
+		    
+		    // use fallbackstring
+		    
+		    if ($fallbackString) {
+		        $snippets[$templateSnippetName] = $fallbackString;
+		        return $snippets[$templateSnippetName];
+		    }
+		    
+		    // no template snippet found
+		    
+		    return false;
 		}
 
 		/*
