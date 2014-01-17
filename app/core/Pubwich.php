@@ -10,7 +10,18 @@
 	 */
 	class Pubwich {
 
-		static private $services, $classes, $columns, $theme_url, $theme_path, $header_links, $gettext = null, $disableOutput = false;
+		static private $services,
+		               $classes,
+		               $columns,
+		               $theme_user_url = null,
+		               $theme_user_path = null,
+		               $theme_parent_url = null,
+		               $theme_parent_path = null,
+		               $theme_default_url = null,
+		               $theme_default_path = null,
+		               $header_links,
+		               $gettext = null,
+		               $disableOutput = false;
 
 		/**
 		 * Application initialisation
@@ -79,14 +90,21 @@
 			}
 
             // Theme
+            if (file_exists(dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME) === true) {
+			    self::$theme_user_path = dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME;
+			    self::$theme_user_url = PUBWICH_URL . 'usr/themes/' . PUBWICH_THEME;
+			}
+
             if (file_exists(dirname(__FILE__) . '/../themes/' . PUBWICH_THEME) === true) {
-			    self::$theme_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
-			    self::$theme_url = PUBWICH_URL . 'app/themes/' . PUBWICH_THEME;
+			    self::$theme_parent_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
+			    self::$theme_parent_url = PUBWICH_URL . 'app/themes/' . PUBWICH_THEME;
 			}
-			else {
-			    self::$theme_path = dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME;
-			    self::$theme_url = PUBWICH_URL . 'usr/themes/' . PUBWICH_THEME;
+			
+            if (file_exists(dirname(__FILE__) . '/../themes/' . 'default') === true) {
+			    self::$theme_default_path = dirname(__FILE__) . '/../themes/' . 'default';
+			    self::$theme_default_url = PUBWICH_URL . 'app/themes/' . 'default';
 			}
+			
 			require_once( 'core/PubwichTemplate.php' );
 
 			// PHP objects creation
@@ -255,11 +273,11 @@
                 die();
             }
 
-			if ( !file_exists(self::getThemePath().'/index.tpl.php') ) {
-				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), '/themes/'.PUBWICH_THEME.'/index.tpl.php' ) );
+			if ( !$templateChrome = self::getThemeFileLocation('index.tpl.php') ) {
+				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), self::getThemePath().'/index.tpl.php' ) );
 			}
 
-			if (!file_exists( self::getThemePath().'/functions.php' ) ) {
+			if ( !$templateSnippets = self::getThemeFileLocation('functions.php') ) {
 				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), self::getThemePath().'/functions.php' ) );
             }
 
@@ -272,9 +290,9 @@
                 ob_start();
                 ob_implicit_flush(false);
             }
-            require_once( self::getThemePath().'/functions.php' );
+            require_once($templateSnippets);
             self::applyTheme();
-			include_once (self::getThemePath() . '/index.tpl.php' );
+			include_once ($templateChrome);
             if ($output_cache) {
                 $data = ob_get_contents();
                 ob_end_clean();
@@ -310,14 +328,30 @@
 		 * @return string
 		 */
 		static public function getThemePath() {
-			return self::$theme_path;
+			if (self::$theme_user_path) {
+			    return self::$theme_user_path;
+			}
+			elseif (self::$theme_parent_path) {
+			    return self::$theme_parent_path;
+			}
+			else {
+			    return self::$theme_default_path;
+			}
 		}
 
 		/**
 		 * @return string
 		 */
 		static public function getThemeUrl() {
-			return self::$theme_url;
+			if (self::$theme_user_url) {
+			    return self::$theme_user_url;
+			}
+			elseif (self::$theme_parent_url) {
+			    return self::$theme_parent_url;
+			}
+			else {
+			    return self::$theme_default_url;
+			}
 		}
 
 		/**
@@ -392,7 +426,7 @@
 		 */
 		static private function applyTheme() {
 
-            $boxTemplate = self::getTemplateSnippet('boxTemplate');
+            $boxTemplate = self::getTemplateSnippet('box');
 			if (!$boxTemplate) {
 				throw new PubwichError( Pubwich::_('You must define a boxTemplate function in your theme\'s functions.php file.') );
 			}
@@ -423,8 +457,8 @@
 
 				foreach ( $templateSnippetNames as $snippetname ) {
 					
-					$box_template = self::getTemplateSnippet($snippetname . '_boxTemplate');
-					$item_template = self::getTemplateSnippet($snippetname . '_itemTemplate');
+					$box_template = self::getTemplateSnippet($snippetname . '_box');
+					$item_template = self::getTemplateSnippet($snippetname . '_item');
 
 					if ($box_template) {
 						$class->setBoxTemplate($box_template);
@@ -444,9 +478,9 @@
 		 */
 		static public function getLoop() {
 
-			$columnTemplate = self::getTemplateSnippet('columnTemplate', '<div class="col{{{number}}}">{{{content}}}</div>');
+			$columnTemplate = self::getTemplateSnippet('column', '<div class="col{{{number}}}">{{{content}}}</div>');
 
-			$layoutTemplate = self::getTemplateSnippet('layoutTemplate');
+			$layoutTemplate = self::getTemplateSnippet('layout');
 
 			$output_columns = array();
 			$layoutTemplateAuto = '';
@@ -483,6 +517,19 @@
 		 */
 		static public function getThemeFileLocation($fileName) {
 		    
+		    if (file_exists(self::$theme_user_path . DIRECTORY_SEPARATOR . $fileName)) {
+		        return self::$theme_user_path . DIRECTORY_SEPARATOR . $fileName;
+		    }
+		    
+		    if (file_exists(self::$theme_parent_path . DIRECTORY_SEPARATOR . $fileName)) {
+		        return self::$theme_parent_path . DIRECTORY_SEPARATOR . $fileName;
+		    }
+		    
+		    if (file_exists(self::$theme_default_path . DIRECTORY_SEPARATOR . $fileName)) {
+		        return self::$theme_default_path . DIRECTORY_SEPARATOR . $fileName;
+		    }
+		    
+		    return false;
 		}
 
 		/**
@@ -513,8 +560,14 @@
 		    
 		    // check for funktion that gives back the template snippet string
 		    
-		    if (function_exists($templateSnippetName)) {
-		        $snippets[$templateSnippetName] = call_user_func($templateSnippetName);
+		    if (function_exists($templateSnippetName.'Template')) {
+		        $snippets[$templateSnippetName] = call_user_func($templateSnippetName.'Template');
+		        return $snippets[$templateSnippetName];
+		    }
+		    
+		    if ($templateSnippetFile = self::getThemeFileLocation('templates'.DIRECTORY_SEPARATOR.$templateSnippetName.'.mustache'))
+		    {
+		        $snippets[$templateSnippetName] = file_get_contents($templateSnippetFile);
 		        return $snippets[$templateSnippetName];
 		    }
 		    
@@ -621,8 +674,8 @@
              * core filter, user filters, theme filters
              */
 
-			if ( file_exists( self::getThemePath()."/filters.php" ) ) {
-				require( self::getThemePath()."/filters.php" );
+			if ( $themeFilters = self::getThemeFileLocation('filters.php')) {
+				require_once( $themeFilters );
 			}
             
 			foreach( self::$classes as $service ) {

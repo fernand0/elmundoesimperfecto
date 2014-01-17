@@ -1,18 +1,5 @@
 <?php
 	
-	function boxTemplate() {
-		return '
-			<div class="box {{{class}}}" id="{{{id}}}">
-				<h2><a rel="me" href="{{{url}}}">{{{title}}}</a> <span>{{{description}}}</span></h2>
-				<div class="boite-inner">
-					<ul class="clearfix">
-						{{{items}}}
-					</ul>
-				</div>
-			</div>
-	';
-	}
-
 	function Text_boxTemplate() {
 		return '
 			<div class="box {{{class}}}" id="{{{id}}}">
