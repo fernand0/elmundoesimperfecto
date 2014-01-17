@@ -5,7 +5,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="generator" content="<?php echo PUBWICH_NAME;?> <?php echo PUBWICH_VERSION;?>" />
         <meta name="viewport" content="width=device-width"> 
-		<link rel="stylesheet" media="screen" href="<?php echo Pubwich::getThemeUrl()?>/static/style.css" type="text/css">
+		<link rel="stylesheet" media="screen" href="<?php echo Pubwich::getThemeUrl()?>/public/style.css" type="text/css">
         <?php echo Pubwich::getHeader() ?>
 	</head>
 	<body>
