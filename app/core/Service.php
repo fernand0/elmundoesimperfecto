@@ -151,17 +151,30 @@
 			$url = $this->getURL();
 			$Cache_Lite = new Cache_Lite( $this->cache_options );
 
-			if ($data = $Cache_Lite->get( $this->cache_id) ) {
-				libxml_use_internal_errors( true );
-				$this->data = $data;
-				if ( is_string( $data ) ) {
-					$this->data = call_user_func( $this->callback_function, $this->data );
-				}
-				libxml_clear_errors();
+			$data = $Cache_Lite->get( $this->cache_id);
+			
+			if (!$data) {
+				$data = $this->buildCache( $Cache_Lite );
 			}
-			else {
-				$this->buildCache( $Cache_Lite );
-			}
+			
+			/* TODO:
+			   it is really strange but only the lasfm cache strings do not
+			   get returned correctly. They available in buildCache but after
+			   returning the data var the string is empty here.
+			*/
+			
+            // echo '<!-- init '.$this->cache_id.': '.(!empty($data)).' -->'.PHP_EOL; 
+            
+			if ($data) {
+			    libxml_use_internal_errors( true );
+			    if ( is_string( $data ) ) {
+				    $data = call_user_func( $this->callback_function, $data );
+			    }
+			    libxml_clear_errors();
+            }
+            
+			$this->data = $data;
+			
 			return $this;
 		}
 
@@ -176,23 +189,30 @@
             if ( !$Cache_Lite ) {
                 // create cache object
 				$Cache_Lite = new Cache_Lite( $this->cache_options );
-				$Cache_Lite->get( $this->cache_id );
+				// $Cache_Lite->get( $this->cache_id );
 			}
+			
+			$data = false;
+			
 			if ( !isset($this->callback_getdata) || !$this->callback_getdata ) {
-				$content = FileFetcher::get( $url, $this->http_headers );
+				$data = FileFetcher::get( $url, $this->http_headers );
 			} else {
-				$content = call_user_func( $this->callback_getdata[0], $this->callback_getdata[1] );
+				$data = call_user_func( $this->callback_getdata[0], $this->callback_getdata[1] );
 			}
-			if ( $content !== false ) {
-				$cacheWrite = $Cache_Lite->save( $content );
-				libxml_use_internal_errors( true );
-				$this->data = $content;
-				if ( is_string( $this->data ) ) {
-					$this->data = call_user_func( $this->callback_function, $this->data );
-				}
-			} else {
-				$this->data = false;
+			
+			if ( $data !== false ) {
+				$cacheWrite = $Cache_Lite->save( $data, $this->cache_id );
 			}
+            elseif (ENABLE_INVALID_CACHE === true) {
+                // enabling alltime cache by setting lifetime unreachable high
+                $Cache_Lite->setLifeTime(time()+666);
+                //PubwichLog::log( 1, Pubwich::_("Use invalid output cache content.") );
+                $data = $Cache_Lite->get( $this->cache_id );
+            }
+            
+            // echo '<!-- buildCache '.$this->cache_id.': '.(!empty($data)).' -->'.PHP_EOL; 
+            
+            return $data;
 		}
 
 		/**
