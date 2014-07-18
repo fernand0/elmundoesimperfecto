@@ -157,7 +157,12 @@
 
     /*
     $github = array(
-        // TODO
+        'Github', 'github', array(
+		'username' => 'YOURUSERNAME',
+		'total' => '10',
+		'title' => 'Github',
+		'description' => 'My recent activity',
+		'method' => 'GithubRecentActivity'
     ); //*/
 
     /*
