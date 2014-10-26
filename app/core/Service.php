@@ -360,9 +360,12 @@
 					if ($this->total && $compteur > $this->total) { break; }
 					$populate = $this->populateItemTemplate( $item );
 
+                    /*
+                    Removed b/c this can be done via filters
 					if ( function_exists( get_class( $this ) . '_populateItemTemplate' ) ) {
 						$populate = call_user_func( get_class( $this ) . '_populateItemTemplate', $item ) + $populate;
 					}
+					*/
 
 					$this->getItemTemplate()->populate( $populate );
 					$items .= $this->getItemTemplate()->output();
@@ -377,10 +380,13 @@
 			// Let the service override it
 			$data = $this->populateBoxTemplate( $data ) + $data;
 
+            /*
+            Removed b/c this can be done via filters
 			// Let the theme override it
 			if ( function_exists( 'populateBoxTemplate' ) ) {
 				$data = call_user_func( 'populateBoxTemplate', $this, $data ) + $data;
 			}
+			*/
 
 			$this->getBoxTemplate()->populate( $data );
 			return $this->getBoxTemplate()->output();
