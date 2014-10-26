@@ -1,0 +1,8 @@
+<li class="clearfix">
+    <span class="date">
+        <a href="{{{user_link}}}"><img src="{{{user_image}}}" alt="" /></a>
+        <br />
+        {{{user_nickname}}}
+    </span>
+    {{{text}}}
+</li>

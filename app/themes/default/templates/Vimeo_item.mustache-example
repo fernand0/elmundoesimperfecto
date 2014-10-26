@@ -1,0 +1,7 @@
+<li>
+    <a class="clearfix" href="{{link}}">
+        <img src="{{{image_small}}}" alt="{{{title}}}" />
+        <strong>{{{title}}}</strong>
+        <span>{{{caption}}}</span>
+    </a>
+</li>
