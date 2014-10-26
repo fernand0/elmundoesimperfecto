@@ -276,9 +276,12 @@
 			if ( !$templateChrome = self::getThemeFileLocation('index.tpl.php') ) {
 				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), self::getThemePath().'/index.tpl.php' ) );
 			}
-
+            
 			if ( !$templateSnippets = self::getThemeFileLocation('functions.php') ) {
+                /*
+                Removed: functions.php is only a fallback and deprecated
 				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), self::getThemePath().'/functions.php' ) );
+                */
             }
 
             if ($output_cache = self::getOutputCacheObject()) {
@@ -290,7 +293,10 @@
                 ob_start();
                 ob_implicit_flush(false);
             }
-            require_once($templateSnippets);
+            if ($templateSnippets) {
+                /* Fallback but deprecated */
+                require_once($templateSnippets);
+            }
             self::applyTheme();
 			include_once ($templateChrome);
             if ($output_cache) {
