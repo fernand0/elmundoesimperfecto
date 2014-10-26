@@ -255,19 +255,19 @@
 
 	Pubwich::setServices(
 		array(
-		    // column 1
+		    // container 1
 			array(
                 // $infobox,
                 // $feed_atom,
                 // $feed_rss,
 			),
-            // column 2
+            // container 2
 			array(
                 // $flickr_user,
                 // $vimeo_likes,
                 // $youtube_uploads,
 			),
-            // column 3
+            // container 3
 			array(
 			    // $delicious,
                 // $lastfm_weekly,

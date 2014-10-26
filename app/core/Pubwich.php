@@ -478,8 +478,12 @@
 		 */
 		static public function getLoop() {
 
-			$columnTemplate = self::getTemplateSnippet('column', '<div class="col{{{number}}}">{{{content}}}</div>');
-
+			$containerTemplate = self::getTemplateSnippet('container', '');
+			if (!$containerTemplate) {
+			    // fallback for deprecated column template
+			    $containerTemplate = self::getTemplateSnippet('column', '<div class="col{{{number}}}">{{{content}}}</div>');
+            }
+            
 			$layoutTemplate = self::getTemplateSnippet('layout');
 
 			$output_columns = array();
@@ -491,9 +495,9 @@
 				foreach( $classes as $class ) {
 					$boxes .= $class->renderBox();
 				}
-				$output_columns['col'.$col] = $m->render($columnTemplate, array('number'=>$col, 'content'=>$boxes));
+				$output_columns['container'.$col] = $m->render($containerTemplate, array('number'=>$col, 'content'=>$boxes));
 
-				$layoutTemplateAuto .= '{{{col'.$col.'}}} ';
+				$layoutTemplateAuto .= '{{{container'.$col.'}}} ';
 			}
 			
 			if (!$layoutTemplate) {
