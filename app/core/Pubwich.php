@@ -273,9 +273,13 @@
                 die();
             }
 
-			if ( !$templateChrome = self::getThemeFileLocation('index.tpl.php') ) {
-				throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), self::getThemePath().'/index.tpl.php' ) );
-			}
+			$siteTemplate = self::getTemplateSnippet('site', '');
+			if (!$siteTemplate) {
+			    // fallback for deprecated index template
+			    if ( !$templateChrome = self::getThemeFileLocation('index.tpl.php') ) {
+				    throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), realpath(self::getThemePath()).'/templates/site.mustache'));
+			    }
+            }
             
 			if ( !$templateSnippets = self::getThemeFileLocation('functions.php') ) {
                 /*
@@ -298,7 +302,25 @@
                 require_once($templateSnippets);
             }
             self::applyTheme();
-			include_once ($templateChrome);
+            if ($siteTemplate) {
+                $m = new Mustache_Engine;
+                echo $m->render(
+                    $siteTemplate,
+                    array(
+                        'title' => PUBWICH_TITLE,
+                        'content' => self::getLoop(),
+                        'headerinclude' => self::getHeader(),
+                        'footerinclude' => self::getFooter(),
+                        'info' => sprintf(self::_('Fetched %s, proudly aggregated by %s.'), date('Y'), '<a class="pubwich" href="'.PUBWICH_WEB.'">'.PUBWICH_NAME.'</a>'),
+                        'version' => PUBWICH_NAME . ' ' . PUBWICH_VERSION,
+                        'themeurl' => self::getThemeUrl()
+                    )
+                );
+            }
+            elseif ($templateChrome) {
+                // Fallback: deprecated index template
+			    include_once ($templateChrome);
+			}
             if ($output_cache) {
                 $data = ob_get_contents();
                 ob_end_clean();
