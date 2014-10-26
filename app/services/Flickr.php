@@ -37,7 +37,7 @@
 		public function populateItemTemplate( &$item ) {
 			$path = $item['pathalias']!='' ? $item['pathalias'] : $item['owner'];
 			return array(
-						'link' => 'http://www.flickr.com/photos/'.$path.'/'.$item['id'].'/',
+						'link' => 'https://www.flickr.com/photos/'.$path.'/'.$item['id'].'/',
 						'title' => htmlspecialchars( $item['title'] ),
 						'photo' => $this->getAbsoluteUrl( $item )
 			);
@@ -49,7 +49,7 @@
 		 * @return string
 		 */
 		public function getAbsoluteUrl( $photo, $size= 's' ) {
-			return sprintf( 'http://farm%d.static.flickr.com/%s/%s_%s_%s.jpg',
+			return sprintf( 'https://farm%d.static.flickr.com/%s/%s_%s_%s.jpg',
 				$photo['farm'],
 				$photo['server'],
 				$photo['id'],
@@ -73,8 +73,8 @@
 
 		public function __construct( $config ) {
 			parent::setVariables( $config );
-			$this->setURL( sprintf( 'http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%s&user_id=%s&sort=%s&extras=owner_name,path_alias&per_page=%d', $config['key'], $config['userid'], $this->sort, $config['total'] ) );
-			$this->setURLTemplate('http://www.flickr.com/photos/'.$config['username'].'/');
+			$this->setURL( sprintf( 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%s&user_id=%s&sort=%s&extras=owner_name,path_alias&per_page=%d', $config['key'], $config['userid'], $this->sort, $config['total'] ) );
+			$this->setURLTemplate('https://www.flickr.com/photos/'.$config['username'].'/');
 			parent::__construct( $config );
 		}
 
@@ -87,15 +87,15 @@
 		public function __construct( $config ) {
 			parent::setVariables( $config );
 			$this->groupname = $config['groupname'];
-			$this->setURL( sprintf( 'http://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=%s&group_id=%s&extras=owner_name,path_alias&per_page=%d', $config['key'], $config['groupid'], $config['total'] ) );
-			$this->setURLTemplate('http://www.flickr.com/groups/'.$config['groupname'].'/');
+			$this->setURL( sprintf( 'https://api.flickr.com/services/rest/?method=flickr.groups.pools.getPhotos&api_key=%s&group_id=%s&extras=owner_name,path_alias&per_page=%d', $config['key'], $config['groupid'], $config['total'] ) );
+			$this->setURLTemplate('https://www.flickr.com/groups/'.$config['groupname'].'/');
 			parent::__construct( $config  );
 		}
 
 		public function populateItemTemplate( &$item ) {
 			$path = $item['pathalias']!='' ? $item['pathalias'] : $item['owner'];
 			$original = parent::populateItemTemplate( $item );
-			$original['link'] = 'http://www.flickr.com/photos/'.$path.'/'.$item['id'].'/in/pool-'.$this->groupname.'/';
+			$original['link'] = 'https://www.flickr.com/photos/'.$path.'/'.$item['id'].'/in/pool-'.$this->groupname.'/';
 			return $original;
 		}
 
@@ -110,8 +110,8 @@
 			$maintag = $config['tags'][0];
 			$config['tags'] = implode( ',', $config['tags'] );
 
-			$this->setURL( sprintf( 'http://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%s&tags=%s&sort=%s&per_page=%d&extras=owner_name,path_alias', $config['key'], $config['tags'], $this->sort, $config['total'] ) );
-			$this->setURLTemplate('http://www.flickr.com/photos/tags/'.$maintag.'/');
+			$this->setURL( sprintf( 'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=%s&tags=%s&sort=%s&per_page=%d&extras=owner_name,path_alias', $config['key'], $config['tags'], $this->sort, $config['total'] ) );
+			$this->setURLTemplate('https://www.flickr.com/photos/tags/'.$maintag.'/');
 			parent::__construct( $config );
 		}
 
