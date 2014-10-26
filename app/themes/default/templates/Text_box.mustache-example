@@ -1,0 +1,7 @@
+<div class="box {{{class}}}" id="{{{id}}}">
+	<h2>{{{title}}} <span>{{{description}}}</span></h2>
+	<div class="text-content">
+		{{{items}}}
+	</div>
+</div>
+
