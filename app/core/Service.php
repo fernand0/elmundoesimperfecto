@@ -32,6 +32,7 @@
 
 			if (isset($config['title'])) $this->title = $config['title'];
 			if (isset($config['description'])) $this->description = $config['description'];
+			if (isset($config['total'])) $this->total = $config['total'];
 
 			$id = md5( $this->getURL() );
 			$this->cache_id = $id . '.data';
