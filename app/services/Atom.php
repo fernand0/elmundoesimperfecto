@@ -14,7 +14,7 @@
 	class Atom extends Feed {
 
 		public function __construct( $config ){
-			$config['contenttype'] = 'application/rss+xml';
+			$config['contenttype'] = 'application/atom+xml';
 			parent::__construct( $config );
 		}
 
