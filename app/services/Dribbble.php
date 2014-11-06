@@ -7,13 +7,22 @@
 	 * @version 1.1 (20100728)
 	 * @author Rémi Prévost (exomel.com)
 	 * @methods DribbbleShots
+	 * @deprecated 2015-04-08
+	 * @see https://dribbble.com/api/deprecated
 	 */
 
 	class Dribbble extends Service {
 
 		public function __construct( $config ){
+			$this->callback_function = array('Pubwich', 'json_decode' );
+			$this->setURL( sprintf('https://api.dribbble.com/players/%s/shots?per_page=%d', $config['username'], $config['total']));
+			$this->setURLTemplate(sprintf('https://dribbble.com/%s', $config['username']));
+			$this->setItemTemplate('<li><a title="{{{title}}}" href="{{{url}}}"><img src="{{{image_teaser_url}}}" alt="{{{title}}}" height="75" /></a></li>'."\n");
 			parent::__construct( $config );
-			$this->callback_function = array( Pubwich, 'json_decode' );
+		}
+
+		public function getData() {
+			return parent::getData()->shots;
 		}
 
 		public function populateItemTemplate( &$item ) {
@@ -35,18 +44,4 @@
 
 	}
 
-	class DribbbleShots extends Dribbble {
 
-		public function __construct( $config ){
-			parent::__construct( $config );
-			$this->callback_function = array( Pubwich, 'json_decode' );
-			$this->setURL( sprintf('http://api.dribbble.com/players/%s/shots', $config['username']));
-			$this->setURLTemplate(sprintf('http://dribbble.com/players/%s', $config['username']));
-			$this->setItemTemplate('<li><a href="{{url}}"><strong>{{{title}}}</strong> <img src="{{image_teaser_url}}" alt="{{title}}" /></a></li>'."\n");
-		}
-
-		public function getData() {
-			return parent::getData()->shots;
-		}
-
-	}

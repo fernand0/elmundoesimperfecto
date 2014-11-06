@@ -282,11 +282,13 @@ h1, h2, h1 a, h2 a {
 	font-style: normal;
 }
 
-.flickr > div {
+.flickr > div,
+.dribbble > div {
 	padding-right: 0.35em;
 }
 
-.flickr ul li {
+.flickr ul li,
+.dribbble ul li {
         padding:0;
         margin: 0;
 	float: left;
@@ -294,13 +296,15 @@ h1, h2, h1 a, h2 a {
         border: none;
 }
 
-.flickr ul li a {
+.flickr ul li a,
+.dribbble ul li a {
         display: block;
         margin: 0 0.35em 0.35em 0;
 	border: none;
 }
 
-.flickr ul li img {
+.flickr ul li img,
+.dribbble ul li img {
 	display: block;
         width: 100%;
         height: auto;
