@@ -649,7 +649,7 @@
 		 */
 		static public function time_since( $original ) {
 
-			$original = strtotime( $original );
+			$original = ($original == intval($original, 10)) ? intval($original, 10) : strtotime($original);
 			$today = time();
 			$since = $today - $original;
 
