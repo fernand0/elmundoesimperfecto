@@ -651,16 +651,19 @@
 		 */
 		static public function time_since( $original ) {
 
-			$original = strtotime( $original );
+			$date_fromint = intval($original, 10);
+			$date_fromstring = strtotime($original);
+			$timestamp = ($original === "$date_fromint") ? $date_fromint : $date_fromstring;
+
 			$today = time();
-			$since = $today - $original;
+			$since = $today - $timestamp;
 
 			if ( $since < 0 ) {
 				return sprintf( Pubwich::_('just moments ago'), $since );
 			}
 
 			if ( $since >= ( 7 * 24 * 60 * 60 ) ) {
-				return strftime( Pubwich::_('%e %B at %H:%M'), $original );
+				return strftime( Pubwich::_('%e %B at %H:%M'), $timestamp );
 			}
 
             $timechunks = array(
