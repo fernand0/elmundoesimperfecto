@@ -274,12 +274,12 @@
             }
 
 			$siteTemplate = self::getTemplateSnippet('site', '');
-			if (!$siteTemplate) {
-			    // fallback for deprecated index template
-			    if ( !$templateChrome = self::getThemeFileLocation('index.tpl.php') ) {
-				    throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), realpath(self::getThemePath()).'/templates/site.mustache'));
-			    }
-            }
+		    // fallback for deprecated index template
+			$templateChrome = self::getThemeFileLocation('index.tpl.php');
+
+		    if ( !$templateChrome && !$templateChrome ) {
+			    throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), realpath(self::getThemePath()).'/templates/site.mustache'));
+		    }
             
 			if ( !$templateSnippets = self::getThemeFileLocation('functions.php') ) {
                 /*
@@ -302,7 +302,11 @@
                 require_once($templateSnippets);
             }
             self::applyTheme();
-            if ($siteTemplate) {
+            if ($templateChrome) {
+                // Fallback: deprecated index template
+			    include_once ($templateChrome);
+			}
+            elseif ($siteTemplate) {
                 $m = new Mustache_Engine;
                 echo $m->render(
                     $siteTemplate,
@@ -317,10 +321,6 @@
                     )
                 );
             }
-            elseif ($templateChrome) {
-                // Fallback: deprecated index template
-			    include_once ($templateChrome);
-			}
             if ($output_cache) {
                 $data = ob_get_contents();
                 ob_end_clean();
@@ -506,10 +506,12 @@
 		 */
 		static public function getLoop() {
 
-			$containerTemplate = self::getTemplateSnippet('container', '');
-			if (!$containerTemplate) {
-			    // fallback for deprecated column template
-			    $containerTemplate = self::getTemplateSnippet('column', '<div class="col{{{number}}}">{{{content}}}</div>');
+			$containerTemplate = self::getTemplateSnippet('container', '<div class="container-{{{number}}}">{{{content}}}</div>');
+
+		    // fallback for deprecated column template
+		    $columnTemplate = self::getTemplateSnippet('column', '');
+			if ($columnTemplate) {
+			    $containerTemplate = $columnTemplate;
             }
             
 			$layoutTemplate = self::getTemplateSnippet('layout');
@@ -649,16 +651,19 @@
 		 */
 		static public function time_since( $original ) {
 
-			$original = ($original == intval($original, 10)) ? intval($original, 10) : strtotime($original);
+			$date_fromint = intval($original, 10);
+			$date_fromstring = strtotime($original);
+			$timestamp = ($original === "$date_fromint") ? $date_fromint : $date_fromstring;
+
 			$today = time();
-			$since = $today - $original;
+			$since = $today - $timestamp;
 
 			if ( $since < 0 ) {
 				return sprintf( Pubwich::_('just moments ago'), $since );
 			}
 
 			if ( $since >= ( 7 * 24 * 60 * 60 ) ) {
-				return strftime( Pubwich::_('%e %B at %H:%M'), $original );
+				return strftime( Pubwich::_('%e %B at %H:%M'), $timestamp );
 			}
 
             $timechunks = array(
