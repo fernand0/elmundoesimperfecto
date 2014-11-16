@@ -506,10 +506,12 @@
 		 */
 		static public function getLoop() {
 
-			$containerTemplate = self::getTemplateSnippet('container', '');
-			if (!$containerTemplate) {
-			    // fallback for deprecated column template
-			    $containerTemplate = self::getTemplateSnippet('column', '<div class="col{{{number}}}">{{{content}}}</div>');
+			$containerTemplate = self::getTemplateSnippet('container', '<div class="container-{{{number}}}">{{{content}}}</div>');
+
+		    // fallback for deprecated column template
+		    $columnTemplate = self::getTemplateSnippet('column', '');
+			if ($columnTemplate) {
+			    $containerTemplate = $columnTemplate;
             }
             
 			$layoutTemplate = self::getTemplateSnippet('layout');
