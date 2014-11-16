@@ -274,12 +274,12 @@
             }
 
 			$siteTemplate = self::getTemplateSnippet('site', '');
-			if (!$siteTemplate) {
-			    // fallback for deprecated index template
-			    if ( !$templateChrome = self::getThemeFileLocation('index.tpl.php') ) {
-				    throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), realpath(self::getThemePath()).'/templates/site.mustache'));
-			    }
-            }
+		    // fallback for deprecated index template
+			$templateChrome = self::getThemeFileLocation('index.tpl.php');
+
+		    if ( !$templateChrome && !$templateChrome ) {
+			    throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), realpath(self::getThemePath()).'/templates/site.mustache'));
+		    }
             
 			if ( !$templateSnippets = self::getThemeFileLocation('functions.php') ) {
                 /*
@@ -302,7 +302,11 @@
                 require_once($templateSnippets);
             }
             self::applyTheme();
-            if ($siteTemplate) {
+            if ($templateChrome) {
+                // Fallback: deprecated index template
+			    include_once ($templateChrome);
+			}
+            elseif ($siteTemplate) {
                 $m = new Mustache_Engine;
                 echo $m->render(
                     $siteTemplate,
@@ -317,10 +321,6 @@
                     )
                 );
             }
-            elseif ($templateChrome) {
-                // Fallback: deprecated index template
-			    include_once ($templateChrome);
-			}
             if ($output_cache) {
                 $data = ob_get_contents();
                 ob_end_clean();
