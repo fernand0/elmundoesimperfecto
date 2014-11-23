@@ -30,6 +30,13 @@ class Reddit extends Service {
 
         $date = $data->created_utc;
 
+        if (isset($this->dateFormat)) {
+            $absolute_date = date($this->dateFormat, strtotime($date));
+        }
+        else {
+            $absolute_date = null;
+        }
+
         $timestamp = 0;
         $timestamp = $date;
 
