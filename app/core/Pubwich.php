@@ -656,7 +656,7 @@
 
 			$date_fromint = intval($original, 10);
 			$date_fromstring = strtotime($original);
-			$timestamp = ($original === "$date_fromint") ? $date_fromint : $date_fromstring;
+			$timestamp = ("$original" === "$date_fromint") ? $date_fromint : $date_fromstring;
 
 			$today = time();
 			$since = $today - $timestamp;
