@@ -32,17 +32,20 @@
 			$path_app = dirname(__FILE__).'/../';
 			// $path_services = $path_core.'../services/';
 			$path_libs = $path_app . 'vendor/';
+			$path_pear_core = $path_libs . 'pear-core/';
 			$path_pear_cache_lite = $path_libs . 'pear-cache-lite/';
 			$path_user = $path_app . '../usr/';
 			set_include_path(
-			    realpath($path_app) . PATH_SEPARATOR
+			    realpath($path_user) . PATH_SEPARATOR
+			    . realpath($path_app) . PATH_SEPARATOR
 			    . realpath($path_libs) . PATH_SEPARATOR
+			    . realpath($path_pear_core) . PATH_SEPARATOR
 			    . realpath($path_pear_cache_lite) . PATH_SEPARATOR
-			    . realpath($path_user) . PATH_SEPARATOR
+			    //. realpath($path_user) . PATH_SEPARATOR
 			    . get_include_path()
 			);
 
-			require_once( 'pear-core/PEAR.php' );
+			require_once( 'PEAR.php' );
 
 			// Exception class
 			require_once( 'core/PubwichError.php' );
@@ -277,7 +280,7 @@
 		    // fallback for deprecated index template
 			$templateChrome = self::getThemeFileLocation('index.tpl.php');
 
-		    if ( !$templateChrome && !$templateChrome ) {
+		    if ( !$siteTemplate && !$templateChrome ) {
 			    throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), realpath(self::getThemePath()).'/templates/site.mustache'));
 		    }
             
