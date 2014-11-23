@@ -280,7 +280,7 @@
 		    // fallback for deprecated index template
 			$templateChrome = self::getThemeFileLocation('index.tpl.php');
 
-		    if ( !$templateChrome && !$templateChrome ) {
+		    if ( !$siteTemplate && !$templateChrome ) {
 			    throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), realpath(self::getThemePath()).'/templates/site.mustache'));
 		    }
             
