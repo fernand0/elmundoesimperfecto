@@ -9,15 +9,15 @@
 	 * @methods None
 	 */
 
-	require_once 'RSS.php';
+	require_once 'Feed.php';
 	
-	class Facebook extends RSS {
+	class FacebookPage extends Feed {
 
 		public function __construct( $config ){
+			$config['contenttype'] = 'application/atom+xml';
 			$config['link'] = 'http://www.facebook.com/'.$config['username'].'/';
-			$config['url'] = sprintf( 'http://www.facebook.com/feeds/status.php?id=%d&viewer=%d&key=%s&format=rss20', $config['id'], $config['id'], $config['key'] );
+			$config['url'] = sprintf( 'https://www.facebook.com/feeds/page.php?format=atom10&id=%d', $config['id']);
 			parent::__construct( $config );
-			$this->setItemTemplate('<li><a href="{{{link}}}">{{{title}}}</a> {{{date}}}</li>'."\n");
 		}
 
 	}

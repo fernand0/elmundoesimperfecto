@@ -75,7 +75,7 @@ class Feed  extends Service {
         $title = html_entity_decode(trim($item['title']), ENT_QUOTES);
         $summary = html_entity_decode(trim($item['summary']), ENT_QUOTES);
 
-        if (strpos($summary, $title) !== false)
+        if ($summary && $title && strpos($summary, $title) !== false)
         {
             unset($item['summary']);
         }
