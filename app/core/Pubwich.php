@@ -57,6 +57,17 @@
 				require_once( 'configuration/config.php' );
 			}
 
+			// Application URL
+			if (!defined('PUBWICH_URL'))
+			{
+			    $prot = 'http://';
+			    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off')
+			    {
+			        $prot = 'https://';
+			    }
+			    define('PUBWICH_URL', $prot . str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['SERVER_NAME'], realpath(__DIR__ . '/../../')) . '/');
+			}
+
 			// Internationalization class
 			if ( defined('PUBWICH_LANG') && PUBWICH_LANG != '' ) {
 				require_once( 'php-gettext/streams.php' );
@@ -91,7 +102,7 @@
 			if ( !function_exists( 'json_decode' ) ) {
 				throw new PubwichError('PHP version with json_decode support is required: http://php.net/manual/en/json.installation.php');
 			}
-
+			
             // Theme
             if (file_exists(dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME) === true) {
 			    self::$theme_user_path = dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME;
