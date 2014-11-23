@@ -36,11 +36,12 @@
 			$path_pear_cache_lite = $path_libs . 'pear-cache-lite/';
 			$path_user = $path_app . '../usr/';
 			set_include_path(
-			    realpath($path_app) . PATH_SEPARATOR
+			    realpath($path_user) . PATH_SEPARATOR
+			    . realpath($path_app) . PATH_SEPARATOR
 			    . realpath($path_libs) . PATH_SEPARATOR
 			    . realpath($path_pear_core) . PATH_SEPARATOR
 			    . realpath($path_pear_cache_lite) . PATH_SEPARATOR
-			    . realpath($path_user) . PATH_SEPARATOR
+			    //. realpath($path_user) . PATH_SEPARATOR
 			    . get_include_path()
 			);
 
