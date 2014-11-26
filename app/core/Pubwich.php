@@ -60,12 +60,21 @@
 			// Application URL
 			if (!defined('PUBWICH_URL'))
 			{
+			    // protocol
 			    $prot = 'http://';
 			    if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] && $_SERVER['HTTPS'] != 'off')
 			    {
 			        $prot = 'https://';
 			    }
-			    define('PUBWICH_URL', $prot . str_replace($_SERVER['DOCUMENT_ROOT'], $_SERVER['SERVER_NAME'], realpath(__DIR__ . '/../../')) . '/');
+			    
+			    // server name
+			    $server = trim($_SERVER['SERVER_NAME'], '/');
+			    
+			    // server path
+			    $path = trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(__DIR__ . '/../../')), '/');
+			    //$path = trim(str_replace(basename($_SERVER['SCRIPT_FILENAME']), '', $_SERVER['SCRIPT_NAME']), '/');
+			    
+			    define('PUBWICH_URL', $prot . $server . '/' . $path . '/');
 			}
 
 			// Internationalization class
