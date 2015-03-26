@@ -32,7 +32,7 @@
 			$path_app = dirname(__FILE__).'/../';
 			// $path_services = $path_core.'../services/';
 			$path_libs = $path_app . 'vendor/';
-			$path_pear_core = $path_libs . 'pear-core/';
+			$path_pear_core = $path_libs . 'pear-core/src/';
 			$path_pear_cache_lite = $path_libs . 'pear-cache-lite/';
 			$path_user = $path_app . '../usr/';
 			set_include_path(
