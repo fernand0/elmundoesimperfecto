@@ -16,7 +16,7 @@
 		public function __construct( $config ){
 			$config['contenttype'] = 'application/atom+xml';
 			$config['link'] = 'http://www.facebook.com/'.$config['username'].'/';
-			$config['url'] = sprintf( 'https://www.facebook.com/feeds/page.php?format=atom10&id=%d', $config['id']);
+			$config['url'] = sprintf( 'https://www.facebook.com/feeds/page.php?format=atom10&id=%s', $config['id']);
 			parent::__construct( $config );
 		}
 
