@@ -157,7 +157,12 @@
 
     /*
     $github = array(
-        // TODO
+        'Github', 'github', array(
+		'username' => 'YOURUSERNAME',
+		'total' => '10',
+		'title' => 'Github',
+		'description' => 'My recent activity',
+		'method' => 'GithubRecentActivity'
     ); //*/
 
     /*
@@ -218,10 +223,21 @@
         // TODO
     ); //*/
 
-	/*
-	$twitter = array(
-	    // TODO
-	); //*/
+    /*
+    $twitter = array(
+        'Twitter', 'twitter_feed', array(
+            'method' => 'TwitterUser',
+            'username' => 'YOURUSERNAME',
+            'oauth' => array(
+                'app_consumer_key'         => '',
+                'app_consumer_secret'      => '',
+                'user_access_token'        => '',
+                'user_access_token_secret' => ''
+            ),
+            'total' => '10',
+            'title' => 'Twitter'
+        )	
+    ); //*/
 
 	/*
 	$vimeo_likes = array(
