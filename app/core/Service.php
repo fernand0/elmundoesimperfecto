@@ -341,6 +341,51 @@
 				'description' => $this->description,
 			);
 		}
+		
+		public function getClassesStack() {
+            
+            $classes = class_parents($this, true);
+            
+            if (!$classes) {
+                $classes = array();
+                $classes[] = get_class($this);
+                if (get_parent_class($this)) {
+                    $classes[] = get_parent_class($this);
+                }
+            }
+            else {
+                $classes = array_merge(array(get_class($this)), $classes);
+            }
+            
+            $ignoreKey = array_search('Service', $classes);
+            
+            if ($ignoreKey !== false) {
+                unset($classes[$ignoreKey]);
+            }
+            
+            return $classes;
+		}
+		
+		public function getClassesStackStrings($separator = '_', $extensions = array()) {
+		
+            if ($extensions) {
+                if (!is_array($extensions)) {
+                    $extensions = array($extensions);
+                }
+            }
+            else {
+                $extensions = array();
+            }
+		
+		    $classes = array_merge(array_reverse($this->getClassesStack()), $extensions);
+		    $strings = array();
+		    
+		    for ($i = count($classes); $i > 0; $i = $i - 1) {
+		        $strings[] = implode($separator, array_slice($classes, 0, $i));
+		    }
+		
+		    return array_reverse($strings);
+		}
 
 		/*
 		 * @return string
@@ -351,7 +396,9 @@
 			$classData = $this->getProcessedData();
             $compteur = 0;
 
-			$htmlClass = strtolower( get_class( $this ) ).' '.( get_parent_class( $this ) != 'Service' ? strtolower( get_parent_class( $this ) ) : '' );
+            $htmlClass = strtolower(implode(' ', $this->getClassesStack()));
+			//$htmlClass = strtolower( get_class( $this ) ).' '.( get_parent_class( $this ) != 'Service' ? strtolower( get_parent_class( $this ) ) : '' );
+
 			if ( !$classData ) {
 				$items = '<li class="nodata">'.sprintf( Pubwich::_('An error occured with the %s API. The data is therefore unavailable.'), get_class( $this ) ).'</li>';
 				$htmlClass .= ' nodata';

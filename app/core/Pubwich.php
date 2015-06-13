@@ -484,27 +484,16 @@
 
 			foreach( self::$classes as $class ) {
 
-				$templateSnippetNames = array();
-				$parent = get_parent_class( $class );
-				$classname = get_class( $class );
-				$variable = $class->getVariable();
-
 				if ( !$class->getBoxTemplate()->hasTemplate() && $boxTemplate ) {
 					$class->setBoxTemplate( $boxTemplate );
 				}
 
-				if ( $parent != 'Service' ) {
-					$templateSnippetNames = array(
-						$parent,
-						$parent . '_' . $classname,
-						$parent . '_' . $classname . '_' . $variable,
-					);
-				} else {
-					$templateSnippetNames = array(
-						$classname,
-						$classname . '_' . $variable,
-					);
-				}
+				$templateSnippetNames = $class->getClassesStackStrings(
+				    '_',
+				    array(
+				        $class->getVariable()
+				    )
+				);
 
 				foreach ( $templateSnippetNames as $snippetname ) {
 					
@@ -740,24 +729,12 @@
             
 			foreach( self::$classes as $service ) {
 
-				$filtermethods = array();
-				$parent = get_parent_class( $service );
-				$classname = get_class( $service );
-				$variable = $service->getVariable();
-
-				if ( $parent != 'Service' ) {
-					$filtermethods = array(
-						$parent,
-						$parent . '_' . $classname,
-						$parent . '_' . $classname . '_' . $variable,
-					);
-				} else {
-					$filtermethods = array(
-						$classname,
-						$classname . '_' . $variable,
-					);
-				}
-
+				$filtermethods = $service->getClassesStackStrings(
+				    '_',
+				    array(
+				        $service->getVariable()
+				    )
+				);
 
 				foreach ( $filtermethods as $filter ) {
 					$stream_filter = $filter . '_filterStream';

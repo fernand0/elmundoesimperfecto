@@ -11,7 +11,10 @@
 
 	require_once 'Feed.php';
 	
-	class GithubRecentActivity extends Feed {
+	class GithubFeed extends Feed {
+	}
+	
+	class GithubRecentActivity extends GithubFeed {
 
 		/**
 		 * @constructor
@@ -25,8 +28,11 @@
 		}
 
 	}
+	
+	class Github extends Service {
+	}
     
-	class GithubRepositories extends Service {
+	class GithubRepositories extends Github {
 
 		/**
 		 * @constructor
@@ -73,7 +79,7 @@
         }
 	}
 
-	class GithubGists extends Service {
+	class GithubGists extends Github {
 
 		/**
 		 * @constructor

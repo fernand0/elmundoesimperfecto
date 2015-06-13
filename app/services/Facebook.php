@@ -11,7 +11,10 @@
 
 	require_once 'Feed.php';
 	
-	class FacebookPage extends Feed {
+	class Facebook extends Feed {
+	}
+	
+	class FacebookPage extends Facebook {
 
 		public function __construct( $config ){
 			$config['contenttype'] = 'application/atom+xml';
