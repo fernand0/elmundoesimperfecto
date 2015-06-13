@@ -15,8 +15,8 @@
 
 		public function __construct( $config ){
 			$config['list'] = isset($config['list']) ? $config['list']:'videos';
-            $config['url'] = sprintf( 'http://vimeo.com/%s/%s/rss', $config['username'], $config['list'] );
-			$config['link'] = 'http://www.vimeo.com/'.$config['username'].'/';
+            $config['url'] = sprintf( 'https://vimeo.com/%s/%s/rss', $config['username'], $config['list'] );
+			$config['link'] = 'https://www.vimeo.com/'.$config['username'].'/';
             $config['contenttype'] = 'application/rss+xml';
 
 			parent::__construct( $config );
