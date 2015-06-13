@@ -17,10 +17,10 @@
 
 		public function __construct( $config ){
 			$config['list'] = isset($config['list']) ? $config['list']:'uploads';
-            $config['url'] = 'http://gdata.youtube.com/feeds/api/users/'.
+            $config['url'] = 'https://gdata.youtube.com/feeds/api/users/'.
                              $config['username'].'/'.$config['list'].
                              '?v=2&orderby=published&max-results='.$config['total'];
-			$config['link'] = 'http://youtube.com/user/'.$config['username'];
+			$config['link'] = 'https://youtube.com/user/'.$config['username'];
             $config['contenttype'] = 'application/atom+xml';
 
 			parent::__construct( $config );
