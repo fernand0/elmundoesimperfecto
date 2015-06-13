@@ -77,10 +77,10 @@
 			parent::setVariables( $config );
 
 			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'statuses/user_timeline', array('screen_name'=>$config['username'], 'count'=>$config['total']) ) );
-			$this->setURL('http://twitter.com/'.$config['username'].'/'.$config['total']); // for cache hash
+			$this->setURL('https://twitter.com/'.$config['username'].'/'.$config['total']); // for cache hash
 			$this->username = $config['username'];
 			$this->setItemTemplate('<li>{{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL);
-			$this->setURLTemplate('http://www.twitter.com/'.$config['username']);
+			$this->setURLTemplate('https://www.twitter.com/'.$config['username']);
 
 			parent::__construct( $config );
 		}
@@ -103,9 +103,9 @@
 			parent::setVariables( $config );
 
 			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'search/tweets', array('q'=>$config['terms'], 'count'=>$config['total'], 'result_type'=>'recent' ) ) );
-			$this->setURL('http://search.twitter.com/'.$config['terms'].'/'.$config['total']); // for cache hash
-			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="" /> <strong>@{{{user_nickname}}}</strong></a>: {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
-			$this->setURLTemplate( 'http://search.twitter.com/search?q='.$config['terms'] );
+			$this->setURL('https://search.twitter.com/'.$config['terms'].'/'.$config['total']); // for cache hash
+			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="" /> <strong>@{{{user_nickname}}}:</strong></a> {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
+			$this->setURLTemplate( 'https://search.twitter.com/search?q='.$config['terms'] );
 
 			parent::__construct( $config );
 		}
@@ -119,11 +119,11 @@
 
 		public function processDataItem( $item ) {
 			return parent::processDataItem( $item ) + array(
-						'link' => sprintf( 'http://www.twitter.com/%s/statuses/%s/', $item->user->screen_name, $item->id_str ),
+						'link' => sprintf( 'https://www.twitter.com/%s/statuses/%s/', $item->user->screen_name, $item->id_str ),
 						'user_image' => $item->user->profile_image_url,
 					    'user_name' => $item->user->name,
 						'user_nickname' => $item->user->screen_name,
-						'user_link' => sprintf( 'http://www.twitter.com/%s', $item->user->screen_name ),
+						'user_link' => sprintf( 'https://www.twitter.com/%s', $item->user->screen_name ),
 			);
 		}
 
