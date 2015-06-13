@@ -1,31 +1,27 @@
-<!DOCTYPE HTML>
+<!doctype html>
 <html>
-	<head>
-		<title>{{{title}}}</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <head>
+        <title>{{{title}}}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="generator" content="{{{version}}}" />
-        <meta name="viewport" content="width=device-width"> 
-		<link rel="stylesheet" media="screen" href="{{{themeurl}}}/public/style.css" type="text/css">
+        <link rel="stylesheet" media="screen" href="{{{themeurl}}}/public/default.css" type="text/css" />
         {{{headerinclude}}}
-	</head>
-	<body>
-		<div id="wrap">
-			<h1>{{{title}}}</h1>
-			<hr>
-			<div class="clearfix">
-
+    </head>
+    <body>
+        <header id="header">
+            <h1>{{{title}}}</h1>
+        </header>
+        <hr class="hideme" />
+        <div id="main" class="clearfix">
             {{{content}}}
-
-			</div>
-			<div id="footer">
-				<div class="footer-inner">
-					<hr>
-					<p>
-					    {{{info}}}
-				    </p>
-				</div>
-			</div>
-		</div>
+        </div>
+        <hr class="hideme" />
+        <footer id="footer">
+            <p>
+                {{{info}}}
+            </p>
+        </footer>
         {{{footerinclude}}}
-	</body>
+    </body>
 </html>
