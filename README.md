@@ -174,7 +174,7 @@ templates are in ``yourtheme/templates`` folder, using ``.mustache`` as file
 extension.
 
 There are currently four template types: box templates, item
-templates, container templates, layout templates and site template:
+templates, container template, layout template and the global site template:
 
 * ``site.mustache``: page layout including HTML head, can use those template
   tags:
@@ -189,105 +189,82 @@ templates, container templates, layout templates and site template:
 
 * ``layout.mustache``: use this only if you know how many layout containers are
   configured. If ``layout.mustache`` is not available, it is generated automatically
-  by PubwichFork (recommended). It can use various ``{{{containerX}}}`` tags,
-  ``X`` is the container number, starting with 1. 
+  by PubwichFork (recommended). It can hold various ``{{{containerX}}}`` tags,
+  ``X`` is the container number, starting with 1, e.g.
+  
+  ```html
+  <div>
+    {{{container1}}}
+  </div>
+  <div>
+    <div>
+        {{{container3}}}
+    </div>
+    <div>
+        {{{container2}}}
+    </div>
+  </div>
+  ```
 
 * ``container.mustache``: layout containers, each of them holds various boxes
   of the aggregared data channels. The container uses:
   * ``{{{number}}}``: number of container, starting with 1
   * ``{{{content}}}``: insert content of container
 
-* 
-
 [9]: http://mustache.github.io/
 
 
 ### Box templates
 
-Box templates control the way whole boxes are displayed. There are a few
-different ways to define them:
+Box templates control the way aggregated content from the Service classes are
+displayed. There are a few file name patterns that you can use to define them,
+from globally used box templates to more specialized box templates:
 
-* `boxTemplate()` (applies to all boxes, **must** be defined in
-  `functions.php`)
-* `<Service>_boxTemplate()`
-* `<Service>_<Method>_boxTemplate()`
-* `<Service>_<Variable>_boxTemplate()`
-* `<Service>_<Method>_<Variable>_boxTemplate()`
+* ``box.mustache``: applies to all boxes, **must** be defined
+* ``#ParentClass_box.mustache``
+* ``[#ParentClass_]#ServiceName_box.mustache``
+* ``[#ParentClass_]#ServiceName_#MethodName_box.mustache``
+* ``#ServiceId_box.mustache``
 
-Example:
+The patterns include all parent classes of the service, except the Service core
+class itself. PubwichFork always uses the most unique pattern.
 
-```php
-function boxTemplate() {
-    return '
-        <div class="boite {{class}}" id="{{id}}">
-            <h2><a rel="me" href="{{{url}}}">{{{title}}}</a> <span>{{{description}}}</span></h2>
-            <div class="boite-inner">
-                <ul class="clearfix">
-                    {{{items}}}
-                </ul>
-            </div>
-        </div>';
-}
-```
+For compatibility issues with older versions of PubwichFork themes the patterns
+include all those combinations extended by the configured service id for each
+channel, e.g. ``#ServiceName_#ServiceId_box.mustache``, as well as the template
+definitions by similar method names in ``functions.php`` located in the theme
+folder. It is not recommended to use this now deprecated template definitions.
+
+* ``#ServiceName_#ServiceId_box.mustache``: in ``functions.php`` the method
+  need to be named ``#ServiceName_#ServiceId_boxTemplate()``
+
+Box templates support following template tags:
+
+* ``{{id}}``: configured service id
+* ``{{class}}``: CSS classes generated from service class names and its parents
+* ``{{{title}}}``: configured title
+* ``{{{url}}}``: configured URL for the service
+* ``{{{description}}}``: configured description
+* ``{{{items}}}``: aggregated items of the Social Web service, each item is
+  is rendered by own item template
+
 
 ### Item templates
 
-Item templates control the way each box item is displayed. Each service has
-its own default templates, but using the following function names, you can
-redefine them:
+Item templates control the way each Service class item is displayed. Each
+service has its own default templates, but using the following template names,
+you can redefine them, it uses the same patterns like the box templates.
 
-* `<Service>_itemTemplate()`
-* `<Service>_<Method>_itemTemplate()`
-* `<Service>_<Variable>_itemTemplate()`
-* `<Service>_<Method>_<Variable>_itemTemplate()`
+* ``#ParentClass_item.mustache``
+* ``[#ParentClass_]#ServiceName_item.mustache``
+* ``[#ParentClass_]#ServiceName_#MethodName_item.mustache``
+* ``#ServiceId_item.mustache``
 
-Example:
+The same goes for the support of the old template name patterns and the support
+of functions in ``functions.php``.
 
-```php
-function Twitter_TwitterUser_itemTemplate() {
-    return '<li class="clearfix {{#in_reply_to_screen_name}}reply{{/in_reply_to_screen_name}}"><span class="date"><a href="{{{link}}}">{{{date}}}</a></span>{{{text}}}</li>'."\n";
-}
-```
+Check the [service overview][10] for documentation of template tags that can be
+used for for each service. Additionally, you can check a service
+file (located in `app/services/<Service>.php`) and look for the
+`populateItemTemplate` method.
 
-There’s currently no documentation about which tag you can put between
-`{{{}}}` braces for which service. In the meantime, you can check a service
-file (located in `lib/Services/<Service>.php`) and look for the
-`populateItemTemplate` function.
-
-### Column templates
-
-The column template defines how each column is rendered. You don’t have to
-define this template; the default used by Pubwich is this:
-
-```php
-'<div class="col{{{number}}}">{{{content}}}</div>'
-```
-
-Where `{{{number}}}` is replaced by the column number and `{{{content}}}`
-is replaced by the column content (the *boxes*). For instance, you could
-put this in your `functions.php` file:
-
-```php
-funtion columnTemplate() {
-    '<div class="column column-{{{number}}}"><div class="column-inner">{{{content}}}</div></div>';
-}
-```
-
-### Layout templates
-
-The layout template defines the columns layout. Again, you don’t have to
-define this template; the default layout used by Pubwich is this (eg. if
-you defined 3 columns in your `config.php` file):
-
-```php
-'{{{col1}}} {{{col2}}} {{{col3}}}'
-```
-
-So each column is displayed one after the other. But if you’d like to
-change that layout, you can use this:
-
-```php
-function layoutTemplate() {
-    return '<div class="first-column">{{{col1}}}</div><div class="other-columns">{{{col2}}} {{{col3}}}</div>';
-}
-```
