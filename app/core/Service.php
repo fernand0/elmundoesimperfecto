@@ -377,14 +377,31 @@
                 $extensions = array();
             }
 		
-		    $classes = array_merge(array_reverse($this->getClassesStack()), $extensions);
-		    $strings = array();
+		    $classes = array_reverse($this->getClassesStack());
+		    $classchains = array();
 		    
 		    for ($i = count($classes); $i > 0; $i = $i - 1) {
-		        $strings[] = implode($separator, array_slice($classes, 0, $i));
+		        $classchains[] = implode($separator, array_slice($classes, 0, $i));
 		    }
-		
-		    return array_reverse($strings);
+		    
+		    $extchains = array();
+		    
+		    for ($i = count($extensions); $i > 0; $i = $i - 1) {
+		        $extchains[] = implode($separator, array_slice($extensions, 0, $i));
+		    }
+		    
+            // string patterns combining classes and service id extension is
+            // deprecated but stay here for backwards compatibility
+		    $patterns = array();
+		    foreach (array_reverse($classchains) as $classchain) {
+		        foreach ($extchains as $extchain) {
+		            $patterns[] = $classchain . $separator . $extchain;
+		        }
+		    }
+		    
+		    $strings = array_merge(array_reverse($classchains), $extensions, $patterns);
+		    
+		    return $strings;
 		}
 
 		/*
