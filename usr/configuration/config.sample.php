@@ -257,8 +257,9 @@
     /*
     $youtube_uploads = array(
         'Youtube', 'youtube_uploads', array(
-            'list' => 'uploads',
+            'list' => 'uploads', // uploads | likes | favorites, or playlist ID
             'username' => 'YOUTUBE_USERNAME_HERE',
+            'apikey' => 'PUBLICAPIKEY', // get it here https://console.developers.google.com/
             'total' => 3,
             'title' => 'Youtube',
             'description' => 'my recent videos'
