@@ -103,9 +103,17 @@
 			parent::setVariables( $config );
 
 			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'search/tweets', array('q'=>$config['terms'], 'count'=>$config['total'], 'result_type'=>'recent' ) ) );
-			$this->setURL('https://search.twitter.com/'.$config['terms'].'/'.$config['total']); // for cache hash
+			$this->setURL(
+			    'https://api.twitter.com/1.1/search/tweets.json?q=' .
+			    urlencode($config['terms']) . 
+			    '&count=' . $config['total'] .
+			    '&result_type=recent'
+			); // for cache hash
 			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="" /> <strong>@{{{user_nickname}}}:</strong></a> {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
-			$this->setURLTemplate( 'https://search.twitter.com/search?q='.$config['terms'] );
+			$this->setURLTemplate(
+			    'https://twitter.com/search?q=' .
+			    urlencode('"'.$config['terms'].'"')
+			);
 
 			parent::__construct( $config );
 		}
