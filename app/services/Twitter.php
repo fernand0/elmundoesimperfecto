@@ -36,7 +36,7 @@
 		public function filterContent( $text ) {
 			$text = strip_tags( $text );
 			$text = preg_replace( '/(https?:\/\/[^\s\)]+)/', '<a href="\\1">\\1</a>', $text );
-			$text = preg_replace( '/(^|\s)\#([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1<a href="https://search.twitter.com/search?q=%23\\2">#\\2</a>', $text );
+			$text = preg_replace( '/(^|\s)\#([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1<a href="https://twitter.com/hashtag/\\2">#\\2</a>', $text );
 			$text = preg_replace( '/(^|\s)\@([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1@<a href="https://twitter.com/\\2">\\2</a>', $text );
 			return $text;
 		}
