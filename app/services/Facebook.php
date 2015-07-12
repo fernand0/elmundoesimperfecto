@@ -37,7 +37,7 @@
 			$this->setItemTemplate(
 			    '<li class="facebook-{{{type}}}">
 			        {{#media_thumbnail_url}}
-                        <img src="{{{media_thumbnail_url}}}" class="item-media-thumbnail" alt="{{{media_caption}}}" height="75" />
+                        <img src="{{{media_thumbnail_url}}}" class="item-media-thumbnail" alt="" height="75" />
                     {{/media_thumbnail_url}}
                     {{{status}}}
 			        (<a href="{{{link}}}">{{{date}}}</a>)
