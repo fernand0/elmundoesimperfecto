@@ -114,7 +114,22 @@
 
     /*
     $facebook = array(
-        // TODO
+	    'Facebook', 'facebook_page', array(
+	        // currently PubwichFork only provide FacebookPage method
+			'method' => 'FacebookPage',
+			
+			// you need to config either pageid or pagename
+			'pageid' => 'PAGEID', // https://www.facebook.com/pages/Name-of-Page/pageid
+			'pagename' => 'PAGENAME', // https://www.facebook.com/pagename
+			
+			// you need to create a website app https://developers.facebook.com/apps/ 
+			'app_id' => 'APPID', // see application dashboard
+			'app_secret' => 'APPSECRET', // see application dashboard
+			
+			'total' => 5,
+			'title' => 'Title',
+			'description' => 'latest statuses',
+		)
     ); //*/
 
     /*
