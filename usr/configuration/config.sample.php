@@ -109,7 +109,11 @@
 
     /*
     $dribbble = array(
-        // TODO
+	    'Dribbble', 'dribble', array(
+			'username' => 'youraccount',
+			'total' => 8,
+			'title' => 'Dribbble',
+			'description' => 'latest shots',
     ); //*/
 
     /*
@@ -188,10 +192,27 @@
     $goodreads = array(
         // TODO
     ); //*/
+    
+    /*
+    $gnusocialprofile = array(
+	    'Gnusocial', 'gnusocial_profile', array(
+	        'serverurl' => 'https://gnu.example.com/',
+	        'username' => 'USERNAME',
+			'total' => 3,
+			'title' => 'Name',
+			'description' => 'GNUsocial profile'
+	    )
+    ); //*/
 
     /*
-    $gowalla = array(
-        // TODO
+    $gnusocialtag = array(
+	    'Gnusocial', 'gnusocial_tag', array(
+	        'serverurl' => 'https://gnu.example.com/',
+	        'tag' => 'tagname',
+			'total' => 3,
+			'title' => 'Tag title',
+			'description' => 'GNUsocial tag'
+	    )
     ); //*/
 
     /*
@@ -214,31 +235,28 @@
 
     /*
     $pinboard = array(
-        // TODO
-    ); //*/
-
-    /*
-    $readernaut = array(
-        //  TODO
-    ); //*/
-
-    /*
-    $readitlater = array(
-        // TODO
+	    'Pinboard', 'pinboard', array(
+			'username' => 'YOUR_USERNAME',
+			'total' => 3,
+			'title' => 'Pinboard',
+			'description' => 'Bookmarks'
+		)
     ); //*/
 
     /*
     $reddit = array(
-        // TODO
+	    'Reddit', 'reddit_likes', array(
+			'method' => 'RedditLiked',
+			'username' => 'YOUR_USERNAME',
+            'list' => 'likes',
+			'total' => 2,
+			'title' => 'Reddit',
+			'description' => 'what I liked'
+		)
     ); //*/
 
     /*
     $slideshare = array(
-        // TODO
-    ); //*/
-
-    /*
-    $statusnet = array(
         // TODO
     ); //*/
 
