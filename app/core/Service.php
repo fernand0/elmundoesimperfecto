@@ -417,7 +417,13 @@
 			//$htmlClass = strtolower( get_class( $this ) ).' '.( get_parent_class( $this ) != 'Service' ? strtolower( get_parent_class( $this ) ) : '' );
 
 			if ( !$classData ) {
-				$items = '<li class="nodata">'.sprintf( Pubwich::_('An error occured with the %s API. The data is therefore unavailable.'), get_class( $this ) ).'</li>';
+				$items = '<li class="nodata">' .
+				         sprintf(
+				            Pubwich::_('An error occured with the %s API. The data is therefore unavailable.'),
+				            get_class($this)
+				         ) . ' ' .
+				         (isset($this->errorMessage) ? $this->errorMessage : '') .
+				         '</li>';
 				$htmlClass .= ' nodata';
 			} else {
 				foreach( $classData as $item ) {
