@@ -264,7 +264,9 @@ The same goes for the support of the old template name patterns and the support
 of functions in ``functions.php``.
 
 Check the [service overview][10] for documentation of template tags that can be
-used for for each service. Additionally, you can check a service
-file (located in `app/services/<Service>.php`) and look for the
-`populateItemTemplate` method.
+used for for each service. Additionally, you can check files (located in
+`app/services/`) and look for the `populateItemTemplate` or `processDataItem`
+methods.
+
+[10]: https://github.com/haschek/PubwichFork/wiki/SocialWebServices
 
