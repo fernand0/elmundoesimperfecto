@@ -34,7 +34,7 @@
 		 * Return an array of key->value using the item data
 		 * @return array
 		 */
-		public function populateItemTemplate( &$item ) {
+		public function processDataItem($item) {
 			$path = $item['pathalias']!='' ? $item['pathalias'] : $item['owner'];
 			return array(
 						'link' => 'https://www.flickr.com/photos/'.$path.'/'.$item['id'].'/',
@@ -44,11 +44,23 @@
 		}
 
 		/**
+		 * Return an array of key->value using the item data
+		 * @return array
+		 */
+		public function populateItemTemplate( &$item ) {
+			return $item;
+		}
+
+		/**
 		 * Return a Flickr photo URL
 		 * @param array $photo Photo item
 		 * @return string
 		 */
-		public function getAbsoluteUrl( $photo, $size= 's' ) {
+		public function getAbsoluteUrl($photo, $size= 'q') {
+		    if ($s = $this->getConfigValue('size')) {
+		        $size = $s;
+		    }
+		
 			return sprintf( 'https://farm%d.static.flickr.com/%s/%s_%s_%s.jpg',
 				$photo['farm'],
 				$photo['server'],
@@ -92,11 +104,11 @@
 			parent::__construct( $config  );
 		}
 
-		public function populateItemTemplate( &$item ) {
+		public function processDataItem($item) {
 			$path = $item['pathalias']!='' ? $item['pathalias'] : $item['owner'];
-			$original = parent::populateItemTemplate( $item );
-			$original['link'] = 'https://www.flickr.com/photos/'.$path.'/'.$item['id'].'/in/pool-'.$this->groupname.'/';
-			return $original;
+			$picdata = parent::processDataItem($item);
+			$picdata['link'] = 'https://www.flickr.com/photos/'.$path.'/'.$item['id'].'/in/pool-'.$this->groupname.'/';
+			return $picdata;
 		}
 
 	}

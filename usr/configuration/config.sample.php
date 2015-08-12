@@ -167,6 +167,7 @@
             'key' => 'FLICKR_KEY_HERE',
             'userid' => 'FLICKER_USERID_HERE', // use http://www.idgettr.com to find it
             'username' => 'FLICKR_USERNAME_HERE',
+            'size' => 's', // s|q|t|m|n|z|c
             'total' => 8,
             'title' => 'Flick<em>r</em>',
             'description' => 'my latest photos'
