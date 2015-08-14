@@ -55,6 +55,10 @@ class Feed  extends Service {
 
     public function loadStringIntoSimplePieObject($xmldata)
     {
+        // Fix incoming xml
+        $xmldata = str_replace('&amp;', '&', $xmldata);
+        $xmldata = str_replace('&', '&amp;', $xmldata);
+
         // Create a new instance of the SimplePie object
         $feed = new SimplePie();
         $feed->enable_cache(false);
