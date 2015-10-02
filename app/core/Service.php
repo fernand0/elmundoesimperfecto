@@ -258,9 +258,9 @@
             if (!method_exists($this, 'processDataItem')) return false;
 
             $data_source = $this->getData();
-            $data_processed = array();
+            if (!$data_source) return array();
 
-            if (!$data_source) return false;
+            $data_processed = array();
 
             foreach ($data_source as $data_item) {
                 $data_processed[] = $this->processDataItem($data_item);
