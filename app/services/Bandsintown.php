@@ -35,7 +35,7 @@ class Bandsintown extends Service {
         );
         $this->setURLTemplate(
             sprintf(
-                'http://www.bandsintown.com/%s',
+                'https://www.bandsintown.com/%s',
                 rawurlencode($config['artistname'])
             )
         );
