@@ -23,7 +23,7 @@
             // @see https://developers.facebook.com/docs/graph-api/reference/v2.4/post
 			$this->setURL(
 			        sprintf(
-			            'https://graph.facebook.com/v2.4/%s/posts?fields=id,status_type,type,story,message,created_time,picture,full_picture,name,caption,link,to{name,link}&limit=%s&access_token=%s',
+			            'https://graph.facebook.com/v2.4/%s/posts?fields=id,status_type,type,story,message,created_time,picture,full_picture,name,caption,link&limit=%s&access_token=%s', // removed ,to{name,link}
 			            trim($pagekey),
 			            trim($config['total']),
 			            trim($config['app_id']).'|'.trim($config['app_secret'])
