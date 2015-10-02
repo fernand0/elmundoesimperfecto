@@ -46,7 +46,7 @@ class Bandsintown extends Service {
                 {{/media_thumbnail_url}}
                 <a href="{{link}}"><strong>{{{day}}}</strong> @ {{{venue}}}, {{{locality}}}, {{{state}}}</a>
                 {{#lineup}}
-                    <br/>{{{lineup}}}
+                    <br/>{{{lineup_extended}}}
                 {{/lineup}}
              </li>'."\n"
         );
@@ -94,16 +94,17 @@ class Bandsintown extends Service {
 
             // link
 
-            $musicbrainzid = $artist->mbid;
-            $facebook = $artist->facebook_page_url;
-            $bandsintownid = $artist->url;
-            $website = $artist->website;
-            $a_link = $website || $facebook;
-            if (!$a_link && $musicbrainzid) {
+            if ($bandsintownid = $artist->url) {
+                $a_link = 'https://www.bandsintown.com/' . $bandsintownid;
+            }
+            if ($musicbrainzid = $artist->mbid) {
                 $a_link = 'http://musicbrainz.org/artist/' . $musicbrainzid;
             }
-            elseif (!$a_link && $bandsintownid) {
-                $a_link = 'https://www.bandsintown.com/' . $bandsintownid;
+            if ($facebook = $artist->facebook_page_url) {
+                $a_link = $facebook;
+            }
+            if ($website = $artist->website) {
+                $a_link = $website;
             }
 
             $lineup[] = $a_name;
