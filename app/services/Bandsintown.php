@@ -7,8 +7,7 @@ defined('PUBWICH') or die('No direct access allowed.');
  * @description Fetch events for artists
  * @author Michael Haschke
  */
-//ini_set('display_errors', 1); // uncomment this line in production environment (prevent errors from showing up)
-//error_reporting(E_ALL); // uncomment this line in production environment (prevent errors from showing up)
+
 class Bandsintown extends Service {
 
     public function __construct($config) {

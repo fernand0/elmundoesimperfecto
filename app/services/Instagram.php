@@ -22,7 +22,6 @@
 		public function buildCache($Cache_Lite = null) {
 
             // get user id by user name
-	        $channelsuri = 
 	        $userdata = Pubwich::json_decode(file_get_contents(
 	            sprintf(
                     'https://api.instagram.com/v1/users/search?q=%s&count=1&client_id=%s',
@@ -43,17 +42,17 @@
                 $userid,
                 trim($this->getConfigValue('client_id'))
 			);
-			
+
 			$this->setURL($recenturi);
 
 			return parent::buildCache($Cache_Lite);
 		}
-		
+
 		function getData() {
 		    if ($this->data === false) {
 		        return false;
 		    }
-		    
+
 		    return $this->data->data;
 		}
 
@@ -86,4 +85,3 @@
 			);
         }
 	}
-
