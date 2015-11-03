@@ -35,7 +35,34 @@ class Songkick extends Service {
         return false;
     }
 
-    public function buildCache($Cache_Lite = null) {
+    public function searchProfileIdByName() {
+        $Cache_Lite = new Cache_Lite($this->cache_options);
+        $cacheid = $this->cache_id . '_idsearch';
+        $profiledata = $Cache_Lite->get($cacheid);
+
+        if (!$profiledata) {
+            $profiledata = file_get_contents(
+                sprintf(
+                    'https://api.songkick.com/api/3.0/search/'.$this->apigroup.'.json?query=%s&apikey=%s',
+                    rawurlencode(trim($this->getConfigValue('name'))),
+                    trim($this->getConfigValue('apikey'))
+                )
+            );
+
+            if ($profiledata !== false ) {
+                $cacheWrite = $Cache_Lite->save($profiledata, $cacheid);
+            }
+        }
+
+        $profiledata = Pubwich::json_decode($profiledata);
+        return $profiledata;
+    }
+
+    public function processURL($url) {
+        return $url;
+    }
+
+    public function init() {
 
         $timeline = 'gigography';
 
@@ -51,13 +78,7 @@ class Songkick extends Service {
                 return false;
             }
             // get profile id by name
-            $profiledata = Pubwich::json_decode(file_get_contents(
-                sprintf(
-                    'https://api.songkick.com/api/3.0/search/'.$this->apigroup.'.json?query=%s&apikey=%s',
-                    rawurlencode(trim($this->getConfigValue('name'))),
-                    trim($this->getConfigValue('apikey'))
-                )
-            ));
+            $profiledata = $this->searchProfileIdByName();
 
             if ($profiledata && count($profiledata->resultsPage->results) > 0) {
                 $profileid = $this->getProfileId($profiledata->resultsPage->results);
@@ -68,13 +89,13 @@ class Songkick extends Service {
         }
 
         $this->setURL(
-            sprintf(
+            $this->processURL(sprintf(
                 'https://api.songkick.com/api/3.0/'.$this->apigroup.'/%s/%s.json?apikey=%s&order=%s',
                 $profileid,
                 $timeline,
                 $this->getConfigValue('apikey'),
                 $this->getConfigValue('sort')
-            )
+            ))
         );
         $this->setURLTemplate(
             sprintf(
@@ -83,7 +104,7 @@ class Songkick extends Service {
             )
         );
 
-        return parent::buildCache($Cache_Lite);
+        return parent::init();
     }
 
     public function processDataItem($item) {
@@ -198,7 +219,7 @@ class Songkick extends Service {
 
 }
 
-class SongkickArtists extends Songkick {
+class SongkickArtist extends Songkick {
 
     protected $apigroup = 'artists';
 
@@ -208,7 +229,7 @@ class SongkickArtists extends Songkick {
 
 }
 
-class SongkickVenues extends Songkick {
+class SongkickVenue extends Songkick {
 
     protected $apigroup = 'venues';
 
@@ -219,6 +240,40 @@ class SongkickVenues extends Songkick {
 
     public function getProfileId($results) {
         return $results->venue[0]->id;
+    }
+
+}
+
+class SongkickUser extends Songkick {
+
+    protected $apigroup = 'users';
+
+    public function __construct($config) {
+        if (!isset($config['profileid']) && isset($config['name'])) {
+            // Songkick api don't support user search
+            $config['profileid'] = $config['name'];
+        }
+        if (!isset($config['sort'])) {
+            // Songkick api returns error on empty order parameter for user events
+            $config['sort'] = 'asc';
+        }
+        parent::__construct( $config );
+    }
+
+    public function processURL($apiurl) {
+        $apiurl = str_replace('calendar.json?', 'events.json?', $apiurl);
+
+        if ($attendance = $this->getConfigValue('attendance')) {
+            $apiurl = $apiurl . '&attendance=' . rawurlencode(trim($attendance));
+        }
+
+        $this->setURL($apiurl);
+
+        return $apiurl;
+    }
+
+    public function getProfileId($results) {
+        return $this->getConfigValue('profileid');
     }
 
 }

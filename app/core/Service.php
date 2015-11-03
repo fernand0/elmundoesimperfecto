@@ -88,7 +88,7 @@
             if (defined('CACHE_DISPLACEMENT')) {
                 $displacementfactor = CACHE_DISPLACEMENT;
             }
-            
+
             $cache_limit = 0; // default, no caching
 
             if (isset($this->configuration['cache_limit'])) {
@@ -153,19 +153,19 @@
 			$Cache_Lite = new Cache_Lite( $this->cache_options );
 
 			$data = $Cache_Lite->get( $this->cache_id);
-			
+
 			if (!$data) {
 				$data = $this->buildCache( $Cache_Lite );
 			}
-			
+
 			/* TODO:
 			   it is really strange but only the lasfm cache strings do not
 			   get returned correctly. They available in buildCache but after
 			   returning the data var the string is empty here.
 			*/
-			
-            // echo '<!-- init '.$this->cache_id.': '.(!empty($data)).' -->'.PHP_EOL; 
-            
+
+            // echo '<!-- init '.$this->cache_id.': '.(!empty($data)).' -->'.PHP_EOL;
+
 			if ($data) {
 			    libxml_use_internal_errors( true );
 			    if ( is_string( $data ) ) {
@@ -173,9 +173,9 @@
 			    }
 			    libxml_clear_errors();
             }
-            
+
 			$this->data = $data;
-			
+
 			return $this;
 		}
 
@@ -192,15 +192,15 @@
 				$Cache_Lite = new Cache_Lite( $this->cache_options );
 				// $Cache_Lite->get( $this->cache_id );
 			}
-			
+
 			$data = false;
-			
+
 			if ( !isset($this->callback_getdata) || !$this->callback_getdata ) {
 				$data = FileFetcher::get( $url, $this->http_headers );
 			} else {
 				$data = call_user_func( $this->callback_getdata[0], $this->callback_getdata[1] );
 			}
-			
+
 			if ( $data !== false ) {
 				$cacheWrite = $Cache_Lite->save( $data, $this->cache_id );
 			}
@@ -210,9 +210,9 @@
                 //PubwichLog::log( 1, Pubwich::_("Use invalid output cache content.") );
                 $data = $Cache_Lite->get( $this->cache_id );
             }
-            
-            // echo '<!-- buildCache '.$this->cache_id.': '.(!empty($data)).' -->'.PHP_EOL; 
-            
+
+            // echo '<!-- buildCache '.$this->cache_id.': '.(!empty($data)).' -->'.PHP_EOL;
+
             return $data;
 		}
 
@@ -341,11 +341,11 @@
 				'description' => $this->description,
 			);
 		}
-		
+
 		public function getClassesStack() {
-            
+
             $classes = class_parents($this, true);
-            
+
             if (!$classes) {
                 $classes = array();
                 $classes[] = get_class($this);
@@ -356,18 +356,18 @@
             else {
                 $classes = array_merge(array(get_class($this)), $classes);
             }
-            
+
             $ignoreKey = array_search('Service', $classes);
-            
+
             if ($ignoreKey !== false) {
                 unset($classes[$ignoreKey]);
             }
-            
+
             return $classes;
 		}
-		
+
 		public function getClassesStackStrings($separator = '_', $extensions = array()) {
-		
+
             if ($extensions) {
                 if (!is_array($extensions)) {
                     $extensions = array($extensions);
@@ -376,20 +376,20 @@
             else {
                 $extensions = array();
             }
-		
+
 		    $classes = array_reverse($this->getClassesStack());
 		    $classchains = array();
-		    
+
 		    for ($i = count($classes); $i > 0; $i = $i - 1) {
 		        $classchains[] = implode($separator, array_slice($classes, 0, $i));
 		    }
-		    
+
 		    $extchains = array();
-		    
+
 		    for ($i = count($extensions); $i > 0; $i = $i - 1) {
 		        $extchains[] = implode($separator, array_slice($extensions, 0, $i));
 		    }
-		    
+
             // string patterns combining classes and service id extension is
             // deprecated but stay here for backwards compatibility
 		    $patterns = array();
@@ -398,9 +398,9 @@
 		            $patterns[] = $classchain . $separator . $extchain;
 		        }
 		    }
-		    
+
 		    $strings = array_merge(array_reverse($classchains), $extensions, $patterns);
-		    
+
 		    return $strings;
 		}
 
