@@ -74,7 +74,6 @@
 			}
             $thumbnail = $item->images->thumbnail->url;
 
-
 			return array(
 				'date' => $date,
 				'timestamp' => $timestamp,
