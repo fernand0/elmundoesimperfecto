@@ -35,7 +35,7 @@
 			if (empty($url)) {
 				 return false;
 			}
-			
+
 			return file_get_contents($url);
 		}
 
@@ -61,8 +61,10 @@
 			}
 			curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
 			curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-			curl_setopt ($ch, CURLOPT_USERAGENT, PUBWICH_NAME.'/'.PUBWICH_VERSION.' (Stream Aggregator; '.PUBWICH_WEB.'; Allow like Gecko) cURL/'.$curl_version);
-			
+			if (!isset($headers['User-Agent'])) {
+				curl_setopt ($ch, CURLOPT_USERAGENT, PUBWICH_NAME.'/'.PUBWICH_VERSION.' (Stream Aggregator; '.PUBWICH_WEB.'; Allow like Gecko) cURL/'.$curl_version);
+			}
+
             // proxy stuff @see http://php.net/manual/en/function.curl-setopt.php
             if (defined('PUBWICH_HTTPPROXYTUNNEL')) curl_setopt($ch, CURLOPT_HTTPPROXYTUNNEL, PUBWICH_HTTPPROXYTUNNEL);
             if (defined('PUBWICH_PROXY')) curl_setopt($ch, CURLOPT_PROXY, PUBWICH_PROXY);
@@ -70,10 +72,10 @@
             if (defined('PUBWICH_PROXYTYPE')) curl_setopt($ch, CURLOPT_PROXYTYPE, PUBWICH_PROXYTYPE);
             if (defined('PUBWICH_PROXYAUTH')) curl_setopt($ch, CURLOPT_PROXYAUTH, PUBWICH_PROXYAUTH);
             if (defined('PUBWICH_PROXYUSERPWD')) curl_setopt($ch, CURLOPT_PROXYUSERPWD, PUBWICH_PROXYUSERPWD);
-            
+
             // get content
             $file_contents = curl_exec($ch);
 			curl_close($ch);
-			return $file_contents; 
+			return $file_contents;
 		}
 	}

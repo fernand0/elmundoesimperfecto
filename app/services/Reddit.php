@@ -16,6 +16,7 @@ class Reddit extends Service {
 	private $base = 'http://www.reddit.com';
 
 	public function __construct( $config ){
+		$this->http_headers['User-Agent'] = 'php:' . PUBWICH_NAME . ':' . PUBWICH_VERSION . ' (by /u/' . $config['username'] . ')';
 		parent::__construct( $config );
 		$this->total = $config['total'];
 		$this->callback_function = array('Pubwich', 'json_decode');
@@ -57,7 +58,7 @@ class Reddit extends Service {
             'timestamp' => $timestamp,
 		);
     }
-    
+
 	public function populateItemTemplate( &$item ) {
         return $item;
 	}
@@ -66,8 +67,8 @@ class Reddit extends Service {
 
 class RedditLiked extends Reddit {
 	public function __construct( $config ){
-		$this->setURLTemplate('http://www.reddit.com/user/'.$config['username'].'/liked/');
-		$this->setURL( sprintf( 'http://www.reddit.com/user/%s/liked.json', $config['username'] ) );
+		$this->setURLTemplate('https://www.reddit.com/user/'.$config['username'].'/liked/');
+		$this->setURL( sprintf( 'https://www.reddit.com/user/%s/liked.json', $config['username'] ) );
 		$this->setItemTemplate(
 		    '<li>
 		        <a href="{{{url}}}">{{{title}}} / <span>{{{domain}}}</span></a>
