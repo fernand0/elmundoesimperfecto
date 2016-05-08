@@ -66,15 +66,25 @@
 			    {
 			        $prot = 'https://';
 			    }
-			    
+
 			    // server name
 			    $server = trim($_SERVER['SERVER_NAME'], '/');
-			    
-			    // server path
-			    $path = trim(str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(__DIR__ . '/../../')), '/');
-			    //$path = trim(str_replace(basename($_SERVER['SCRIPT_FILENAME']), '', $_SERVER['SCRIPT_NAME']), '/');
-			    
-			    define('PUBWICH_URL', $prot . $server . '/' . $path . '/');
+
+				$requesturi = $_SERVER['REQUEST_URI'];
+
+				if ($requesturi) {
+					$path = trim(implode('/', array_slice(explode('/', $requesturi), 0, -1)), '/');
+				}
+				else {
+					// document root
+					$phproot = realpath($_SERVER['DOCUMENT_ROOT']);
+					// application root
+					$approot = realpath(__DIR__ . '/../../');
+				    // server path
+				    $path = trim(str_replace($phproot, '', $approot), '/');
+				}
+
+			    define('PUBWICH_URL', $prot . $server . '/' . $path . ($path ? '/' : ''));
 			}
 
 			// Internationalization class
@@ -93,12 +103,12 @@
             if (!defined('CACHE_LOCATION')) {
                 define('CACHE_LOCATION', $path_user . 'cache/');
             }
-            
+
 			require_once( 'Cache/Lite.php' );
-			
+
 			// Other classes
 			require_once( 'FileFetcher.php' );
-			
+
 
 			if ( !defined( 'PUBWICH_CRON' ) ) {
 				require_once( 'mustache.php/src/Mustache/Autoloader.php' );
@@ -111,7 +121,7 @@
 			if ( !function_exists( 'json_decode' ) ) {
 				throw new PubwichError('PHP version with json_decode support is required: http://php.net/manual/en/json.installation.php');
 			}
-			
+
             // Theme
             if (file_exists(dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME) === true) {
 			    self::$theme_user_path = dirname(__FILE__) . '/../../usr/themes/' . PUBWICH_THEME;
@@ -122,12 +132,12 @@
 			    self::$theme_parent_path = dirname(__FILE__) . '/../themes/' . PUBWICH_THEME;
 			    self::$theme_parent_url = PUBWICH_URL . 'app/themes/' . PUBWICH_THEME;
 			}
-			
+
             if (file_exists(dirname(__FILE__) . '/../themes/' . 'default') === true) {
 			    self::$theme_default_path = dirname(__FILE__) . '/../themes/' . 'default';
 			    self::$theme_default_url = PUBWICH_URL . 'app/themes/' . 'default';
 			}
-			
+
 			require_once( 'core/PubwichTemplate.php' );
 
 			// PHP objects creation
@@ -303,7 +313,7 @@
 		    if ( !$siteTemplate && !$templateChrome ) {
 			    throw new PubwichError( sprintf( Pubwich::_( 'The file <code>%s</code> was not found. It has to be there.' ), realpath(self::getThemePath()).'/templates/site.mustache'));
 		    }
-            
+
 			if ( !$templateSnippets = self::getThemeFileLocation('functions.php') ) {
                 /*
                 Removed: functions.php is only a fallback and deprecated
@@ -496,7 +506,7 @@
 				);
 
 				foreach ( $templateSnippetNames as $snippetname ) {
-					
+
 					$box_template = self::getTemplateSnippet($snippetname . '_box');
 					$item_template = self::getTemplateSnippet($snippetname . '_item');
 
@@ -525,13 +535,13 @@
 			if ($columnTemplate) {
 			    $containerTemplate = $columnTemplate;
             }
-            
+
 			$layoutTemplate = self::getTemplateSnippet('layout');
 
 			$output_columns = array();
 			$layoutTemplateAuto = '';
 			$m = new Mustache_Engine;
-			
+
 			foreach( self::$columns as $col => $classes ) {
 				$boxes = '';
 				foreach( $classes as $class ) {
@@ -541,14 +551,14 @@
 
 				$layoutTemplateAuto .= '{{{container'.$col.'}}} ';
 			}
-			
+
 			if (!$layoutTemplate) {
 			    $layoutTemplate = $layoutTemplateAuto;
 			}
-			
+
 			return $m->render($layoutTemplate, $output_columns);
 		}
-		
+
 		/**
 		 * Get theme file location
 		 *
@@ -562,19 +572,19 @@
          * @since 2014-01-14
 		 */
 		static public function getThemeFileLocation($fileName) {
-		    
+
 		    if (file_exists(self::$theme_user_path . DIRECTORY_SEPARATOR . $fileName)) {
 		        return self::$theme_user_path . DIRECTORY_SEPARATOR . $fileName;
 		    }
-		    
+
 		    if (file_exists(self::$theme_parent_path . DIRECTORY_SEPARATOR . $fileName)) {
 		        return self::$theme_parent_path . DIRECTORY_SEPARATOR . $fileName;
 		    }
-		    
+
 		    if (file_exists(self::$theme_default_path . DIRECTORY_SEPARATOR . $fileName)) {
 		        return self::$theme_default_path . DIRECTORY_SEPARATOR . $fileName;
 		    }
-		    
+
 		    return false;
 		}
 
@@ -593,39 +603,39 @@
          * @since 2014-01-12
 		 */
 		static public function getTemplateSnippet($templateSnippetName, $fallbackString = false) {
-		
+
 		    static $snippets = array();
-		    
+
 		    // echo '<!-- TEMPLATESTRINGS: '.print_r($snippets, true).' -->'.PHP_EOL;
-		    
+
 		    // template snippet already known (or not available)?
-		    
+
 		    if (isset($snippets[$templateSnippetName])) {
 		        return $snippets[$templateSnippetName];
 		    }
-		    
+
 		    // check for funktion that gives back the template snippet string
-		    
+
 		    if (function_exists($templateSnippetName.'Template')) {
 		        $snippets[$templateSnippetName] = call_user_func($templateSnippetName.'Template');
 		        return $snippets[$templateSnippetName];
 		    }
-		    
+
 		    if ($templateSnippetFile = self::getThemeFileLocation('templates'.DIRECTORY_SEPARATOR.$templateSnippetName.'.mustache'))
 		    {
 		        $snippets[$templateSnippetName] = file_get_contents($templateSnippetFile);
 		        return $snippets[$templateSnippetName];
 		    }
-		    
+
 		    // use fallbackstring
-		    
+
 		    if ($fallbackString) {
 		        $snippets[$templateSnippetName] = $fallbackString;
 		        return $snippets[$templateSnippetName];
 		    }
-		    
+
 		    // no template snippet found
-		    
+
 		    return false;
 		}
 
@@ -726,7 +736,7 @@
 			if ( $themeFilters = self::getThemeFileLocation('filters.php')) {
 				require_once( $themeFilters );
 			}
-            
+
 			foreach( self::$classes as $service ) {
 
 				$filtermethods = $service->getClassesStackStrings(
