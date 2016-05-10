@@ -295,6 +295,13 @@
             return $services[$service_id];
         }
 
+		static public function getGlobalTemplateVars() {
+			return array(
+				'themeurl' => self::getThemeUrl(),
+				'baseurl' => PUBWICH_URL
+			);
+		}
+
 		/**
 		 * Renders the template according to the current theme
 		 *
@@ -343,15 +350,17 @@
                 $m = new Mustache_Engine;
                 echo $m->render(
                     $siteTemplate,
-                    array(
-                        'title' => PUBWICH_TITLE,
-                        'content' => self::getLoop(),
-                        'headerinclude' => self::getHeader(),
-                        'footerinclude' => self::getFooter(),
-                        'info' => sprintf(self::_('Fetched %s, proudly aggregated by %s.'), date('Y'), '<a class="pubwich" href="'.PUBWICH_WEB.'">'.PUBWICH_NAME.'</a>'),
-                        'version' => PUBWICH_NAME . ' ' . PUBWICH_VERSION,
-                        'themeurl' => self::getThemeUrl()
-                    )
+					array_merge(
+						self::getGlobalTemplateVars(),
+						array(
+							'title' => htmlspecialchars(PUBWICH_TITLE),
+							'content' => self::getLoop(),
+							'headerinclude' => self::getHeader(),
+							'footerinclude' => self::getFooter(),
+							'info' => sprintf(self::_('Fetched %s, proudly aggregated by %s.'), date('Y'), '<a class="pubwich" href="'.PUBWICH_WEB.'">'.PUBWICH_NAME.'</a>'),
+							'version' => PUBWICH_NAME . ' ' . PUBWICH_VERSION,
+						)
+					)
                 );
             }
             if ($output_cache) {
@@ -547,7 +556,13 @@
 				foreach( $classes as $class ) {
 					$boxes .= $class->renderBox();
 				}
-				$output_columns['container'.$col] = $m->render($containerTemplate, array('number'=>$col, 'content'=>$boxes));
+				$output_columns['container'.$col] = $m->render(
+					$containerTemplate,
+					array_merge(
+						//self::getGlobalTemplateVars(),
+						array('number'=>$col, 'content'=>$boxes)
+					)
+				);
 
 				$layoutTemplateAuto .= '{{{container'.$col.'}}} ';
 			}
@@ -556,7 +571,13 @@
 			    $layoutTemplate = $layoutTemplateAuto;
 			}
 
-			return $m->render($layoutTemplate, $output_columns);
+			return $m->render(
+				$layoutTemplate,
+				array_merge(
+					//self::getGlobalTemplateVars(),
+					$output_columns
+				)
+			);
 		}
 
 		/**

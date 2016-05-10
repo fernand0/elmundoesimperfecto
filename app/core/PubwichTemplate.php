@@ -45,7 +45,13 @@
 		 */
 		public function populate( $data ) {
 			$m = new Mustache_Engine;
-			$this->output = $m->render($this->template, $data);
+			$this->output = $m->render(
+				$this->template,
+				array_merge(
+					Pubwich::getGlobalTemplateVars(),
+					$data
+				)
+			);
 		}
 
 		/**
