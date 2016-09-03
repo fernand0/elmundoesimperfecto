@@ -187,6 +187,7 @@
         'title' => 'Github',
         'description' => 'My recent activity',
         'method' => 'GithubRecentActivity'
+        )
     ); //*/
 
     /*
