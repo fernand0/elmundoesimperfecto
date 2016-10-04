@@ -17,7 +17,7 @@ require_once 'Feed.php';
 class Delicious extends Feed {
 
     public function __construct( $config ){
-        $config['link'] = 'http://delicious.com/'.$config['username'].'/';
+        $config['link'] = 'https://del.icio.us/'.$config['username'].'/';
         $tags = null;
         if (isset($config['tags']) && is_string($config['tags'])) {
             $tags = explode(',', $config['tags']);
@@ -26,7 +26,7 @@ class Delicious extends Feed {
             }
             $tags = '/'.implode('+', $tags);
         }
-        $config['url'] = sprintf( 'http://feeds.delicious.com/v2/rss/%s%s?count=%s', $config['username'], $tags, $config['total'] );
+        $config['url'] = sprintf( 'http://feeds.del.icio.us/v2/rss/%s%s?count=%s', $config['username'], $tags, $config['total'] );
         parent::__construct( $config );
         $this->setItemTemplate(
             '<li>
