@@ -215,7 +215,18 @@
 			'title' => 'Tag title',
 			'description' => 'GNUsocial tag'
 	    )
-    ); //*/
+    ); //*/	
+	
+	/*
+    $instagram = array(
+        'Instagram', 'instagram', array(
+			'username'      => 'Your instagram user name',
+			'access_token'  => 'Oauth access token',
+			'total'         => '12',
+			'title'         => 'Instagram',
+            'description'   => 'my insta pics'
+        )
+    ); //*/	
 
     /*
     $instapaper = array(
