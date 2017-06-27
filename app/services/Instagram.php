@@ -64,9 +64,9 @@
 			$date = Pubwich::time_since($item->created_time);
 			$timestamp = $item->created_time;
 			$link = $item->link;
-			$description = $item->caption->text;
-			if ($description) {
-			    $title = strip_tags(explode("\n", $description)[0]);
+			$ig_description = $item->caption->text;
+			if ($ig_description) {
+			    $title = strip_tags(explode("\n", $ig_description)[0]);
 			}
 			else {
 			    $title = null;
@@ -78,7 +78,7 @@
 				'timestamp' => $timestamp,
 				'link' => $link,
 	            'title' => $title,
-				'description' => $description,
+				'description' => $ig_description,
 				'thumbnail' => $thumbnail
 			);
         }
