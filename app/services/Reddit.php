@@ -23,7 +23,11 @@ class Reddit extends Service {
 	}
 
 	public function getData() {
-		return parent::getData()->data->children;
+		if ($json = parent::getData()) {
+			return $json->data->children;
+		}
+
+		return false;
 	}
 
     public function processDataItem( $item ) {
@@ -41,18 +45,19 @@ class Reddit extends Service {
         $timestamp = 0;
         $timestamp = $date;
 
+		//var_dump($data); die();
+
 		return array(
 			'base' => $this->base,
-			'title' => $data->title,
-			'link' => $this->base.$data->permalink,
-			'url' => $data->url,
+			'title' => isset($data->title) ? $data->title : $data->link_title,
+			'link' => isset($data->permalink) ? $this->base.$data->permalink : $this->base.$data->link_permalink,
+			'url' => isset($data->url) ? $data->url : $data->link_url,
 			'subreddit' => $data->subreddit,
 			'author' => $data->author,
 			'score' => $data->score,
 			'comments' => $data->num_comments,
 			'over_18' => $data->over_18 == 'true',
-			'thumbnail' => $data->thumbnail,
-			'domain' => $data->domain,
+			'domain' => isset($data->domain) ? $data->domain : false,
             'date' => Pubwich::time_since( $date ),
             'absolute_date' => $absolute_date,
             'timestamp' => $timestamp,
@@ -68,10 +73,10 @@ class Reddit extends Service {
 class RedditLiked extends Reddit {
 	public function __construct( $config ){
 		$this->setURLTemplate('https://www.reddit.com/user/'.$config['username'].'/liked/');
-		$this->setURL( sprintf( 'https://www.reddit.com/user/%s/liked.json', $config['username'] ) );
+		$this->setURL( sprintf( 'https://www.reddit.com/user/liked.json?username=%s', $config['username'] ) );
 		$this->setItemTemplate(
 		    '<li>
-		        <a href="{{{url}}}">{{{title}}} / <span>{{{domain}}}</span></a>
+		        <a href="{{{url}}}">{{{title}}} {{#domain}}/ <span>{{{domain}}}</span>{{/domain}}</a>
                 (<a href="{{{link}}}">{{{date}}}</a> in <a href="{{{base}}}/r/{{{subreddit}}}/">{{{subreddit}}}</a>)
 		    </li>'."\n");
 		parent::__construct( $config );
