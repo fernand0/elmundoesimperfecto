@@ -24,9 +24,9 @@
             // get user id by user name
 	        $userdata = Pubwich::json_decode(file_get_contents(
 	            sprintf(
-                    'https://api.instagram.com/v1/users/search?q=%s&count=1&client_id=%s',
+                    'https://api.instagram.com/v1/users/search?q=%s&count=1&access_token=%s',
                     trim($this->getConfigValue('username')),
-                    trim($this->getConfigValue('client_id'))
+                    trim($this->getConfigValue('access_token'))
     	        )
 	        ));
 
@@ -38,9 +38,9 @@
             }
 
 			$recenturi = sprintf(
-                'https://api.instagram.com/v1/users/%s/media/recent?client_id=%s',
+                'https://api.instagram.com/v1/users/%s/media/recent?access_token=%s',
                 $userid,
-                trim($this->getConfigValue('client_id'))
+                trim($this->getConfigValue('access_token'))
 			);
 
 			$this->setURL($recenturi);
@@ -61,13 +61,12 @@
 		}
 
         public function processDataItem($item) {
-
 			$date = Pubwich::time_since($item->created_time);
 			$timestamp = $item->created_time;
 			$link = $item->link;
-			$description = $item->caption->text;
-			if ($description) {
-			    $title = strip_tags(explode("\n", $description)[0]);
+			$ig_description = $item->caption->text;
+			if ($ig_description) {
+			    $title = strip_tags(explode("\n", $ig_description)[0]);
 			}
 			else {
 			    $title = null;
@@ -79,7 +78,7 @@
 				'timestamp' => $timestamp,
 				'link' => $link,
 	            'title' => $title,
-				'description' => $description,
+				'description' => $ig_description,
 				'thumbnail' => $thumbnail
 			);
         }
