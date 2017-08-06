@@ -205,18 +205,30 @@
 			'title' => 'Tag title',
 			'description' => 'GNUsocial tag'
 	    )
-    ); //*/	
-	
-	/*
-    $instagram = array(
-        'Instagram', 'instagram', array(
+    ); //*/
+
+    /*
+    $instagramapi = array(
+        'Instagram', 'instagram_api', array(
+			'method' => 'InstagramApiData',
 			'username'      => 'Your instagram user name',
-			'access_token'  => 'Oauth access token',
+			'access_token'  => 'Oauth access token', // @see https://github.com/haschek/PubwichFork/wiki/ServiceInstagram
 			'total'         => '12',
 			'title'         => 'Instagram',
             'description'   => 'my insta pics'
         )
-    ); //*/	
+    ); //*/
+
+    /*
+    $instagramprofile = array(
+        'Instagram', 'instagram_profile', array(
+			'method' => 'InstagramProfileData',
+			'username'      => 'Your instagram user name',
+			'total'         => '12',
+			'title'         => 'Instagram',
+            'description'   => 'my insta pics'
+        )
+    ); //*/
 
     /*
     $instapaper = array(
@@ -301,7 +313,7 @@
             'description' => 'my recent videos'
         )
     ); //*/
-	
+
 	/*
     $steam_last_played_games = array(
         'Steam', 'steam_last_played', array(
