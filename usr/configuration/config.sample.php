@@ -290,6 +290,18 @@
             'description' => 'my recent videos'
         )
     ); //*/
+	
+	/*
+    $steam_last_played_games = array(
+        'Steam', 'steam_last_played', array(
+            'method' => 'SteamLastPlayed',
+            'apikey' => 'YOURAPIKEY', // get it here https://steamcommunity.com/dev/apikey
+			'userid' => 'YOURUSERID', //if you have a vanity url, get your ID here : https://api.steampowered.com/ISteamUser/ResolveVanityURL/v1/?key=YOUR_KEY&vanityurl=YOUR_VANITY_URL Otherwise it's in your url when you visit your profile.
+            'title' => 'Steam',
+			'total' => '5',
+            'description' => 'my last played games'
+        )
+    ); //*/
 
     /* -- 7) Add service configurations -------------------------------- */
 
