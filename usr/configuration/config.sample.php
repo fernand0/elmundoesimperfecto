@@ -5,7 +5,7 @@
 
     /*
         Please follow this steps to configure PubwichFork:
-        
+
         1) Server environment & Logging
         2) Localisation/Language
         3) Site informations
@@ -59,7 +59,7 @@
     /* You probably do not need this, but in some cases your server may not
        have directly access to the web for aggregation. Then please ask
        your admin/service provider for the proxy server data.
-       
+
        @see https://github.com/haschek/PubwichFork/wiki/UsingProxyServer
     */
 
@@ -74,10 +74,10 @@
        the following examples of service configuration, or read the
        documentation. Later (in step 7) you need to group the configured
        services.
-       
+
        @see https://github.com/haschek/PubwichFork/wiki/SocialWebServices
     */
-    
+
     //*
     $infobox = array(
         'Text', 'intro', array(
@@ -98,16 +98,6 @@
     // @see https://github.com/haschek/PubwichFork/Services
 
     /*
-    $delicious = array(
-        'Delicious', 'bookmarks', array(
-            'username' => 'DELICIOUS_USERNAME',
-            'total' => 5,
-            'title' => 'Delicious',
-            'description' => 'latest bookmarks',
-        )
-    ); //*/
-
-    /*
     $dribbble = array(
 	    'Dribbble', 'dribble', array(
 			'username' => 'youraccount',
@@ -121,15 +111,15 @@
 	    'Facebook', 'facebook_page', array(
 	        // currently PubwichFork only provide FacebookPage method
 			'method' => 'FacebookPage',
-			
+
 			// you need to config either pageid or pagename
 			'pageid' => 'PAGEID', // https://www.facebook.com/pages/Name-of-Page/pageid
 			'pagename' => 'PAGENAME', // https://www.facebook.com/pagename
-			
-			// you need to create a website app https://developers.facebook.com/apps/ 
+
+			// you need to create a website app https://developers.facebook.com/apps/
 			'app_id' => 'APPID', // see application dashboard
 			'app_secret' => 'APPSECRET', // see application dashboard
-			
+
 			'total' => 5,
 			'title' => 'Title',
 			'description' => 'latest statuses',
@@ -194,7 +184,7 @@
     $goodreads = array(
         // TODO
     ); //*/
-    
+
     /*
     $gnusocialprofile = array(
 	    'Gnusocial', 'gnusocial_profile', array(
@@ -275,7 +265,7 @@
             ),
             'total' => '10',
             'title' => 'Twitter'
-        )    
+        )
     ); //*/
 
     /*
@@ -302,7 +292,7 @@
     ); //*/
 
     /* -- 7) Add service configurations -------------------------------- */
-    
+
     /*
         Use the configuration variables from step 6 to group the Social
         Web services (if you use the vars from the examples, do not forget
@@ -325,7 +315,7 @@
             ),
             // container 3
             array(
-                // $delicious,
+                // $dribbble,
                 // $lastfm_weekly,
             ),
 
