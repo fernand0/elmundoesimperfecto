@@ -40,6 +40,9 @@
 					{{#game}}
 						<br/><a href="{{link}}">{{{game}}}</a> : {{{playingtime}}}
 					{{/game}}
+					{{#nogame}}
+						No game played recently to display.
+					{{/nogame}}
 				 </li>'."\n"
 			);
 		}
@@ -62,6 +65,12 @@
 		    if ($this->data === false) {
 		        return false;
 		    }
+		    if ($this->data->response === false) {
+		        return false;
+		    }
+		    if ($this->data->response->total_count === 0) {
+		        return $this->data;
+		    }
 		    return $this->data->response->games;
 		}
 
@@ -70,11 +79,20 @@
 		}
 		
 		public function processDataItem( $item ) {
-			return array(
+			if ($item->total_count === 0)
+			{
+				return array(
+					'nogame' => 1,
+				);
+			}
+			else
+			{
+				return array(
 					'game' => $item->name,
 					'playingtime' => date('G\hi\m\n', mktime(0,$item->playtime_2weeks)),
 					'media_thumbnail_url' => 'http://cdn.akamai.steamstatic.com/steamcommunity/public/images/apps/'.$item->appid.'/'.$item->img_icon_url.'.jpg',
 					'link' => 'http://steamcommunity.com/app/'.$item->appid,
-			);
+				);
+			}
 		}
 	}
