@@ -79,7 +79,7 @@
 		}
 		
 		public function processDataItem( $item ) {
-			if ($item->total_count === 0)
+			if (!isset($item))
 			{
 				return array(
 					'nogame' => 1,
