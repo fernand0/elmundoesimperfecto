@@ -26,7 +26,7 @@ class Bandsintown extends Service {
 
         $this->setURL(
             sprintf(
-                'http://api.bandsintown.com/artists/%s/events?format=json&app_id=%s&date=%s&api_version=2.0',
+                'https://rest.bandsintown.com/artists/%s/events?format=json&app_id=%s&date=%s',
                 urlencode(rawurlencode($config['artistname'])),
                 PUBWICH_NAME.PUBWICH_VERSION,
                 $config['date']
@@ -40,9 +40,6 @@ class Bandsintown extends Service {
         );
         $this->setItemTemplate(
             '<li>
-                {{#media_thumbnail_url}}
-                    <img src="{{{media_thumbnail_url}}}" class="item-media-thumbnail" alt="{{{media_caption}}}" height="75" />
-                {{/media_thumbnail_url}}
                 <a href="{{link}}"><strong>{{{day}}}</strong> @ {{{venue}}}, {{{locality}}}, {{{state}}}</a>
                 {{#lineup}}
                     <br/>{{{lineup_extended}}}
@@ -58,9 +55,6 @@ class Bandsintown extends Service {
 
         // date
         $timestamp = strtotime($item->datetime . date('P'));
-
-        // title
-        $title = $item->title;
 
         // description
         $description = preg_replace( '/(https?:\/\/[^\s\)]+)/', '<a href="\\1">\\1</a>', $item->description);
@@ -81,33 +75,18 @@ class Bandsintown extends Service {
         $state_or_country = ($country === 'United States' || $country === 'Canada') ? $region : $country;
 
         // event link
-        $link = explode('?', $item->facebook_rsvp_url);
+        $link = explode('?', $item->url);
         $link = $link[0];
 
         // artist lineup
         $lineup = array();
         $lineup_extended = array();
-        foreach ($item->artists as $artist) {
-            // name
-            $a_name = $artist->name;
-
+        foreach ($item->lineup as $artist) {
             // link
+            $a_link = 'https://www.bandsintown.com/' . urldecode($artist);
 
-            if ($bandsintownid = $artist->url) {
-                $a_link = 'https://www.bandsintown.com/' . $bandsintownid;
-            }
-            if ($musicbrainzid = $artist->mbid) {
-                $a_link = 'http://musicbrainz.org/artist/' . $musicbrainzid;
-            }
-            if ($facebook = $artist->facebook_page_url) {
-                $a_link = $facebook;
-            }
-            if ($website = $artist->website) {
-                $a_link = $website;
-            }
-
-            $lineup[] = $a_name;
-            $lineup_extended[] = $a_link ? '<a href="'.$a_link.'">'.$a_name.'</a>' : $a_name;
+            $lineup[] = $artist;
+            $lineup_extended[] = '<a href="'.$a_link.'">'.$artist.'</a>';
         }
         $lineup = implode(', ', $lineup);
         $lineup_extended = implode(', ', $lineup_extended);
@@ -116,7 +95,6 @@ class Bandsintown extends Service {
             'day' => date('Y-m-d', $timestamp),
             'time' => date('H:m', $timestamp),
             'timestamp' => $timestamp,
-            'title' => $title,
             'description' => $description,
             'venue' => $venue,
             'locality' => $locality,
