@@ -23,29 +23,31 @@ class Dribbble extends Service {
 	}
 
 	public function getData() {
-		if ($data = parent::getData()) {
-			return $data;
+		if ($this->data !== false && isset($this->data->message)) {
+			$this->errorMessage = $this->data->message;
+			return false;
 		}
+
+		return $this->data;
 	}
 
 	public function processDataItem($item) {
 		return array(
 			'id' => $item->id,
 			'title' => $item->title,
-			'date' => Pubwich::time_since($item->created_at),
-			'timestamp' => $item->created_at,
+			'date' => Pubwich::time_since($item->published_at),
+			'timestamp' => $item->published_at,
 			'description' => $item->description,
 			'url' => $item->html_url,
-			'image_url' => $item->images->hidpi,
+			'image_url' => $item->attachments[0]->url,
 			'likes' => $item->likes_count,
 			'comments' => $item->comments_count,
-			'image_teaser_url' => $item->images->teaser,
-			'height' => $item->height,
-			'width' => $item->width,
+			'image_teaser_url' => $item->attachments[0]->thumbnail_url,
 		);
 	}
 
 	public function processDataStream() {
+		if (count($this->getData()) < 1) return array();
         $data = parent::processDataStream();
         $limit = $this->getConfigValue('total');
 
@@ -67,8 +69,7 @@ class DribbbleShots extends Dribbble {
 	public function __construct( $config ){
 		$this->setURL(
 			sprintf(
-				'https://api.dribbble.com/v1/users/%s/shots?access_token=%s',
-				$config['username'],
+				'https://api.dribbble.com/v2/user/shots?access_token=%s',
 				$config['access_token']
 			)
 		);
@@ -81,8 +82,7 @@ class DribbbleLikes extends Dribbble {
 	public function __construct( $config ){
 		$this->setURL(
 			sprintf(
-				'https://api.dribbble.com/v1/users/%s/likes?access_token=%s',
-				$config['username'],
+				'https://api.dribbble.com/v2/user/likes?access_token=%s',
 				$config['access_token']
 			)
 		);
