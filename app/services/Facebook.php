@@ -23,7 +23,7 @@
             // @see https://developers.facebook.com/docs/graph-api/reference/v2.4/post
 			$this->setURL(
 			        sprintf(
-			            'https://graph.facebook.com/v2.12/%s/posts?fields=' . implode(',', array(
+			            'https://graph.facebook.com/v3.0/%s/posts?fields=' . implode(',', array(
 							'id',
 							'status_type',
 							'type',
