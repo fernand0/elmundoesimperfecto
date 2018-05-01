@@ -12,7 +12,7 @@
 	class Facebook extends Service {
 	    // only stub for other stuff that may come later.
 	}
-	
+
 	class FacebookPage extends Facebook {
 
 		public function __construct( $config ){
@@ -23,7 +23,21 @@
             // @see https://developers.facebook.com/docs/graph-api/reference/v2.4/post
 			$this->setURL(
 			        sprintf(
-			            'https://graph.facebook.com/v2.4/%s/posts?fields=id,status_type,type,story,message,created_time,picture,full_picture,name,caption,link&limit=%s&access_token=%s', // removed ,to{name,link}
+			            'https://graph.facebook.com/v3.0/%s/posts?fields=' . implode(',', array(
+							'id',
+							'status_type',
+							'type',
+							'created_time',
+							'story',
+							'message',
+							'picture',
+							'full_picture',
+							'message_tags',
+							'name',
+							'caption',
+							'description',
+							'link'
+						)) . '&limit=%s&access_token=%s',
 			            trim($pagekey),
 			            trim($config['total']),
 			            trim($config['app_id']).'|'.trim($config['app_secret'])
@@ -49,14 +63,14 @@
 
 		public function getData() {
 		    if ($this->data === false || !isset($this->data->data)) {
-		    
+
 		        if (isset($this->data->error) && isset($this->data->error->message)) {
 		            $this->errorMessage = $this->data->error->message;
 		        }
-		        
+
 		        return false;
 		    }
-		    
+
 		    return $this->data->data;
 		}
 
@@ -75,7 +89,7 @@
             $link_name = isset($item->name) ? $item->name : false;
             $link_caption = isset($item->caption) ? $item->caption : false;
             $link_url = isset($item->link) ? $item->link : false;
-            
+
             $id = explode('_', $item->id);
             $id_page = $id[0];
             $id_message = $id[1];
@@ -90,16 +104,16 @@
 
             if ($link_name && $link_url) {
                 $status_extended = str_replace('>'.$link_url.'<', '>'.$link_name.'<', $status_extended);
-                
+
                 if ($status === $status_extended) {
                     $status_extended .= ' ' . '<a href="'.$link_url.'">'.$link_name.'</a>';
                     if ($link_caption) {
                         $status_extended .= ' ('.$link_caption.')';
                     }
                 }
-                
+
             }
-            
+
             if (isset($item->to)) {
                 foreach($item->to->data as $to) {
                     $status_extended = str_replace($to->name, '<a href="'.$to->link.'">'.$to->name.'</a>', $status_extended);
