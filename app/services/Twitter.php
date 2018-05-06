@@ -40,7 +40,7 @@
 			$text = preg_replace( '/(^|\s)\@([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1@<a href="https://twitter.com/\\2">\\2</a>', $text );
 			return $text;
 		}
-		
+
         public function processDataItem($item) {
 			return array(
 			            'text' => $item->text,
@@ -105,11 +105,11 @@
 			$this->callback_getdata = array( array($this, 'oauthRequest'), array( 'search/tweets', array('q'=>$config['terms'], 'count'=>$config['total'], 'result_type'=>'recent' ) ) );
 			$this->setURL(
 			    'https://api.twitter.com/1.1/search/tweets.json?q=' .
-			    urlencode($config['terms']) . 
+			    urlencode($config['terms']) .
 			    '&count=' . $config['total'] .
 			    '&result_type=recent'
 			); // for cache hash
-			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="Profileimage of @{{{user_nickname}}}" /> <strong>@{{{user_nickname}}}:</strong></a> {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
+			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="" /> <strong>@{{{user_nickname}}}:</strong></a> {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
 			$this->setURLTemplate(
 			    'https://twitter.com/search?q=' .
 			    urlencode('"'.$config['terms'].'"')
