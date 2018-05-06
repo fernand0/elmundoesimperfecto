@@ -24,38 +24,6 @@
 			$this->setItemTemplate('<li><a title="{{{title}}}" href="{{{link}}}"><img src="{{{thumbnail}}}" alt="{{{title}}}" height="75" /></a></li>'."\n");
 		}
 
-		public function buildCache($Cache_Lite = null) {
-
-			if (!$recenturi = $this->getURL()) {
-				// get user id by user name
-		        $userdata = Pubwich::json_decode(file_get_contents(
-		            sprintf(
-	                    'https://api.instagram.com/v1/users/search?q=%s&count=1&access_token=%s',
-	                    trim($this->getConfigValue('username')),
-	                    trim($this->getConfigValue('access_token'))
-	    	        )
-		        ));
-
-	            if ($userdata && isset($userdata->data)) {
-	                $userid = $userdata->data[0]->id;
-	            }
-	            else {
-	                return false;
-	            }
-
-				$recenturi = sprintf(
-	                'https://api.instagram.com/v1/users/%s/media/recent?access_token=%s',
-	                $userid,
-	                trim($this->getConfigValue('access_token'))
-				);
-
-				$this->setURL($recenturi);
-
-			}
-
-			return parent::buildCache($Cache_Lite);
-		}
-
 		function getData() {
 		    if ($this->data === false) {
 		        return false;
@@ -93,7 +61,15 @@
 	}
 
 	class InstagramApiData extends Instagram {
-
+		public function __construct( $config ){
+			$this->setURL(
+				sprintf(
+	                'https://api.instagram.com/v1/users/self/media/recent/?access_token=%s',
+	                $config['access_token']
+				)
+			);
+			parent::__construct( $config );
+		}
 	}
 
 	class InstagramProfileData extends Instagram {
