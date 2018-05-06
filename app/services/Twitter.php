@@ -87,11 +87,11 @@
 
 		public function processDataItem( $item ) {
 			return parent::processDataItem( $item ) + array(
-					'link' => sprintf( 'http://www.twitter.com/%s/statuses/%s/', $item->user->screen_name, $item->id_str ),
+					'link' => sprintf( 'https://www.twitter.com/%s/statuses/%s/', $item->user->screen_name, $item->id_str ),
 					'user_image' => $item->user->profile_image_url,
 					'user_name' => $item->user->name,
 					'user_nickname' => $item->user->screen_name,
-					'user_link' => sprintf( 'http://www.twitter.com/%s', $item->user->screen_name ),
+					'user_link' => sprintf( 'https://www.twitter.com/%s', $item->user->screen_name ),
 			);
 		}
 
@@ -109,7 +109,7 @@
 			    '&count=' . $config['total'] .
 			    '&result_type=recent'
 			); // for cache hash
-			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="" /> <strong>@{{{user_nickname}}}:</strong></a> {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
+			$this->setItemTemplate( '<li><a href="{{{user_link}}}"><img class="item-media-thumbnail" width="48" height="48" src="{{{user_image}}}" alt="Profileimage of @{{{user_nickname}}}" /> <strong>@{{{user_nickname}}}:</strong></a> {{{status}}} (<a href="{{{link}}}">{{{date}}}</a>)</li>'.PHP_EOL );
 			$this->setURLTemplate(
 			    'https://twitter.com/search?q=' .
 			    urlencode('"'.$config['terms'].'"')
