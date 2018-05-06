@@ -131,15 +131,15 @@
 		        return false;
 		    }
 
-		    return $this->data->entry_data->ProfilePage[0]->user->media->nodes;
+		    return $this->data->entry_data->ProfilePage[0]->graphql->user->edge_owner_to_timeline_media->edges;
 		}
 
 		public function processDataItem($item) {
-			$timestamp = $item->date;
+			$item = $item->node;
+			$timestamp = $item->taken_at_timestamp;
 			$date = Pubwich::time_since($timestamp);
-			$link = 'https://www.instagram.com/p/' . $item->code;
-			$ig_description = $item->caption;
-		    $title = strip_tags(explode("\n", $ig_description)[0]);
+			$link = 'https://www.instagram.com/p/' . $item->shortcode;
+			$title = $item->edge_media_to_caption->edges[0]->node->text;
             $thumbnail = $item->thumbnail_src;
 
 			return array(
@@ -147,7 +147,6 @@
 				'timestamp' => $timestamp,
 				'link' => $link,
 	            'title' => $title,
-				'description' => $ig_description,
 				'thumbnail' => $thumbnail
 			);
         }
