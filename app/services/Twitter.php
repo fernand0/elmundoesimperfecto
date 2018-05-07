@@ -88,7 +88,7 @@
 		public function processDataItem( $item ) {
 			return parent::processDataItem( $item ) + array(
 					'link' => sprintf( 'https://www.twitter.com/%s/statuses/%s/', $item->user->screen_name, $item->id_str ),
-					'user_image' => $item->user->profile_image_url_https,
+					'user_image' => str_replace('_normal.', '_bigger.', $item->user->profile_image_url_https),
 					'user_name' => $item->user->name,
 					'user_nickname' => $item->user->screen_name,
 					'user_link' => sprintf( 'https://www.twitter.com/%s', $item->user->screen_name ),
@@ -128,7 +128,7 @@
 		public function processDataItem( $item ) {
 			return parent::processDataItem( $item ) + array(
 						'link' => sprintf( 'https://www.twitter.com/%s/statuses/%s/', $item->user->screen_name, $item->id_str ),
-						'user_image' => $item->user->profile_image_url_https,
+						'user_image' => str_replace('_normal.', '_bigger.', $item->user->profile_image_url_https),
 					    'user_name' => $item->user->name,
 						'user_nickname' => $item->user->screen_name,
 						'user_link' => sprintf( 'https://www.twitter.com/%s', $item->user->screen_name ),
