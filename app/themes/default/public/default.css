@@ -100,7 +100,7 @@ Basic Layout
 
 html {
     font-size: 100.01%;
-    font-size: calc(75% + 0.25vh + 0.15vw);
+    font-size: calc(0.75em + 0.25vh + 0.15vw);
     font-family: sans-serif;
     line-height: 1.4;
 }
