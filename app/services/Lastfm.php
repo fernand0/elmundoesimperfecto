@@ -42,7 +42,7 @@
 			parent::setVariables( $config );
 
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&api_key=%s&user=%s&limit=%d', $this->key, $this->username, $this->total ) );
-			$this->setItemTemplate('<li><a href="{{{link}}}"><strong>{{{track}}}</strong> — {{{artist}}}</a></li>'."\n");
+			$this->setItemTemplate('<li><a href="{{{link}}}">{{#image_large}}<img class="item-media-thumbnail" src="{{{image_large}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}">{{/image_large}}<strong>{{{track}}}</strong> — {{{artist}}}</a></li>'."\n");
 
 			parent::__construct( $config );
 		}
@@ -63,6 +63,12 @@
          * @since 20120318
          */
         public function processDataItem( $item ) {
+			$images = new StdClass;
+			foreach( $item->image as $k=>$i ) {
+				$key = (string) $i['size'];
+				$val = (string) $i;
+				$images->{$key} = $val;
+			}
 			$album = $item->album;
 			$artist = $item->artist;
 			$title= $item->name;
@@ -73,6 +79,9 @@
 				'album' => $album,
 				'track' => $title,
 				'date' => $item->date,
+				'image_small' => $images->small,
+				'image_medium' => $images->medium,
+				'image_large' => $images->large,
 			);
         }
 
@@ -92,7 +101,7 @@
 			parent::setVariables( $config );
 
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.getlovedtracks&api_key=%s&user=%s&limit=%d', $this->key, $this->username, $this->total ) );
-			$this->setItemTemplate('<li><a href="{{{link}}}"><strong>{{{track}}}</strong> — {{{artist}}}</a></li>'."\n");
+			$this->setItemTemplate('<li><a href="{{{link}}}">{{#image_large}}<img class="item-media-thumbnail" src="{{{image_large}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}">{{/image_large}}<strong>{{{track}}}</strong> — {{{artist}}}</a></li>'."\n");
 
 			parent::__construct( $config );
 		}
@@ -113,6 +122,12 @@
          * @since 20120318
          */
         public function processDataItem( $item ) {
+			$images = new StdClass;
+			foreach( $item->image as $k=>$i ) {
+				$key = (string) $i['size'];
+				$val = (string) $i;
+				$images->{$key} = $val;
+			}
 			$artist = $item->artist->name;
 			$title= $item->name;
 			$this->compteur++;
@@ -121,6 +136,9 @@
 				'artist' => $artist,
 				'track' => $title,
 				'date' => $item->date,
+				'image_small' => $images->small,
+				'image_medium' => $images->medium,
+				'image_large' => $images->large,
 			);
         }
 
@@ -140,7 +158,7 @@
 			parent::setVariables( $config );
 
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.getweeklytrackchart&api_key=%s&user=%s', $this->key, $this->username ) );
-			$this->setItemTemplate('<li><a href="{{{link}}}"><strong>{{{track}}}</strong> — {{{artist}}}</a> ({{{playcount}}}x)</li>'."\n");
+			$this->setItemTemplate('<li><a href="{{{link}}}">{{#image_large}}<img class="item-media-thumbnail" src="{{{image_large}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}">{{/image_large}}<strong>{{{track}}}</strong> — {{{artist}}}</a> ({{{playcount}}}x)</li>'."\n");
 
 			parent::__construct( $config );
 		}
@@ -161,6 +179,12 @@
          * @since 20120318
          */
         public function processDataItem( $item ) {
+			$images = new StdClass;
+			foreach( $item->image as $k=>$i ) {
+				$key = (string) $i['size'];
+				$val = (string) $i;
+				$images->{$key} = $val;
+			}
 			$artist = $item->artist;
 			$title= $item->name;
 			$this->compteur++;
@@ -170,6 +194,9 @@
 				'track' => $title,
 				'date' => $item->date,
 				'playcount' => $item->playcount,
+				'image_small' => $images->small,
+				'image_medium' => $images->medium,
+				'image_large' => $images->large,
 			);
         }
 
@@ -195,7 +222,7 @@
 			parent::setVariables( $config );
 			$period = isset($config['period']) ? $config['period'] : 'overall';
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&api_key=%s&user=%s&period=%s', $this->key, $this->username, $period ) );
-			$this->setItemTemplate('<li><a href="{{{link}}}">{{#image_medium}}<img class="item-media-thumbnail" src="{{{image_medium}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}">{{/image_medium}}<strong>{{{artist}}}</strong> {{{album}}}</a> ({{{playcount}}}x)</li>'."\n");
+			$this->setItemTemplate('<li><a href="{{{link}}}">{{#image_large}}<img class="item-media-thumbnail" src="{{{image_large}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}">{{/image_large}}<strong>{{{artist}}}</strong> {{{album}}}</a> ({{{playcount}}}x)</li>'."\n");
 			parent::__construct( $config );
 		}
 
@@ -209,7 +236,6 @@
 		 */
 		public function getData() {
 			$data = parent::getData();
-			//var_dump($data); die();
 			if (!isset($data->topalbums) || !isset(get_object_vars($data->topalbums)['album'])) {
 				return array();
 			}
@@ -237,7 +263,6 @@
 				'image_small' => $images->small,
 				'image_medium' => $images->medium,
 				'image_large' => $images->large,
-				'image_extralarge' => $images->extralarge,
 			);
         }
 
