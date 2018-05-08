@@ -52,7 +52,10 @@
 		 */
 		public function getData() {
 			$data = parent::getData();
-			return $data->recenttracks->track;
+			if (!isset($data->recenttracks) || !isset(get_object_vars($data->recenttracks)['track'])) {
+				return array();
+			}
+			return get_object_vars($data->recenttracks)['track'];
 		}
 
         /**
@@ -65,14 +68,14 @@
 			$title= $item->name;
 			$this->compteur++;
 			return array(
-						'link' => htmlspecialchars( $item->url ),
-						'artist' => $artist,
-						'album' => $album,
-						'track' => $title,
-						'date' => $item->date,
-						);
+				'link' => htmlspecialchars( $item->url ),
+				'artist' => $artist,
+				'album' => $album,
+				'track' => $title,
+				'date' => $item->date,
+			);
         }
-        
+
 		/**
 		 * @return array
 		 */
@@ -99,7 +102,10 @@
 		 */
 		public function getData() {
 			$data = parent::getData();
-			return $data->lovedtracks->track;
+			if (!isset($data->lovedtracks) || !isset(get_object_vars($data->lovedtracks)['track'])) {
+				return array();
+			}
+			return get_object_vars($data->lovedtracks)['track'];
 		}
 
         /**
@@ -111,13 +117,13 @@
 			$title= $item->name;
 			$this->compteur++;
 			return array(
-						'link' => htmlspecialchars( $item->url ),
-						'artist' => $artist,
-						'track' => $title,
-						'date' => $item->date,
-						);
+				'link' => htmlspecialchars( $item->url ),
+				'artist' => $artist,
+				'track' => $title,
+				'date' => $item->date,
+			);
         }
-        
+
 		/**
 		 * @return array
 		 */
@@ -127,12 +133,12 @@
 
 	}
 
-	
+
 	class LastFMWeeklyTracks extends LastFM {
 
 		public function __construct( $config ) {
 			parent::setVariables( $config );
-			
+
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.getweeklytrackchart&api_key=%s&user=%s', $this->key, $this->username ) );
 			$this->setItemTemplate('<li><a href="{{{link}}}"><strong>{{{track}}}</strong> — {{{artist}}}</a> ({{{playcount}}}x)</li>'."\n");
 
@@ -144,7 +150,10 @@
 		 */
 		public function getData() {
 			$data = parent::getData();
-			return $data->weeklytrackchart->track;
+			if (!isset($data->weeklytrackchart) || !isset(get_object_vars($data->weeklytrackchart)['track'])) {
+				return array();
+			}
+			return get_object_vars($data->weeklytrackchart)['track'];
 		}
 
         /**
@@ -156,14 +165,14 @@
 			$title= $item->name;
 			$this->compteur++;
 			return array(
-						'link' => htmlspecialchars( $item->url ),
-						'artist' => $artist,
-						'track' => $title,
-						'date' => $item->date,
-						'playcount' => $item->playcount,
-						);
+				'link' => htmlspecialchars( $item->url ),
+				'artist' => $artist,
+				'track' => $title,
+				'date' => $item->date,
+				'playcount' => $item->playcount,
+			);
         }
-        
+
 		/**
 		 * @return array
 		 */
@@ -172,7 +181,7 @@
 		}
 
 	}
-	
+
 
 	class LastFMWeeklyAlbums extends LastFMTopAlbums {
 		public function __construct( $config ) {
@@ -186,7 +195,7 @@
 			parent::setVariables( $config );
 			$period = isset($config['period']) ? $config['period'] : 'overall';
 			$this->setURL( sprintf( 'http://ws.audioscrobbler.com/2.0/?method=user.gettopalbums&api_key=%s&user=%s&period=%s', $this->key, $this->username, $period ) );
-			$this->setItemTemplate('<li><a href="{{{link}}}"><img class="item-media-thumbnail" src="{{{image_medium}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}"><strong>{{{artist}}}</strong> {{{album}}}</a> ({{{playcount}}}x)</li>'."\n");
+			$this->setItemTemplate('<li><a href="{{{link}}}">{{#image_medium}}<img class="item-media-thumbnail" src="{{{image_medium}}}" width="{{{size}}}" height="{{{size}}}" alt="{{{title}}}">{{/image_medium}}<strong>{{{artist}}}</strong> {{{album}}}</a> ({{{playcount}}}x)</li>'."\n");
 			parent::__construct( $config );
 		}
 
@@ -200,6 +209,11 @@
 		 */
 		public function getData() {
 			$data = parent::getData();
+			//var_dump($data); die();
+			if (!isset($data->topalbums) || !isset(get_object_vars($data->topalbums)['album'])) {
+				return array();
+			}
+			return get_object_vars($data->topalbums)['album'];
 			return $data->topalbums->album;
 		}
 
@@ -215,18 +229,18 @@
 				$images->{$key} = $val;
 			}
 			return array(
-						'size' => $this->size,
-						'link' => $item->url,
-						'playcount' => $item->playcount,
-						'album' => $item->name,
-						'artist' => $item->artist->name,
-						'image_small' => $images->small,
-						'image_medium' => $images->medium,
-						'image_large' => $images->large,
-						'image_extralarge' => $images->extralarge,
-						);
+				'size' => $this->size,
+				'link' => $item->url,
+				'playcount' => $item->playcount,
+				'album' => $item->name,
+				'artist' => $item->artist->name,
+				'image_small' => $images->small,
+				'image_medium' => $images->medium,
+				'image_large' => $images->large,
+				'image_extralarge' => $images->extralarge,
+			);
         }
-        
+
 		/**
 		 * @return array
 		 */
