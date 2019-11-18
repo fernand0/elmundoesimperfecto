@@ -23,29 +23,24 @@
             // @see https://developers.facebook.com/docs/graph-api/reference/v2.4/post
 			$this->setURL(
 			        sprintf(
-			            'https://graph.facebook.com/v3.0/%s/posts?fields=' . implode(',', array(
+			            'https://graph.facebook.com/v5.0/%s/posts?fields=' . implode(',', array(
 							'id',
-							'status_type',
-							'type',
 							'created_time',
-							'story',
 							'message',
 							'picture',
 							'full_picture',
-							'message_tags',
-							'name',
-							'caption',
-							'description',
-							'link'
+							'permalink_url',
+							'to{id,name}',
+							'attachments{title,unshimmed_url,description}',
 						)) . '&limit=%s&access_token=%s',
 			            trim($pagekey),
 			            trim($config['total']),
-			            trim($config['app_id']).'|'.trim($config['app_secret'])
+			            isset($config['access_token']) ? trim($config['access_token']) : trim($config['app_id']).'|'.trim($config['app_secret'])
 			        )
 			); // for cache hash
 
 			$this->setURLTemplate(
-			    'http://www.facebook.com/' . trim($pagekey)
+			    'https://facebook.com/' . trim($pagekey)
 			);
 
 			$this->setItemTemplate(
@@ -80,50 +75,41 @@
 
         public function processDataItem($item) {
 
-            $type = $item->type;
             $date = Pubwich::time_since($item->created_time);
             $timestamp = strtotime($item->created_time);
             $message = isset($item->message) ? $item->message : '';
             $media_thumbnail_url = isset($item->picture) ? $item->picture : false;
             $media_picture_url = isset($item->full_picture) ? $item->full_picture : false;
-            $link_name = isset($item->name) ? $item->name : false;
-            $link_caption = isset($item->caption) ? $item->caption : false;
-            $link_url = isset($item->link) ? $item->link : false;
-
-            $id = explode('_', $item->id);
-            $id_page = $id[0];
-            $id_message = $id[1];
-            $link = 'https://www.facebook.com/'.$id_page.'/posts/'.$id_message;
+			$link = isset($item->permalink_url) ? $item->permalink_url : false;
 
 			$status = strip_tags($message);
 			$status = preg_replace('/(https?:\/\/[^\s\)]+)/', '<a href="\\1">\\1</a>', $status);
-			$status = preg_replace('/(^|\s)\#([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1<a href="https://www.facebook.com/hashtag/\\2">#\\2</a>', $status);
-			$status = preg_replace('/(^|\s)\@([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1@<a href="https://www.facebook.com/\\2">\\2</a>', $status);
+			$status = preg_replace('/(^|\s)\#([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1<a href="https://facebook.com/hashtag/\\2">#\\2</a>', $status);
+			$status = preg_replace('/(^|\s)\@([^\s\ \:\.\;\-\,\!\)\(\"]+)/', '\\1@<a href="https:/facebook.com/\\2">\\2</a>', $status);
 
             $status_extended = $status;
 
-            if ($link_name && $link_url) {
-                $status_extended = str_replace('>'.$link_url.'<', '>'.$link_name.'<', $status_extended);
+			if (isset($item->to)) {
+                foreach($item->to->data as $to) {
+                    $status_extended = str_replace($to->name, '<a href="https://facebook.com/'.$to->id.'">'.$to->name.'</a>', $status_extended);
+                }
+            }
+
+            if (isset($item->attachments)) {
+                $status_extended = str_replace('>'.$item->attachments->data[0]->unshimmed_url.'<', '>'.$item->attachments->data[0]->title.'<', $status_extended);
 
                 if ($status === $status_extended) {
-                    $status_extended .= ' ' . '<a href="'.$link_url.'">'.$link_name.'</a>';
-                    if ($link_caption) {
-                        $status_extended .= ' ('.$link_caption.')';
+                    $status_extended .= ' ' . '<a href="'.$item->attachments->data[0]->unshimmed_url.'">'.$item->attachments->data[0]->title.'</a>';
+                    if ($item->attachments->data[0]->description) {
+                        $status_extended .= ' ('.$item->attachments->data[0]->description.')';
                     }
                 }
 
             }
 
-            if (isset($item->to)) {
-                foreach($item->to->data as $to) {
-                    $status_extended = str_replace($to->name, '<a href="'.$to->link.'">'.$to->name.'</a>', $status_extended);
-                }
-            }
-
             $status = $status_extended;
 
 			return array(
-	            'type' => $type,
 				'message' => $message,
 				'date' => $date,
 				'timestamp' => $timestamp,
