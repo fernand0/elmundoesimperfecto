@@ -23,7 +23,7 @@
             // @see https://developers.facebook.com/docs/graph-api/reference/v2.4/post
 			$this->setURL(
 			        sprintf(
-			            'https://graph.facebook.com/v5.0/%s/posts?fields=' . implode(',', array(
+			            'https://graph.facebook.com/v5.0/%s/published_posts?fields=' . implode(',', array(
 							'id',
 							'created_time',
 							'message',
