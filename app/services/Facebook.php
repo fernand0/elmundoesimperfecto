@@ -23,7 +23,7 @@
             // @see https://developers.facebook.com/docs/graph-api/reference/v2.4/post
 			$this->setURL(
 			        sprintf(
-			            'https://graph.facebook.com/v5.0/%s/published_posts?fields=' . implode(',', array(
+			            'https://graph.facebook.com/v5.0/%s/posts?fields=' . implode(',', array(
 							'id',
 							'created_time',
 							'message',
@@ -96,10 +96,10 @@
             }
 
             if (isset($item->attachments)) {
-                $status_extended = str_replace('>'.$item->attachments->data[0]->unshimmed_url.'<', '>'.$item->attachments->data[0]->title.'<', $status_extended);
+                $status_extended = isset($item->attachments->data[0]->title) ? str_replace('>'.$item->attachments->data[0]->unshimmed_url.'<', '>'.$item->attachments->data[0]->title.'<', $status_extended) : $status_extended;
 
                 if ($status === $status_extended) {
-                    $status_extended .= ' ' . '<a href="'.$item->attachments->data[0]->unshimmed_url.'">'.$item->attachments->data[0]->title.'</a>';
+                    $status_extended .= isset($item->attachments->data[0]->title) ? ' ' . '<a href="'.$item->attachments->data[0]->unshimmed_url.'">'.$item->attachments->data[0]->title.'</a>' : '';
                     if ($item->attachments->data[0]->description) {
                         $status_extended .= ' ('.$item->attachments->data[0]->description.')';
                     }
