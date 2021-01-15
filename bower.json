@@ -7,6 +7,6 @@
     "pear-cache-lite": "pear/Cache_Lite",
     "php-gettext": "https://launchpad.net/php-gettext/trunk/1.0.12/+download/php-gettext-1.0.12.tar.gz",
     "php-oauth": "https://raw.githubusercontent.com/jtsternberg/oauth/master/code/php/OAuth.php",
-    "mustache.php": "bobthecow/mustache.php#v2.12.0"
+    "mustache.php": "bobthecow/mustache.php"
   }
 }
